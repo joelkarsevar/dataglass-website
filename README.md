@@ -77,7 +77,7 @@
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 140px 0 80px;
+            padding: 80px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -490,20 +490,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <a href="#home" class="logo">Data Glass</a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#analytics">Dashboard</a></li>
-                <li><a href="#about">About Me</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#contact">Connect</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <main>
         <section id="home" class="hero">
             <div class="container">
@@ -542,7 +528,6 @@
                 </div>
                 <div class="about-content">
                     <div class="about-text">
-                        <h3 style="font-size: 2rem; color: #2c3e50; margin-bottom: 1.5rem;">Federal FOIA Data Expert With Deep Government Experience</h3>
                         <p>As the primary data analyst for FOIA at the Department of Veterans Affairs, I've developed unparalleled expertise in navigating the complexities of federal transparency requirements and extracting actionable insights from government datasets.</p>
                         <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
                         <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
@@ -603,7 +588,7 @@
                     </div>
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/US-DeptOfVeteransAffairs-Seal.svg/200px-US-DeptOfVeteransAffairs-Seal.svg.png" alt="Department of Veterans Affairs" class="logo-img">
+                            <img src="VA Seal.svg.png" alt="Department of Veterans Affairs" class="logo-img">
                         </div>
                         <h3>Department of Veterans Affairs</h3>
                         <h4>Functional Analyst: Compliance Risk & Remediation | 2024-2025</h4>
@@ -611,7 +596,7 @@
                     </div>
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/American_University_seal.svg/200px-American_University_seal.svg.png" alt="American University" class="logo-img">
+                            <img src="American_Eagles_logo.svg.png" alt="American University" class="logo-img">
                         </div>
                         <h3>American University</h3>
                         <h4>Kogod School of Business | Washington, D.C.</h4>
@@ -624,7 +609,7 @@
                     </div>
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Seal_of_the_United_States_Department_of_the_Army.svg/200px-Seal_of_the_United_States_Department_of_the_Army.svg.png" alt="US Army" class="logo-img">
+                            <img src="Army Seal.svg.png" alt="US Army" class="logo-img">
                         </div>
                         <h3>United States Army</h3>
                         <h4>Avionic Equipment Repairer | 2013-2017</h4>
@@ -668,7 +653,7 @@
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
+        // Smooth scrolling for navigation links (if any exist)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -680,18 +665,6 @@
                     });
                 }
             });
-        });
-
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
-            } else {
-                header.style.background = '#fff';
-                header.style.backdropFilter = 'none';
-            }
         });
 
         // Service cards hover effect
@@ -720,8 +693,8 @@
             });
         }, observerOptions);
 
-        // Observe service cards and other elements
-        document.querySelectorAll('.service-card, .about-text, .powerbi-container, .experience-card').forEach(el => {
+        // Observe elements for animations
+        document.querySelectorAll('.service-card, .about-text, .powerbi-container, .experience-card, .connect-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
