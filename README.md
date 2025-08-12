@@ -610,7 +610,7 @@
                 <div class="experience-grid">
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <svg style="width: 120px; height: 45px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                            <svg style="width: 160px; height: 60px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
                               <defs>
                                 <linearGradient id="expGlassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                   <stop offset="0%" style="stop-color:#1B365D;stop-opacity:0.8"/>
