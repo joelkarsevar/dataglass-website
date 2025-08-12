@@ -14,7 +14,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #1B365D;
+            background: #FFFFFF;
         }
 
         .container {
@@ -23,60 +24,10 @@
             padding: 0 20px;
         }
 
-        /* Header */
-        header {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2c3e50;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo::before {
-            content: "🔍";
-            font-size: 1.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #3498db;
-        }
-
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+            color: #FFFFFF;
             padding: 80px 0;
             text-align: center;
             position: relative;
@@ -90,59 +41,48 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,800 1000,1000"/></svg>');
-            background-size: cover;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: 3.5em;
             font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
             opacity: 0;
             animation: fadeInUp 1s ease forwards;
         }
 
+        .hero h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.2s forwards;
+        }
+
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
+            font-size: 1.3em;
+            margin-bottom: 30px;
             opacity: 0.9;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             opacity: 0;
             animation: fadeInUp 1s ease 0.3s forwards;
         }
 
-        .cta-button {
-            display: inline-block;
-            background: #e74c3c;
-            color: white;
-            padding: 15px 40px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.6s forwards;
-        }
-
-        .cta-button:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-        }
-
         /* Power BI Section */
         .powerbi-section {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: #F8F9FA;
+            text-align: center;
         }
 
         .section-title {
@@ -151,159 +91,192 @@
         }
 
         .section-title h2 {
-            font-size: 2.8rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1B365D;
         }
 
         .section-title p {
-            font-size: 1.2rem;
+            font-size: 1.2em;
             color: #666;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .powerbi-container {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 80px 40px;
+            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
             text-align: center;
             min-height: 400px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            margin-top: 40px;
         }
 
         .powerbi-placeholder {
-            color: #666;
-            font-size: 1.2rem;
-            border: 2px dashed #ddd;
-            padding: 3rem;
-            border-radius: 10px;
+            border: 2px dashed #E8E8E8;
+            border-radius: 12px;
+            padding: 40px;
             width: 100%;
         }
 
         .powerbi-placeholder h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
+            font-size: 1.5em;
+            color: #1B365D;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .powerbi-placeholder p {
+            color: #666;
+            font-size: 1.1em;
         }
 
         /* About Section */
         .about {
             padding: 80px 0;
-            background: white;
+            background: #FFFFFF;
         }
 
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 60px;
             align-items: center;
-        }
-
-        .about-text h2 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
         }
 
         .about-text p {
             color: #666;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.7;
         }
 
         .about-image {
+            background: linear-gradient(135deg, #F8F9FA 0%, #E8E8E8 100%);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
             position: relative;
         }
 
-        .about-image::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 15px;
-            opacity: 0.1;
+        .data-visualization {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 8px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .data-bar {
+            background: linear-gradient(180deg, #1B365D, #2A4A7A);
+            border-radius: 4px 4px 0 0;
+            opacity: 0.8;
+            animation: barGrow 2s ease-out;
+        }
+
+        .data-bar:nth-child(1) { width: 25px; height: 60px; animation-delay: 0.1s; }
+        .data-bar:nth-child(2) { width: 25px; height: 100px; animation-delay: 0.3s; }
+        .data-bar:nth-child(3) { width: 25px; height: 45px; animation-delay: 0.5s; }
+        .data-bar:nth-child(4) { width: 25px; height: 120px; animation-delay: 0.7s; }
+        .data-bar:nth-child(5) { width: 25px; height: 80px; animation-delay: 0.9s; }
+
+        @keyframes barGrow {
+            from { height: 0; opacity: 0; }
+            to { opacity: 0.8; }
         }
 
         /* Services Section */
         .services {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: #F8F9FA;
         }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
         }
 
         .service-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
+            background: #FFFFFF;
+            padding: 30px 25px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
             transition: all 0.3s ease;
+            border-top: 4px solid #1B365D;
         }
 
         .service-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
         }
 
         .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1B365D, #2A4A7A);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #FFFFFF;
+            font-size: 20px;
         }
 
         .service-card h3 {
-            font-size: 1.5rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1B365D;
         }
 
         .service-card p {
             color: #666;
             line-height: 1.6;
+            font-size: 0.95em;
         }
 
         /* Experience Section */
         .experience {
             padding: 80px 0;
-            background: white;
+            background: #FFFFFF;
         }
 
         .experience-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            gap: 30px;
+            margin-top: 60px;
         }
 
         .experience-card {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 15px;
+            background: #F8F9FA;
+            padding: 30px 25px;
+            border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #1B365D;
+            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
         }
 
         .experience-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(52, 152, 219, 0.1);
-            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
+            background: #FFFFFF;
         }
 
         .experience-logo {
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
             height: 80px;
             display: flex;
             align-items: center;
@@ -311,8 +284,8 @@
         }
 
         .logo-img {
-            max-height: 70px;
-            max-width: 70px;
+            max-height: 60px;
+            max-width: 60px;
             object-fit: contain;
             filter: grayscale(20%);
             transition: filter 0.3s ease;
@@ -323,57 +296,71 @@
         }
 
         .custom-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);
         }
 
         .experience-card h3 {
-            font-size: 1.3rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1B365D;
         }
 
         .experience-card h4 {
             font-size: 1rem;
-            color: #3498db;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            color: #2A4A7A;
+            font-weight: 500;
+            margin-bottom: 15px;
         }
 
         .experience-card p {
             color: #666;
             line-height: 1.6;
-            font-size: 0.95rem;
+            font-size: 0.95em;
+            margin-bottom: 8px;
         }
 
         /* Connect Section */
         .connect-section {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: #1B365D;
+            color: #FFFFFF;
         }
 
         .connect-content {
-            display: flex;
-            justify-content: center;
-            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .connect-content h2 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .connect-content p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.9;
         }
 
         .connect-card {
-            background: white;
-            padding: 3rem;
-            border-radius: 15px;
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 400px;
+            max-width: 500px;
+            margin: 0 auto;
             transition: all 0.3s ease;
         }
 
@@ -389,7 +376,7 @@
 
         .connect-card h3 {
             font-size: 1.8rem;
-            color: #2c3e50;
+            color: #1B365D;
             margin-bottom: 1rem;
         }
 
@@ -400,56 +387,54 @@
         }
 
         .connect-link {
-            display: inline-block;
-            background: #0077b5;
-            color: white;
-            padding: 12px 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #1B365D;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border-radius: 8px;
             text-decoration: none;
-            border-radius: 25px;
             font-weight: 600;
+            font-size: 1.1em;
             transition: all 0.3s ease;
         }
 
         .connect-link:hover {
-            background: #005885;
+            background: #0F2A4A;
             transform: translateY(-2px);
         }
 
         /* Footer */
         footer {
-            background: #2c3e50;
-            color: white;
-            padding: 60px 0 30px;
+            background: #0F2A4A;
+            color: #FFFFFF;
+            padding: 40px 0 20px;
+            text-align: center;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .footer-section h3 {
-            margin-bottom: 1rem;
-            color: #3498db;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #E8E8E8;
         }
 
-        .footer-section p, .footer-section a {
-            color: #bdc3c7;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .footer-section a:hover {
-            color: #3498db;
+        .footer-section p {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
         }
 
         .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #34495e;
-            color: #95a5a6;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 20px;
+            color: rgba(255,255,255,0.6);
         }
 
         /* Animations */
@@ -466,12 +451,8 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.5em;
             }
 
             .hero p {
@@ -480,11 +461,19 @@
 
             .about-content {
                 grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 40px;
             }
 
             .section-title h2 {
-                font-size: 2.2rem;
+                font-size: 2em;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -494,8 +483,50 @@
         <section id="home" class="hero">
             <div class="container">
                 <div class="hero-content">
-                    <h1>Data Glass</h1>
-                    <h2 style="font-size: 2.2rem; margin-bottom: 1rem; font-weight: 500; opacity: 0; animation: fadeInUp 1s ease 0.2s forwards;">Federal FOIA Data Solutions</h2>
+                    <div style="display: flex; justify-content: center; margin-bottom: 40px;">
+                        <svg style="height: 200px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
+                              <stop offset="50%" style="stop-color:#E8E8E8;stop-opacity:0.4"/>
+                              <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.8"/>
+                            </linearGradient>
+                            <linearGradient id="highlight" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+                              <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+                            </linearGradient>
+                            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                              <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#FFFFFF" flood-opacity="0.3"/>
+                            </filter>
+                          </defs>
+                          <g filter="url(#shadow)">
+                            <rect x="30" y="65" width="45" height="35" rx="4" fill="url(#glassGradient)" opacity="0.7"/>
+                            <rect x="45" y="45" width="45" height="55" rx="4" fill="url(#glassGradient)" opacity="0.8"/>
+                            <rect x="60" y="20" width="45" height="80" rx="4" fill="url(#glassGradient)" stroke="#FFFFFF" stroke-width="1" opacity="0.9"/>
+                            <g stroke="#FFFFFF" stroke-width="0.5" opacity="0.6" fill="none">
+                              <line x1="67" y1="28" x2="98" y2="28"/>
+                              <line x1="67" y1="35" x2="98" y2="35"/>
+                              <line x1="67" y1="42" x2="98" y2="42"/>
+                              <line x1="67" y1="49" x2="98" y2="49"/>
+                              <line x1="67" y1="56" x2="98" y2="56"/>
+                              <line x1="67" y1="63" x2="98" y2="63"/>
+                              <line x1="67" y1="70" x2="98" y2="70"/>
+                              <line x1="67" y1="77" x2="98" y2="77"/>
+                              <line x1="67" y1="84" x2="98" y2="84"/>
+                              <line x1="67" y1="91" x2="98" y2="91"/>
+                              <line x1="72" y1="25" x2="72" y2="93"/>
+                              <line x1="78" y1="25" x2="78" y2="93"/>
+                              <line x1="84" y1="25" x2="84" y2="93"/>
+                              <line x1="90" y1="25" x2="90" y2="93"/>
+                              <line x1="96" y1="25" x2="96" y2="93"/>
+                            </g>
+                          </g>
+                          <rect x="65" y="25" width="8" height="70" rx="2" fill="url(#highlight)" opacity="0.2"/>
+                          <text x="135" y="55" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="-1px">DATA</text>
+                          <text x="135" y="85" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="300" fill="#FFFFFF" letter-spacing="-1px">GLASS</text>
+                        </svg>
+                    </div>
+                    <h2>Federal FOIA Data Solutions</h2>
                     <p>Transforming government transparency through advanced data analysis</p>
                 </div>
             </div>
@@ -512,7 +543,7 @@
                         <h3>🚀 Dynamic FOIA Analytic Reporting Tool</h3>
                         <p><strong>Coming Soon</strong></p>
                         <p>Interactive federal data insights and real-time FOIA analytics dashboard will be available here.</p>
-                        <p style="font-size: 1rem; margin-top: 2rem; color: #667eea;">
+                        <p style="font-size: 1rem; margin-top: 2rem; color: #1B365D;">
                             Stay tuned for cutting-edge government data visualization and analysis tools.
                         </p>
                     </div>
@@ -532,9 +563,7 @@
                         <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
                         <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
                         <p>When federal agencies work with Data Glass, they get more than consulting—they get a partner who understands government operations from the inside and delivers measurable improvements to both transparency and efficiency.</p>
-                    </div>
-                    <div class="about-image">
-                        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); height: 300px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #667eea;">🏛️</div>
+                        <p style="margin-top: 30px; font-style: italic; color: #1B365D; font-weight: 500; font-size: 1.2em;">What data challenge can I help you solve?<br><span style="margin-left: 20px;">-Joel</span></p>
                     </div>
                 </div>
             </div>
@@ -580,7 +609,7 @@
                 <div class="experience-grid">
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <div class="custom-logo">DG</div>
+                            <div class="custom-logo" style="width: 80px; height: 80px; background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; color: white; box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);">DG</div>
                         </div>
                         <h3>Data Glass LLC</h3>
                         <h4>Federal FOIA Solutions | 2025-Present</h4>
@@ -621,16 +650,17 @@
 
         <section class="connect-section">
             <div class="container">
-                <div class="section-title">
+                <div class="connect-content">
                     <h2>Connect With Me</h2>
                     <p>Let's discuss how federal data can drive your organization's success</p>
-                </div>
-                <div class="connect-content">
                     <div class="connect-card">
                         <div class="connect-icon">🔗</div>
                         <h3>LinkedIn</h3>
                         <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
-                        <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">View LinkedIn Profile</a>
+                        <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">
+                            <span>View LinkedIn Profile</span>
+                            <span>→</span>
+                        </a>
                     </div>
                 </div>
             </div>
