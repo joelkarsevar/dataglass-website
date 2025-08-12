@@ -609,7 +609,7 @@
                 <div class="experience-grid">
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <img src="data-glass-logo-400x150-icon.png" alt="Data Glass LLC" class="logo-img" style="max-height: 60px; max-width: 60px;">
+                            <img src="data-glass-logo-400x150-icon.png" alt="Data Glass LLC" class="logo-img" style="max-height: 80px; max-width: 120px; object-fit: contain;">
                         </div>
                         <h3>Data Glass LLC</h3>
                         <h4>Federal FOIA Solutions | 2025-Present</h4>
@@ -625,6 +625,14 @@
                     </div>
                     <div class="experience-card">
                         <div class="experience-logo">
+                            <img src="Army Seal.svg.png" alt="US Army" class="logo-img">
+                        </div>
+                        <h3>United States Army</h3>
+                        <h4>Avionic Equipment Repairer | 2013-2017</h4>
+                        <p>Engaged in multinational exercises and supported missions with foreign allies, supporting operations across the globe.</p>
+                    </div>
+                    <div class="experience-card">
+                        <div class="experience-logo">
                             <img src="American_Eagles_logo.svg.png" alt="American University" class="logo-img">
                         </div>
                         <h3>American University</h3>
@@ -635,14 +643,6 @@
                         • Database Management & Statistical Applications<br>
                         • Data Modelling & Analysis<br>
                         • Business Intelligence & Analytics</p>
-                    </div>
-                    <div class="experience-card">
-                        <div class="experience-logo">
-                            <img src="Army Seal.svg.png" alt="US Army" class="logo-img">
-                        </div>
-                        <h3>United States Army</h3>
-                        <h4>Avionic Equipment Repairer | 2013-2017</h4>
-                        <p>Engaged in multinational exercises and supported missions with foreign allies, supporting operations across the globe.</p>
                     </div>
                 </div>
             </div>
