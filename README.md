@@ -290,6 +290,8 @@
             object-fit: contain;
             filter: grayscale(20%);
             transition: filter 0.3s ease;
+            background: transparent !important;
+            border-radius: 8px;
         }
 
         .experience-card:hover .logo-img {
