@@ -200,7 +200,7 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin-top: 60px;
         }
@@ -254,7 +254,7 @@
 
         .experience-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin-top: 60px;
         }
@@ -609,7 +609,7 @@
                 <div class="experience-grid">
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <div class="custom-logo" style="width: 80px; height: 80px; background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; color: white; box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);">DG</div>
+                            <img src="data-glass-logo-400x150-icon.png" alt="Data Glass LLC" class="logo-img" style="max-height: 60px; max-width: 60px;">
                         </div>
                         <h3>Data Glass LLC</h3>
                         <h4>Federal FOIA Solutions | 2025-Present</h4>
