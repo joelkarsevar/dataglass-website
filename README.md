@@ -277,10 +277,11 @@
 
         .experience-logo {
             margin-bottom: 20px;
-            height: 80px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: transparent;
         }
 
         .logo-img {
@@ -609,7 +610,47 @@
                 <div class="experience-grid">
                     <div class="experience-card">
                         <div class="experience-logo">
-                            <img src="data-glass-logo-400x150-icon.png" alt="Data Glass LLC" class="logo-img" style="max-height: 80px; max-width: 120px; object-fit: contain;">
+                            <svg style="width: 120px; height: 45px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                              <defs>
+                                <linearGradient id="expGlassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" style="stop-color:#1B365D;stop-opacity:0.8"/>
+                                  <stop offset="50%" style="stop-color:#E8E8E8;stop-opacity:0.3"/>
+                                  <stop offset="100%" style="stop-color:#1B365D;stop-opacity:0.9"/>
+                                </linearGradient>
+                                <linearGradient id="expHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+                                  <stop offset="0%" style="stop-color:#E8E8E8;stop-opacity:0.3"/>
+                                  <stop offset="100%" style="stop-color:#E8E8E8;stop-opacity:0.1"/>
+                                </linearGradient>
+                                <filter id="expShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                  <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#1B365D" flood-opacity="0.25"/>
+                                </filter>
+                              </defs>
+                              <g filter="url(#expShadow)">
+                                <rect x="30" y="65" width="45" height="35" rx="4" fill="url(#expGlassGradient)" opacity="0.7"/>
+                                <rect x="45" y="45" width="45" height="55" rx="4" fill="url(#expGlassGradient)" opacity="0.8"/>
+                                <rect x="60" y="20" width="45" height="80" rx="4" fill="url(#expGlassGradient)" stroke="#FFFFFF" stroke-width="1" opacity="0.9"/>
+                                <g stroke="#FFFFFF" stroke-width="0.5" opacity="0.4" fill="none">
+                                  <line x1="67" y1="28" x2="98" y2="28"/>
+                                  <line x1="67" y1="35" x2="98" y2="35"/>
+                                  <line x1="67" y1="42" x2="98" y2="42"/>
+                                  <line x1="67" y1="49" x2="98" y2="49"/>
+                                  <line x1="67" y1="56" x2="98" y2="56"/>
+                                  <line x1="67" y1="63" x2="98" y2="63"/>
+                                  <line x1="67" y1="70" x2="98" y2="70"/>
+                                  <line x1="67" y1="77" x2="98" y2="77"/>
+                                  <line x1="67" y1="84" x2="98" y2="84"/>
+                                  <line x1="67" y1="91" x2="98" y2="91"/>
+                                  <line x1="72" y1="25" x2="72" y2="93"/>
+                                  <line x1="78" y1="25" x2="78" y2="93"/>
+                                  <line x1="84" y1="25" x2="84" y2="93"/>
+                                  <line x1="90" y1="25" x2="90" y2="93"/>
+                                  <line x1="96" y1="25" x2="96" y2="93"/>
+                                </g>
+                              </g>
+                              <rect x="65" y="25" width="8" height="70" rx="2" fill="url(#expHighlight)" opacity="0.15"/>
+                              <text x="135" y="55" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#1B365D" letter-spacing="-1px">DATA</text>
+                              <text x="135" y="85" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="300" fill="#1B365D" letter-spacing="-1px">GLASS</text>
+                            </svg>
                         </div>
                         <h3>Data Glass LLC</h3>
                         <h4>Federal FOIA Solutions | 2025-Present</h4>
