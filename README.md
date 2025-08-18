@@ -1,62 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Glass LLC - Federal FOIA Data Solutions</title>
-    <style>
-    /* CSS Reset for full screen display */
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Data Glass LLC - Federal FOIA Data Solutions</title>
+   <style>
+   /* CSS Reset for full screen display */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
 }
-
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   height: 100%;
 }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #1B365D;
-            background: #FFFFFF;
-        }
-
-        .container {
-            max-width: none;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
-            color: #FFFFFF;
-            padding: 80px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+           line-height: 1.6;
+           color: #1B365D;
+           background: #FFFFFF;
+       }
+       .container {
+           max-width: none;
+           margin: 0 auto;
+           padding: 0;
+       }
+       /* Hero Section */
+       .hero {
+           background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+           color: #FFFFFF;
+           padding: 80px 0;
+           text-align: center;
+           position: relative;
+           overflow: hidden;
+       }
+       .hero::before {
+           content: '';
+           position: absolute;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+           opacity: 0.3;
+       }
+       .hero-content {
+           position: relative;
+           z-index: 2;
+       }
 
         .hero h1 {
             font-size: 3.5em;
