@@ -27,9 +27,9 @@ html, body {
         }
 
         .container {
-            max-width: 1200px;
+            max-width: none;
             margin: 0 auto;
-            padding: 0;
+            padding: 0 20px;
         }
 
         /* Hero Section */
