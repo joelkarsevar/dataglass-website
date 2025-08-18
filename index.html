@@ -29,6 +29,13 @@ html, body {
         .container {
             max-width: none;
             margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Full width container for sections that should have no padding */
+        .full-width-container {
+            max-width: none;
+            margin: 0 auto;
             padding: 0;
         }
 
@@ -152,10 +159,18 @@ html, body {
         }
 
         .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 60px;
             align-items: center;
+        }
+
+        .about-text {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .about-text p {
@@ -163,6 +178,7 @@ html, body {
             font-size: 1.1em;
             margin-bottom: 20px;
             line-height: 1.7;
+            padding: 0 20px;
         }
 
         .about-image {
@@ -206,11 +222,18 @@ html, body {
             background: #F8F9FA;
         }
 
+        .services .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin-top: 60px;
+            padding: 0 20px;
         }
 
         .service-card {
@@ -260,11 +283,18 @@ html, body {
             background: #FFFFFF;
         }
 
+        .experience .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
         .experience-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin-top: 60px;
+            padding: 0 20px;
         }
 
         .experience-card {
@@ -492,7 +522,7 @@ html, body {
 <body>
     <main>
         <section id="home" class="hero">
-            <div class="container">
+            <div class="full-width-container">
                 <div class="hero-content">
                     <div style="display: flex; justify-content: center; margin-bottom: 40px;">
                         <svg style="height: 200px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
@@ -568,8 +598,9 @@ html, body {
                     <h2>About Me</h2>
                     <p>Federal FOIA expertise with deep government experience</p>
                 </div>
-                <div class="about-content">
-                    <div class="about-text">
+            </div>
+            <div class="about-content">
+                <div class="about-text">
                         <p>As the primary data analyst for FOIA at the Department of Veterans Affairs, I've developed unparalleled expertise in navigating the complexities of federal transparency requirements and extracting actionable insights from government datasets.</p>
                         <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
                         <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
