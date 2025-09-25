@@ -122,15 +122,22 @@ html, body {
         .powerbi-container {
             background: #FFFFFF;
             border-radius: 12px;
-            padding: 80px 40px;
+            padding: 40px;
             box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
             text-align: center;
             min-height: 400px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-top: 40px;
+        }
+
+        .powerbi-container iframe {
+            width: 100%;
+            max-width: 1024px;
+            height: 612px;
+            border: none;
+            border-radius: 8px;
         }
 
         .powerbi-placeholder {
@@ -394,14 +401,20 @@ html, body {
             opacity: 0.9;
         }
 
+        .connect-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
         .connect-card {
             background: #FFFFFF;
             padding: 40px;
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
             transition: all 0.3s ease;
         }
 
@@ -442,6 +455,63 @@ html, body {
         }
 
         .connect-link:hover {
+            background: #0F2A4A;
+            transform: translateY(-2px);
+        }
+
+        /* Contact Form Styles */
+        .contact-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1B365D;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1B365D;
+            box-shadow: 0 0 0 3px rgba(27, 54, 93, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: #1B365D;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
             background: #0F2A4A;
             transform: translateY(-2px);
         }
@@ -516,6 +586,11 @@ html, body {
             .experience-grid {
                 grid-template-columns: 1fr;
             }
+
+            .connect-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
         }
     </style>
 </head>
@@ -524,8 +599,8 @@ html, body {
         <section id="home" class="hero">
             <div class="full-width-container">
                 <div class="hero-content">
-                    <div style="display: flex; justify-content: center; margin-bottom: 40px;">
-                        <svg style="height: 200px;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px;">
+                        <svg style="height: 120px; width: auto;" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
                           <defs>
                             <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                               <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
@@ -577,11 +652,12 @@ html, body {
             <div class="container">
                 <div class="section-title">
                     <h2>FOIA Analytics Dashboard</h2>
-                    <p>Interactive insights from federal data sources</p>
+                    <p>Yearly FOIA statistics at a glance</p>
                 </div>
                 <div class="powerbi-container">
-                                    <h3>🚀 Dynamic FOIA Analytic Reporting Tool
-<iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                    <iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9&pageName=1c3ea7ef9e0eb4bb7472" frameborder="0" allowFullScreen="true"></iframe>
+                </div>
+            </div>
             <div class="container">
                 <div class="section-title">
                     <h2>About Me</h2>
@@ -724,14 +800,48 @@ html, body {
                 <div class="connect-content">
                     <h2>Connect With Me</h2>
                     <p>Let's discuss how federal data can drive your organization's success</p>
-                    <div class="connect-card">
-                        <div class="connect-icon">🔗</div>
-                        <h3>LinkedIn</h3>
-                        <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
-                        <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">
-                            <span>View LinkedIn Profile</span>
-                            <span>→</span>
-                        </a>
+                    <div class="connect-grid">
+                        <div class="connect-card">
+                            <div class="connect-icon">🔗</div>
+                            <h3>LinkedIn</h3>
+                            <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
+                            <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">
+                                <span>View LinkedIn Profile</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+                        <div class="connect-card">
+                            <div class="connect-icon">📧</div>
+                            <h3>Get In Touch</h3>
+                            <p>Ready to transform your data challenges? Send me a message and let's start the conversation.</p>
+                            <form class="contact-form" action="https://formsubmit.co/joel@dataglass.com" method="POST">
+                                <input type="hidden" name="_subject" value="New Contact from Data Glass Website">
+                                <input type="hidden" name="_captcha" value="false">
+                                <input type="hidden" name="_next" value="https://joelkarsevar.github.io/dataglass-website">
+                                
+                                <div class="form-group">
+                                    <label for="name">Name *</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="organization">Company/Agency</label>
+                                    <input type="text" id="organization" name="organization">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="message">Message *</label>
+                                    <textarea id="message" name="message" placeholder="Let's start a conversation about FOIA, data challenges, and how I can help!" required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Send Message</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
