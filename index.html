@@ -156,6 +156,109 @@ html, body {
             font-size: 1.1em;
         }
 
+        /* FOIA Agency Rankings Section */
+        .rankings-section {
+            padding: 80px 0;
+            background: #FFFFFF;
+        }
+
+        .methodology-text {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 40px;
+            text-align: left;
+        }
+
+        .methodology-text p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .methodology-text h3 {
+            color: #1B365D;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        /* Links Section */
+        .links-section {
+            padding: 80px 0;
+            background: #F8F9FA;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .link-card {
+            background: #FFFFFF;
+            padding: 30px 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #1B365D;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
+        }
+
+        .link-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1B365D, #2A4A7A);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #FFFFFF;
+            font-size: 20px;
+        }
+
+        .link-card h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1B365D;
+        }
+
+        .link-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+
+        .link-button {
+            display: inline-block;
+            background: #1B365D;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .link-button:hover {
+            background: #0F2A4A;
+            transform: translateY(-2px);
+        }
+
         /* About Section */
         .about {
             padding: 80px 0;
@@ -220,7 +323,7 @@ html, body {
             to { opacity: 0.8; }
         }
 
-        /* Services Section */
+        /* Services Section (Now "How I Can Help") */
         .services {
             padding: 80px 0;
             background: #F8F9FA;
@@ -588,6 +691,10 @@ html, body {
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -655,6 +762,89 @@ html, body {
                    <iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9&pageName=1c3ea7ef9e0eb4bb7472" frameborder="0" allowFullScreen="true"></iframe>
                 </div>
             </div>
+        </section>
+
+        <!-- NEW: FOIA Agency Rankings Section -->
+        <section id="rankings" class="rankings-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>FOIA Agency Rankings</h2>
+                    <p>Comprehensive agency performance analysis and scoring</p>
+                </div>
+                
+                <!-- Placeholder for Power BI Embed - Replace with your embed code -->
+                <div class="powerbi-container">
+                    <div class="powerbi-placeholder">
+                        <h3>🏆 Agency Rankings Dashboard</h3>
+                        <p>Power BI report will be embedded here</p>
+                        <p style="font-size: 0.9em; margin-top: 10px; color: #999;">Replace this placeholder with your iframe embed code</p>
+                    </div>
+                    <!-- WHEN READY, REPLACE THE ABOVE PLACEHOLDER WITH YOUR IFRAME:
+                    <iframe title="YOUR TITLE" width="1024" height="612" 
+                        src="YOUR_POWERBI_EMBED_URL" 
+                        frameborder="0" allowFullScreen="true"></iframe>
+                    -->
+                </div>
+
+                <!-- Methodology Text - Replace with your actual methodology -->
+                <div class="methodology-text">
+                    <h3>Scoring Methodology</h3>
+                    <p><strong>PLACEHOLDER TEXT:</strong> Add your scoring methodology description here. Explain how agencies are evaluated, what metrics are used, and how the rankings are calculated.</p>
+                    
+                    <p>For example, you might want to include:</p>
+                    <ul style="margin-left: 40px; color: #666;">
+                        <li>Key performance indicators (KPIs) measured</li>
+                        <li>Data sources and timeframes</li>
+                        <li>Weighting methodology</li>
+                        <li>How scores are calculated</li>
+                        <li>Any relevant notes or disclaimers</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Links Section -->
+        <section id="links" class="links-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>FOIA Resources</h2>
+                    <p>Essential links for FOIA professionals and researchers</p>
+                </div>
+                <div class="links-grid">
+                    <div class="link-card">
+                        <div class="link-icon">🚀</div>
+                        <h3>NextGen FOIA Showcase</h3>
+                        <p>Explore innovative FOIA programs and best practices from the Chief FOIA Officers Council.</p>
+                        <a href="https://www.foia.gov/chief-foia-officers-council/nexgen2.0-foia-showcase" target="_blank" class="link-button">Visit Showcase →</a>
+                    </div>
+                    
+                    <div class="link-card">
+                        <div class="link-icon">📚</div>
+                        <h3>The FOIA Project</h3>
+                        <p>Comprehensive research and analysis on Freedom of Information Act implementation and trends.</p>
+                        <a href="https://foiaproject.org/" target="_blank" class="link-button">Explore Project →</a>
+                    </div>
+                    
+                    <div class="link-card">
+                        <div class="link-icon">🎓</div>
+                        <h3>FOIA University</h3>
+                        <p>Professional training and education for FOIA practitioners and government transparency professionals.</p>
+                        <a href="#" class="link-button" style="background: #999; cursor: not-allowed;">Link Coming Soon</a>
+                        <!-- UPDATE THIS LINK WHEN AVAILABLE -->
+                    </div>
+                    
+                    <div class="link-card">
+                        <div class="link-icon">📊</div>
+                        <h3>Annual FOIA Reports</h3>
+                        <p>Official source data: Agency annual reports on FOIA processing, requests, and compliance metrics.</p>
+                        <a href="https://www.foia.gov/reports.html" target="_blank" class="link-button">View Reports →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section - Keeping current text, you can update later -->
+        <section id="about" class="powerbi-section">
             <div class="container">
                 <div class="section-title">
                     <h2>About Me</h2>
@@ -663,21 +853,22 @@ html, body {
             </div>
             <div class="about-content">
                 <div class="about-text">
-                        <p>As the primary data analyst for FOIA at the Department of Veterans Affairs, I've developed unparalleled expertise in navigating the complexities of federal transparency requirements and extracting actionable insights from government datasets.</p>
-                        <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
-                        <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
-                        <p>When federal agencies work with Data Glass, they get more than consulting—they get a partner who understands government operations from the inside and delivers measurable improvements to both transparency and efficiency.</p>
-                        <p style="margin-top: 30px; font-style: italic; color: #1B365D; font-weight: 500; font-size: 1.2em;">What data challenge can I help you solve?<br><span style="margin-left: 20px;">-Joel</span></p>
-                    </div>
+                    <!-- CURRENT TEXT - Update this when ready with your new content -->
+                    <p>As the primary data analyst for FOIA at the Department of Veterans Affairs, I've developed unparalleled expertise in navigating the complexities of federal transparency requirements and extracting actionable insights from government datasets.</p>
+                    <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
+                    <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
+                    <p>When federal agencies work with Data Glass, they get more than consulting—they get a partner who understands government operations from the inside and delivers measurable improvements to both transparency and efficiency.</p>
+                    <p style="margin-top: 30px; font-style: italic; color: #1B365D; font-weight: 500; font-size: 1.2em;">What data challenge can I help you solve?<br><span style="margin-left: 20px;">-Joel</span></p>
                 </div>
             </div>
         </section>
 
+        <!-- UPDATED: Services Section renamed to "How I Can Help" -->
         <section id="services" class="services">
             <div class="container">
                 <div class="section-title">
-                    <h2>Services Offered</h2>
-                    <p>Comprehensive FOIA data solutions to illuminate government operations and enhance transparency</p>
+                    <h2>How I Can Help</h2>
+                    <p>Practical solutions to your FOIA data challenges</p>
                 </div>
                 <div class="services-grid">
                     <div class="service-card">
@@ -902,7 +1093,7 @@ html, body {
         }, observerOptions);
 
         // Observe elements for animations
-        document.querySelectorAll('.service-card, .about-text, .powerbi-container, .experience-card, .connect-card').forEach(el => {
+        document.querySelectorAll('.service-card, .about-text, .powerbi-container, .experience-card, .connect-card, .link-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
