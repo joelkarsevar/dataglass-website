@@ -1281,34 +1281,59 @@ html, body {
                                 </tr>
                                 <tr class="table-detail-row" id="processing-detail">
                                     <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Average days to process simple and complex track requests.</p>
+                                        <p><strong>What it measures:</strong> Percentage of requests processed within 20 days for both simple track and complex track requests.</p>
                                         
-                                        <p><strong>Scoring approach:</strong> Split evenly between simple track (15 points) and complex track (15 points). Uses a 7-band competitive system that ranks agencies within their size category, with bonus points awarded to top performers. Agencies are compared only against peers with similar request volumes to ensure fair evaluation.</p>
+                                        <p><strong>Scoring approach:</strong> Split evenly between simple track (15 points max) and complex track (15 points max). Each track uses a base point system with performance-based bonus points. Agencies are ranked within their size category, and those meeting threshold percentages earn additional bonus points based on their percentile ranking among peers.</p>
                                         
-                                        <h5>7-Band Scoring System</h5>
-                                        <p>Agencies are ranked within their size category and assigned to performance bands. Points are awarded separately for simple track and complex track processing times.</p>
+                                        <h5>Simple Track Scoring (15 points max)</h5>
+                                        <p><strong>Base Points:</strong> Awarded based on percentage of simple track requests processed under 20 days.</p>
                                         
                                         <table class="detail-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Performance Band</th>
-                                                    <th>Points (per track)</th>
+                                                    <th>% Processed Under 20 Days</th>
+                                                    <th>Base Points</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td>Band 1 (Fastest)</td><td>15</td></tr>
-                                                <tr><td>Band 2</td><td>13</td></tr>
-                                                <tr><td>Band 3</td><td>11</td></tr>
-                                                <tr><td>Band 4</td><td>9</td></tr>
-                                                <tr><td>Band 5</td><td>7</td></tr>
-                                                <tr><td>Band 6</td><td>4</td></tr>
-                                                <tr><td>Band 7 (Slowest)</td><td>2</td></tr>
+                                                <tr><td>≥90%</td><td>13</td></tr>
+                                                <tr><td>85-89%</td><td>11</td></tr>
+                                                <tr><td>80-84%</td><td>9</td></tr>
+                                                <tr><td>75-79%</td><td>7</td></tr>
+                                                <tr><td>70-74%</td><td>5</td></tr>
+                                                <tr><td>65-69%</td><td>3</td></tr>
+                                                <tr><td><65%</td><td>1</td></tr>
                                             </tbody>
                                         </table>
                                         
-                                        <p style="margin-top: 15px;"><em>Note: Maximum 30 points possible (15 for simple track + 15 for complex track)</em></p>
+                                        <p><strong>Bonus Points:</strong> Agencies achieving ≥80% earn bonus points (1-2 points) based on their percentile ranking within their size category, for a maximum of 15 total points.</p>
                                         
-                                        <p><strong>Why it matters:</strong> Fast response times demonstrate commitment to transparency and efficient operations.</p>
+                                        <h5>Complex Track Scoring (15 points max)</h5>
+                                        <p><strong>Base Points:</strong> Awarded based on percentage of complex track requests processed under 20 days.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>% Processed Under 20 Days</th>
+                                                    <th>Base Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>≥70%</td><td>13</td></tr>
+                                                <tr><td>60-69%</td><td>11</td></tr>
+                                                <tr><td>50-59%</td><td>9</td></tr>
+                                                <tr><td>40-49%</td><td>7</td></tr>
+                                                <tr><td>30-39%</td><td>5</td></tr>
+                                                <tr><td>25-29%</td><td>3</td></tr>
+                                                <tr><td><25%</td><td>1</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Bonus Points:</strong> Agencies achieving ≥60% earn bonus points (1-2 points) based on their percentile ranking within their size category, for a maximum of 15 total points.</p>
+                                        
+                                        <p style="margin-top: 15px;"><em>Note: Total score is the sum of simple track points + complex track points, with a maximum of 30 points possible. If an agency has only one track type, that track's score is doubled.</em></p>
+                                        
+                                        <p><strong>Why it matters:</strong> Processing the majority of requests within 20 days demonstrates strong operational efficiency and commitment to timely transparency. The 20-day threshold represents best-practice responsiveness in FOIA operations.</p>
                                     </td>
                                 </tr>
                                 
@@ -1319,38 +1344,80 @@ html, body {
                                 </tr>
                                 <tr class="table-detail-row" id="backlog-detail">
                                     <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Three dimensions of backlog health—growth rate (15 pts), absolute size (10 pts), and oldest case age (5 pts).</p>
+                                        <p><strong>What it measures:</strong> Three dimensions of backlog health—backlog trajectory (15 pts), absolute size (10 pts), and oldest case age (5 pts).</p>
                                         
-                                        <h5>Component 1: Backlog Performance Index (15 points)</h5>
-                                        <p>Measures whether backlogs are growing or shrinking relative to processing capacity using the formula: <em>(Current Year Backlog - Previous Year Backlog) ÷ Requests Processed</em>.</p>
+                                        <h5>Component 1: Backlog Performance Index - BPI (15 points)</h5>
+                                        <p><strong>Formula:</strong> <em>(Current Year Backlog - Previous Year Backlog) ÷ Requests Processed</em></p>
+                                        
+                                        <p><strong>Understanding BPI values:</strong></p>
+                                        <ul>
+                                            <li><strong>Negative BPI (e.g., -0.25):</strong> Backlog is shrinking. Agency processed more cases than it added. <em>This is excellent performance.</em></li>
+                                            <li><strong>Zero BPI (0.00):</strong> Backlog is stable. Agency is keeping pace with incoming requests. <em>This is good performance.</em></li>
+                                            <li><strong>Positive BPI (e.g., +0.35):</strong> Backlog is growing. Agency is adding cases faster than it processes them. <em>This indicates operational challenges.</em></li>
+                                        </ul>
+                                        
+                                        <p><strong>Example:</strong> An agency with 500 requests in backlog last year, 600 this year, and 1,000 processed has BPI = (600-500)/1,000 = 0.10, meaning their backlog grew by 10% of their processing capacity.</p>
                                         
                                         <table class="detail-table">
                                             <thead>
                                                 <tr>
                                                     <th>BPI Value</th>
                                                     <th>Points</th>
+                                                    <th>Meaning</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td>≤0.00</td><td>15</td></tr>
-                                                <tr><td>0.01-0.05</td><td>14</td></tr>
-                                                <tr><td>0.06-0.12</td><td>12</td></tr>
-                                                <tr><td>0.13-0.20</td><td>10</td></tr>
-                                                <tr><td>0.21-0.30</td><td>8</td></tr>
-                                                <tr><td>0.31-0.45</td><td>6</td></tr>
-                                                <tr><td>0.46-0.65</td><td>4</td></tr>
-                                                <tr><td>0.66-1.00</td><td>2</td></tr>
-                                                <tr><td>>1.00</td><td>1</td></tr>
+                                                <tr><td>≤0.00</td><td>15</td><td>Backlog shrinking or stable</td></tr>
+                                                <tr><td>0.01-0.05</td><td>14</td><td>Minimal growth (1-5% of capacity)</td></tr>
+                                                <tr><td>0.06-0.12</td><td>12</td><td>Modest growth (6-12% of capacity)</td></tr>
+                                                <tr><td>0.13-0.20</td><td>10</td><td>Moderate growth (13-20% of capacity)</td></tr>
+                                                <tr><td>0.21-0.30</td><td>8</td><td>Concerning growth (21-30% of capacity)</td></tr>
+                                                <tr><td>0.31-0.45</td><td>6</td><td>Significant growth (31-45% of capacity)</td></tr>
+                                                <tr><td>0.46-0.65</td><td>4</td><td>Substantial growth (46-65% of capacity)</td></tr>
+                                                <tr><td>0.66-1.00</td><td>2</td><td>Severe growth (66-100% of capacity)</td></tr>
+                                                <tr><td>>1.00</td><td>1</td><td>Critical growth (backlog grew more than entire year's processing)</td></tr>
                                             </tbody>
                                         </table>
                                         
                                         <h5>Component 2: Backlog Volume (10 points)</h5>
-                                        <p>Government-wide comparison of absolute backlog size using LOG10 transformation. This ensures a 10× increase in backlog (e.g., 100→1,000 or 10,000→100,000) results in proportional point penalties regardless of agency size, preventing extreme outliers from distorting the scale.</p>
+                                        <p><strong>Method:</strong> Government-wide comparison of absolute backlog size using LOG10 transformation to ensure fair scoring across all agency sizes.</p>
+                                        
+                                        <p><strong>Why LOG10?</strong> This mathematical transformation ensures that a 10× increase in backlog results in the same proportional point penalty, whether an agency grows from 100 to 1,000 cases or from 10,000 to 100,000 cases. This prevents agencies with extremely large backlogs from distorting the scoring scale.</p>
+                                        
+                                        <p><strong>How it works:</strong> Each agency's backlog is compared to the government-wide minimum and maximum backlog for that fiscal year. Agencies with smaller backlogs (closer to the minimum) receive higher scores, while agencies with larger backlogs (closer to the maximum) receive lower scores.</p>
+                                        
+                                        <p><em>Maximum: 10 points (smallest backlog in comparison group)<br>Minimum: 0 points (largest backlog in comparison group)</em></p>
                                         
                                         <h5>Component 3: Persistence Score (5 points)</h5>
-                                        <p>Evaluates the age of an agency's 10 oldest pending requests. Each case receives 0-10 points based on age bands (<300 days = 10 pts, declining to ≥5,000 days = 0 pts). The 10 scores are averaged and scaled to a maximum of 5 points.</p>
+                                        <p><strong>Method:</strong> Evaluates the age of an agency's 10 oldest pending requests. Each case receives 0-10 points based on age bands, then all 10 scores are averaged and scaled to a maximum of 5 points.</p>
                                         
-                                        <p><strong>Why it matters:</strong> Effective backlog management prevents multi-year delays and demonstrates sustainable operations.</p>
+                                        <p><strong>Age Band Scoring (per case):</strong></p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Days Pending (Business Days)</th>
+                                                    <th>Points (per case)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td><300 days</td><td>10</td></tr>
+                                                <tr><td>300-499 days</td><td>9</td></tr>
+                                                <tr><td>500-749 days</td><td>8</td></tr>
+                                                <tr><td>750-999 days</td><td>7</td></tr>
+                                                <tr><td>1,000-1,499 days</td><td>6</td></tr>
+                                                <tr><td>1,500-1,999 days</td><td>5</td></tr>
+                                                <tr><td>2,000-2,499 days</td><td>4</td></tr>
+                                                <tr><td>2,500-2,999 days</td><td>3</td></tr>
+                                                <tr><td>3,000-3,499 days</td><td>2</td></tr>
+                                                <tr><td>3,500-4,999 days</td><td>1</td></tr>
+                                                <tr><td>≥5,000 days</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Calculation example:</strong> If the 10 oldest cases have ages that score 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (averaging to 5.5), the persistence score is 5.5 / 10 × 5 = 2.75 points.</p>
+                                        
+                                        <p><strong>Why it matters:</strong> Effective backlog management prevents multi-year delays and demonstrates sustainable operations. The BPI shows trajectory, volume shows current burden, and persistence reveals whether the oldest cases are being forgotten or actively resolved.</p>
                                     </td>
                                 </tr>
                                 
@@ -1361,10 +1428,11 @@ html, body {
                                 </tr>
                                 <tr class="table-detail-row" id="cost-detail">
                                     <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Processing costs per request (10 pts) and litigation expenses per request (5 pts), evaluated using government-wide thresholds.</p>
+                                        <p><strong>What it measures:</strong> Total costs per request (10 pts) and litigation expenses per request (5 pts), evaluated using government-wide thresholds.</p>
                                         
                                         <h5>Component 1: Cost Per Request (10 points)</h5>
-                                        <p>Total program costs divided by requests processed.</p>
+                                        <p><strong>Formula:</strong> <em>Total Cost ÷ Requests Processed</em></p>
+                                        <p>Includes all FOIA program costs (personnel, technology, operations) divided by the number of requests processed during the fiscal year.</p>
                                         
                                         <table class="detail-table">
                                             <thead>
@@ -1386,7 +1454,8 @@ html, body {
                                         </table>
                                         
                                         <h5>Component 2: Litigation Cost Per Request (5 points)</h5>
-                                        <p>Litigation-related costs divided by requests received.</p>
+                                        <p><strong>Formula:</strong> <em>Litigation Costs ÷ Requests Received</em></p>
+                                        <p>Litigation-related expenses divided by the total number of requests received during the fiscal year.</p>
                                         
                                         <table class="detail-table">
                                             <thead>
@@ -1416,10 +1485,12 @@ html, body {
                                 </tr>
                                 <tr class="table-detail-row" id="appeals-detail">
                                     <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Quality of initial FOIA decisions through appeal rate (8 pts) and appeals backlog management (2 pts).</p>
+                                        <p><strong>What it measures:</strong> Appeal rate (8 pts) and total backlogged appeals (2 pts).</p>
                                         
                                         <h5>Component 1: Appeal Rate (8 points)</h5>
-                                        <p>Percentage of requests that generate appeals (appeals received ÷ requests received). Lower rates indicate higher-quality initial decisions.</p>
+                                        <p><strong>Definition:</strong> Appeal rate is the percentage of incoming FOIA requests that result in an administrative appeal.</p>
+                                        
+                                        <p><strong>Formula:</strong> <em>(Appeals Received ÷ Requests Received) × 100</em></p>
                                         
                                         <table class="detail-table">
                                             <thead>
@@ -1442,9 +1513,11 @@ html, body {
                                         </table>
                                         
                                         <h5>Component 2: Appeals Backlog (2 points)</h5>
-                                        <p>Government-wide comparison of pending appeals using LOG10 transformation to ensure proportional scoring regardless of backlog size.</p>
+                                        <p><strong>Method:</strong> Government-wide comparison using LOG10 transformation to ensure fair scoring across all agency sizes. This transformation treats a 10× increase in backlog (e.g., 10→100 or 1,000→10,000) as equivalent, preventing extreme outliers from distorting the scale.</p>
                                         
-                                        <p><strong>Why it matters:</strong> Low appeal rates signal accurate, well-justified decisions that reduce downstream litigation and demonstrate commitment to correct initial determinations.</p>
+                                        <p>Agencies with smaller appeals backlogs receive higher scores (up to 2 points), while those with larger backlogs receive lower scores (down to 0 points).</p>
+                                        
+                                        <p><strong>Why it matters:</strong> Low appeal rates signal accurate initial decisions that requesters accept without challenge, reducing downstream litigation and administrative burden. Small appeals backlogs demonstrate efficient processing and prevent delays from compounding.</p>
                                     </td>
                                 </tr>
                                 
@@ -1489,7 +1562,7 @@ html, body {
                                 </tr>
                                 <tr class="table-detail-row" id="staff-detail">
                                     <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Workforce productivity based on requests processed per total full-time staff member, evaluated within size categories.</p>
+                                        <p><strong>What it measures:</strong> Staff efficiency based on requests processed per total full-time staff member, evaluated within size categories.</p>
                                         
                                         <p><strong>Scoring approach:</strong> Agencies are ranked by efficiency rate (requests processed ÷ total full-time staff). Only the top 5 agencies in each size category earn points:</p>
                                         
@@ -1512,7 +1585,7 @@ html, body {
                                         
                                         <p><strong>Staff calculation:</strong> Total full-time staff includes both full-time employees and employees that handle FOIA part-time.</p>
                                         
-                                        <p><strong>Why it matters:</strong> High productivity indicates effective workforce deployment and process optimization.</p>
+                                        <p><strong>Why it matters:</strong> High staff efficiency can indicate effective workforce deployment and process optimization.</p>
                                     </td>
                                 </tr>
                                 
