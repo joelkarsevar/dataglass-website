@@ -39,6 +39,204 @@ html, body {
             padding: 0;
         }
 
+        /* Navigation Bar Styles */
+        nav {
+            background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: 700;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            opacity: 0.9;
+        }
+
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Dropdown Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle::after {
+            content: ' ▼';
+            font-size: 0.7em;
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            list-style: none;
+            padding: 10px 0;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            padding: 0;
+        }
+
+        .dropdown-menu a {
+            color: #1B365D;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: #F8F9FA;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+                flex-direction: column;
+                gap: 0;
+                padding: 20px 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+
+            .nav-menu.active {
+                max-height: 600px;
+            }
+
+            .nav-item {
+                padding: 0 40px;
+            }
+
+            .nav-link {
+                padding: 15px 0;
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(255,255,255,0.1);
+                margin: 10px 0;
+                display: none;
+            }
+
+            .nav-dropdown.active .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-menu a {
+                color: white;
+                padding: 10px 20px;
+            }
+
+            .dropdown-menu a:hover {
+                background: rgba(255,255,255,0.1);
+            }
+        }
+
+        /* Add padding to body to account for fixed nav */
+        body {
+            padding-top: 70px;
+        }
+
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
@@ -230,8 +428,73 @@ html, body {
             color: #1B365D;
         }
 
-        .methodology-table tr:hover td {
+        .methodology-table tbody tr {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .methodology-table tbody tr:hover {
             background: #F8F9FA;
+        }
+
+        .methodology-table tbody tr.clickable-row {
+            position: relative;
+        }
+
+        .methodology-table tbody tr.clickable-row::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9em;
+            color: #1B365D;
+            transition: transform 0.3s ease;
+        }
+
+        .methodology-table tbody tr.clickable-row.active::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* Detail rows that expand from table */
+        .table-detail-row {
+            display: none;
+            background: white;
+        }
+
+        .table-detail-row.active {
+            display: table-row;
+        }
+
+        .table-detail-cell {
+            padding: 30px 25px;
+            border-bottom: 2px solid #1B365D;
+            text-align: left;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .table-detail-cell h5 {
+            color: #1B365D;
+            font-size: 1.1em;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .table-detail-cell p {
+            margin-bottom: 15px;
+        }
+
+        .table-detail-cell strong {
+            color: #1B365D;
+        }
+
+        .table-detail-cell ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        .table-detail-cell li {
+            margin-bottom: 8px;
         }
 
         .accordion-item {
@@ -861,6 +1124,57 @@ html, body {
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="#home" class="nav-logo">
+                <div class="nav-logo-icon">📊</div>
+                <span>DATA GLASS</span>
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                ☰
+            </button>
+
+            <!-- Navigation Menu -->
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                
+                <li class="nav-item nav-dropdown">
+                    <a href="#analytics" class="nav-link dropdown-toggle">FOIA Data</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#analytics">Analytics Dashboard</a></li>
+                        <li><a href="#rankings">Agency Rankings</a></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#links" class="nav-link">Resources</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#services" class="nav-link">How I Can Help</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#experience" class="nav-link">Experience</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Connect</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <main>
         <section id="home" class="hero">
             <div class="full-width-container">
@@ -931,7 +1245,7 @@ html, body {
             <div class="container">
                 <div class="section-title">
                     <h2>FOIA Agency Rankings</h2>
-                    <p>Comprehensive agency performance analysis and scoring</p>
+                    <p>How agencies are measured and ranked</p>
                 </div>
                 
                 <!-- Placeholder for Power BI Embed - Replace with your embed code -->
@@ -950,351 +1264,297 @@ html, body {
                         <p style="max-width: 900px; margin: 0 auto 20px; color: #666;"><strong>Only parent agencies are scored</strong> to prevent double-counting organizational performance, using data from official annual FOIA reports covering fiscal years 2013-2024.</p>
                         
                         <h4>Scoring Framework (100 Points)</h4>
+                        <p style="margin: 10px auto 20px; color: #999; font-size: 0.95em;">Click any category to view detailed scoring methodology</p>
                         
                         <table class="methodology-table">
                             <thead>
                                 <tr>
                                     <th>Category</th>
                                     <th>Points</th>
-                                    <th>Focus</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- 1. Processing Time -->
+                                <tr class="clickable-row" data-target="processing-detail">
                                     <td><strong>Processing Time</strong></td>
                                     <td>30</td>
-                                    <td>Response speed and timeliness</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="processing-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Average days to process simple and complex track requests.</p>
+                                        
+                                        <p><strong>Scoring approach:</strong> Split evenly between simple track (15 points) and complex track (15 points). Uses a 7-band competitive system that ranks agencies within their size category, with bonus points awarded to top performers. Agencies are compared only against peers with similar request volumes to ensure fair evaluation.</p>
+                                        
+                                        <h5>7-Band Scoring System</h5>
+                                        <p>Agencies are ranked within their size category and assigned to performance bands. Points are awarded separately for simple track and complex track processing times.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Performance Band</th>
+                                                    <th>Points (per track)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>Band 1 (Fastest)</td><td>15</td></tr>
+                                                <tr><td>Band 2</td><td>13</td></tr>
+                                                <tr><td>Band 3</td><td>11</td></tr>
+                                                <tr><td>Band 4</td><td>9</td></tr>
+                                                <tr><td>Band 5</td><td>7</td></tr>
+                                                <tr><td>Band 6</td><td>4</td></tr>
+                                                <tr><td>Band 7 (Slowest)</td><td>2</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p style="margin-top: 15px;"><em>Note: Maximum 30 points possible (15 for simple track + 15 for complex track)</em></p>
+                                        
+                                        <p><strong>Why it matters:</strong> Fast response times demonstrate commitment to transparency and efficient operations.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 2. Backlog Management -->
+                                <tr class="clickable-row" data-target="backlog-detail">
                                     <td><strong>Backlog Management</strong></td>
                                     <td>30</td>
-                                    <td>Workload control and case aging</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="backlog-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Three dimensions of backlog health—growth rate (15 pts), absolute size (10 pts), and oldest case age (5 pts).</p>
+                                        
+                                        <h5>Component 1: Backlog Performance Index (15 points)</h5>
+                                        <p>Measures whether backlogs are growing or shrinking relative to processing capacity using the formula: <em>(Current Year Backlog - Previous Year Backlog) ÷ Requests Processed</em>.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>BPI Value</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>≤0.00</td><td>15</td></tr>
+                                                <tr><td>0.01-0.05</td><td>14</td></tr>
+                                                <tr><td>0.06-0.12</td><td>12</td></tr>
+                                                <tr><td>0.13-0.20</td><td>10</td></tr>
+                                                <tr><td>0.21-0.30</td><td>8</td></tr>
+                                                <tr><td>0.31-0.45</td><td>6</td></tr>
+                                                <tr><td>0.46-0.65</td><td>4</td></tr>
+                                                <tr><td>0.66-1.00</td><td>2</td></tr>
+                                                <tr><td>>1.00</td><td>1</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <h5>Component 2: Backlog Volume (10 points)</h5>
+                                        <p>Government-wide comparison of absolute backlog size using LOG10 transformation. This ensures a 10× increase in backlog (e.g., 100→1,000 or 10,000→100,000) results in proportional point penalties regardless of agency size, preventing extreme outliers from distorting the scale.</p>
+                                        
+                                        <h5>Component 3: Persistence Score (5 points)</h5>
+                                        <p>Evaluates the age of an agency's 10 oldest pending requests. Each case receives 0-10 points based on age bands (<300 days = 10 pts, declining to ≥5,000 days = 0 pts). The 10 scores are averaged and scaled to a maximum of 5 points.</p>
+                                        
+                                        <p><strong>Why it matters:</strong> Effective backlog management prevents multi-year delays and demonstrates sustainable operations.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 3. Cost Efficiency -->
+                                <tr class="clickable-row" data-target="cost-detail">
                                     <td><strong>Cost Efficiency</strong></td>
                                     <td>15</td>
-                                    <td>Resource utilization</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="cost-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Processing costs per request (10 pts) and litigation expenses per request (5 pts), evaluated using government-wide thresholds.</p>
+                                        
+                                        <h5>Component 1: Cost Per Request (10 points)</h5>
+                                        <p>Total program costs divided by requests processed.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cost Per Request</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>≤$250</td><td>10</td></tr>
+                                                <tr><td>$251-750</td><td>9</td></tr>
+                                                <tr><td>$751-1,500</td><td>8</td></tr>
+                                                <tr><td>$1,501-2,500</td><td>6</td></tr>
+                                                <tr><td>$2,501-4,000</td><td>4</td></tr>
+                                                <tr><td>$4,001-6,000</td><td>2</td></tr>
+                                                <tr><td>$6,001-8,000</td><td>1</td></tr>
+                                                <tr><td>>$8,000</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <h5>Component 2: Litigation Cost Per Request (5 points)</h5>
+                                        <p>Litigation-related costs divided by requests received.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Litigation Cost Per Request</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>$0</td><td>5</td></tr>
+                                                <tr><td>$1-10</td><td>4</td></tr>
+                                                <tr><td>$11-50</td><td>3</td></tr>
+                                                <tr><td>$51-100</td><td>2</td></tr>
+                                                <tr><td>$101-250</td><td>1</td></tr>
+                                                <tr><td>>$250</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Why it matters:</strong> Efficient resource use maximizes transparency while respecting taxpayer dollars. Low litigation costs indicate well-justified decisions that withstand legal challenge.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 4. Appeals Performance -->
+                                <tr class="clickable-row" data-target="appeals-detail">
                                     <td><strong>Appeals Performance</strong></td>
                                     <td>10</td>
-                                    <td>Decision quality and appeals handling</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="appeals-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Quality of initial FOIA decisions through appeal rate (8 pts) and appeals backlog management (2 pts).</p>
+                                        
+                                        <h5>Component 1: Appeal Rate (8 points)</h5>
+                                        <p>Percentage of requests that generate appeals (appeals received ÷ requests received). Lower rates indicate higher-quality initial decisions.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Appeal Rate</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>≤0.50%</td><td>8</td></tr>
+                                                <tr><td>0.51-1.00%</td><td>7</td></tr>
+                                                <tr><td>1.01-1.50%</td><td>6</td></tr>
+                                                <tr><td>1.51-2.50%</td><td>5</td></tr>
+                                                <tr><td>2.51-3.00%</td><td>4</td></tr>
+                                                <tr><td>3.01-4.50%</td><td>3</td></tr>
+                                                <tr><td>4.51-6.50%</td><td>2</td></tr>
+                                                <tr><td>6.51-10.00%</td><td>1</td></tr>
+                                                <tr><td>>10%</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <h5>Component 2: Appeals Backlog (2 points)</h5>
+                                        <p>Government-wide comparison of pending appeals using LOG10 transformation to ensure proportional scoring regardless of backlog size.</p>
+                                        
+                                        <p><strong>Why it matters:</strong> Low appeal rates signal accurate, well-justified decisions that reduce downstream litigation and demonstrate commitment to correct initial determinations.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 5. Fee Collection -->
+                                <tr class="clickable-row" data-target="fee-detail">
                                     <td><strong>Fee Collection</strong></td>
                                     <td>5</td>
-                                    <td>Revenue recovery effectiveness</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="fee-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Effectiveness in recovering program costs through fee collection, evaluated within size categories.</p>
+                                        
+                                        <p><strong>Scoring approach:</strong> Agencies are ranked by fee recovery percentage (fees collected ÷ total costs). Only the top 5 agencies in each size category earn points:</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rank Within Category</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>1st place</td><td>5</td></tr>
+                                                <tr><td>2nd place</td><td>4</td></tr>
+                                                <tr><td>3rd place</td><td>3</td></tr>
+                                                <tr><td>4th place</td><td>2</td></tr>
+                                                <tr><td>5th place</td><td>1</td></tr>
+                                                <tr><td>6th+ place</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Eligibility:</strong> Agencies must collect fees >$0 to qualify for ranking.</p>
+                                        
+                                        <p><strong>Why it matters:</strong> Appropriate fee collection balances public access with cost recovery, ensuring FOIA programs operate sustainably.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 6. Staff Efficiency -->
+                                <tr class="clickable-row" data-target="staff-detail">
                                     <td><strong>Staff Efficiency</strong></td>
                                     <td>5</td>
-                                    <td>Personnel productivity</td>
                                 </tr>
-                                <tr>
+                                <tr class="table-detail-row" id="staff-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Workforce productivity based on requests processed per total full-time staff member, evaluated within size categories.</p>
+                                        
+                                        <p><strong>Scoring approach:</strong> Agencies are ranked by efficiency rate (requests processed ÷ total full-time staff). Only the top 5 agencies in each size category earn points:</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rank Within Category</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>1st place</td><td>5</td></tr>
+                                                <tr><td>2nd place</td><td>4</td></tr>
+                                                <tr><td>3rd place</td><td>3</td></tr>
+                                                <tr><td>4th place</td><td>2</td></tr>
+                                                <tr><td>5th place</td><td>1</td></tr>
+                                                <tr><td>6th+ place</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Staff calculation:</strong> Total full-time staff includes both full-time employees and employees that handle FOIA part-time.</p>
+                                        
+                                        <p><strong>Why it matters:</strong> High productivity indicates effective workforce deployment and process optimization.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- 7. Data Quality -->
+                                <tr class="clickable-row" data-target="quality-detail">
                                     <td><strong>Data Quality</strong></td>
                                     <td>5</td>
-                                    <td>Reporting accuracy</td>
                                 </tr>
+                                <tr class="table-detail-row" id="quality-detail">
+                                    <td colspan="2" class="table-detail-cell">
+                                        <p><strong>What it measures:</strong> Accuracy and completeness of reported FOIA data through track type validation.</p>
+                                        
+                                        <p><strong>Validation method:</strong> Compares sum of track-specific totals (simple + complex + expedited) against reported total requests processed using the formula: <em>(Simple + Complex + Expedited) ÷ Total Requests Processed</em>.</p>
+                                        
+                                        <table class="detail-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Validation Accuracy</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>100%</td><td>5</td></tr>
+                                                <tr><td>≥99.9%</td><td>4</td></tr>
+                                                <tr><td>99.5-99.8%</td><td>3</td></tr>
+                                                <tr><td>98-99.4%</td><td>2</td></tr>
+                                                <tr><td>95-97.9%</td><td>1</td></tr>
+                                                <tr><td><95%</td><td>0</td></tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <p><strong>Why it matters:</strong> Perfect alignment indicates complete data accounting with no missing or miscategorized cases. Accurate data enables informed policy decisions and maintains public trust in transparency metrics.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Total Row -->
                                 <tr>
                                     <td><strong>Total</strong></td>
                                     <td><strong>100</strong></td>
-                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-
-                    <!-- Accordion Items -->
-                    <div class="accordion-container">
-                        
-                        <!-- 1. Processing Time -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Processing Time (30 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Average days to process simple and complex track requests.</p>
-                                    
-                                    <p><strong>Scoring approach:</strong> Split evenly between simple track (15 points) and complex track (15 points). Uses a 7-band competitive system that ranks agencies within their size category, with bonus points awarded to top performers. Agencies are compared only against peers with similar request volumes to ensure fair evaluation.</p>
-                                    
-                                    <h5>7-Band Scoring System</h5>
-                                    <p>Agencies are ranked within their size category and assigned to performance bands. Points are awarded separately for simple track and complex track processing times.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Performance Band</th>
-                                                <th>Points (per track)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>Band 1 (Fastest)</td><td>15</td></tr>
-                                            <tr><td>Band 2</td><td>13</td></tr>
-                                            <tr><td>Band 3</td><td>11</td></tr>
-                                            <tr><td>Band 4</td><td>9</td></tr>
-                                            <tr><td>Band 5</td><td>7</td></tr>
-                                            <tr><td>Band 6</td><td>4</td></tr>
-                                            <tr><td>Band 7 (Slowest)</td><td>2</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <p style="margin-top: 15px;"><em>Note: Maximum 30 points possible (15 for simple track + 15 for complex track)</em></p>
-                                    
-                                    <p><strong>Why it matters:</strong> Fast response times demonstrate commitment to transparency and efficient operations.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. Backlog Management -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Backlog Management (30 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Three dimensions of backlog health—growth rate (15 pts), absolute size (10 pts), and oldest case age (5 pts).</p>
-                                    
-                                    <h5>Component 1: Backlog Performance Index (15 points)</h5>
-                                    <p>Measures whether backlogs are growing or shrinking relative to processing capacity using the formula: <em>(Current Year Backlog - Previous Year Backlog) ÷ Requests Processed</em>.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>BPI Value</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>≤0.00</td><td>15</td></tr>
-                                            <tr><td>0.01-0.05</td><td>14</td></tr>
-                                            <tr><td>0.06-0.12</td><td>12</td></tr>
-                                            <tr><td>0.13-0.20</td><td>10</td></tr>
-                                            <tr><td>0.21-0.30</td><td>8</td></tr>
-                                            <tr><td>0.31-0.45</td><td>6</td></tr>
-                                            <tr><td>0.46-0.65</td><td>4</td></tr>
-                                            <tr><td>0.66-1.00</td><td>2</td></tr>
-                                            <tr><td>>1.00</td><td>1</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <h5>Component 2: Backlog Volume (10 points)</h5>
-                                    <p>Government-wide comparison of absolute backlog size using LOG10 transformation. This ensures a 10× increase in backlog (e.g., 100→1,000 or 10,000→100,000) results in proportional point penalties regardless of agency size, preventing extreme outliers from distorting the scale.</p>
-                                    
-                                    <h5>Component 3: Persistence Score (5 points)</h5>
-                                    <p>Evaluates the age of an agency's 10 oldest pending requests. Each case receives 0-10 points based on age bands (<300 days = 10 pts, declining to ≥5,000 days = 0 pts). The 10 scores are averaged and scaled to a maximum of 5 points.</p>
-                                    
-                                    <p><strong>Why it matters:</strong> Effective backlog management prevents multi-year delays and demonstrates sustainable operations.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Cost Efficiency -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Cost Efficiency (15 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Processing costs per request (10 pts) and litigation expenses per request (5 pts), evaluated using government-wide thresholds.</p>
-                                    
-                                    <h5>Component 1: Cost Per Request (10 points)</h5>
-                                    <p>Total program costs divided by requests processed.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Cost Per Request</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>≤$250</td><td>10</td></tr>
-                                            <tr><td>$251-750</td><td>9</td></tr>
-                                            <tr><td>$751-1,500</td><td>8</td></tr>
-                                            <tr><td>$1,501-2,500</td><td>6</td></tr>
-                                            <tr><td>$2,501-4,000</td><td>4</td></tr>
-                                            <tr><td>$4,001-6,000</td><td>2</td></tr>
-                                            <tr><td>$6,001-8,000</td><td>1</td></tr>
-                                            <tr><td>>$8,000</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <h5>Component 2: Litigation Cost Per Request (5 points)</h5>
-                                    <p>Litigation-related costs divided by requests received.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Litigation Cost Per Request</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>$0</td><td>5</td></tr>
-                                            <tr><td>$1-10</td><td>4</td></tr>
-                                            <tr><td>$11-50</td><td>3</td></tr>
-                                            <tr><td>$51-100</td><td>2</td></tr>
-                                            <tr><td>$101-250</td><td>1</td></tr>
-                                            <tr><td>>$250</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <p><strong>Why it matters:</strong> Efficient resource use maximizes transparency while respecting taxpayer dollars. Low litigation costs indicate well-justified decisions that withstand legal challenge.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 4. Appeals Performance -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Appeals Performance (10 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Quality of initial FOIA decisions through appeal rate (8 pts) and appeals backlog management (2 pts).</p>
-                                    
-                                    <h5>Component 1: Appeal Rate (8 points)</h5>
-                                    <p>Percentage of requests that generate appeals (appeals received ÷ requests received). Lower rates indicate higher-quality initial decisions.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Appeal Rate</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>≤0.50%</td><td>8</td></tr>
-                                            <tr><td>0.51-1.00%</td><td>7</td></tr>
-                                            <tr><td>1.01-1.50%</td><td>6</td></tr>
-                                            <tr><td>1.51-2.50%</td><td>5</td></tr>
-                                            <tr><td>2.51-3.00%</td><td>4</td></tr>
-                                            <tr><td>3.01-4.50%</td><td>3</td></tr>
-                                            <tr><td>4.51-6.50%</td><td>2</td></tr>
-                                            <tr><td>6.51-10.00%</td><td>1</td></tr>
-                                            <tr><td>>10%</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <h5>Component 2: Appeals Backlog (2 points)</h5>
-                                    <p>Government-wide comparison of pending appeals using LOG10 transformation to ensure proportional scoring regardless of backlog size.</p>
-                                    
-                                    <p><strong>Why it matters:</strong> Low appeal rates signal accurate, well-justified decisions that reduce downstream litigation and demonstrate commitment to correct initial determinations.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 5. Fee Collection -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Fee Collection (5 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Effectiveness in recovering program costs through fee collection, evaluated within size categories.</p>
-                                    
-                                    <p><strong>Scoring approach:</strong> Agencies are ranked by fee recovery percentage (fees collected ÷ total costs). Only the top 5 agencies in each size category earn points:</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Rank Within Category</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>1st place</td><td>5</td></tr>
-                                            <tr><td>2nd place</td><td>4</td></tr>
-                                            <tr><td>3rd place</td><td>3</td></tr>
-                                            <tr><td>4th place</td><td>2</td></tr>
-                                            <tr><td>5th place</td><td>1</td></tr>
-                                            <tr><td>6th+ place</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <p><strong>Eligibility:</strong> Agencies must collect fees >$0 to qualify for ranking.</p>
-                                    
-                                    <p><strong>Why it matters:</strong> Appropriate fee collection balances public access with cost recovery, ensuring FOIA programs operate sustainably.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 6. Staff Efficiency -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Staff Efficiency (5 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Workforce productivity based on requests processed per total full-time staff member, evaluated within size categories.</p>
-                                    
-                                    <p><strong>Scoring approach:</strong> Agencies are ranked by efficiency rate (requests processed ÷ total full-time staff). Only the top 5 agencies in each size category earn points:</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Rank Within Category</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>1st place</td><td>5</td></tr>
-                                            <tr><td>2nd place</td><td>4</td></tr>
-                                            <tr><td>3rd place</td><td>3</td></tr>
-                                            <tr><td>4th place</td><td>2</td></tr>
-                                            <tr><td>5th place</td><td>1</td></tr>
-                                            <tr><td>6th+ place</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <p><strong>Staff calculation:</strong> Total full-time staff includes both full-time employees and employees that handle FOIA part-time.</p>
-                                    
-                                    <p><strong>Why it matters:</strong> High productivity indicates effective workforce deployment and process optimization.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 7. Data Quality -->
-                        <div class="accordion-item">
-                            <div class="accordion-header">
-                                <h4>Data Quality (5 points)</h4>
-                                <span class="accordion-icon">▼</span>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="accordion-inner">
-                                    <p><strong>What it measures:</strong> Accuracy and completeness of reported FOIA data through track type validation.</p>
-                                    
-                                    <p><strong>Validation method:</strong> Compares sum of track-specific totals (simple + complex + expedited) against reported total requests processed using the formula: <em>(Simple + Complex + Expedited) ÷ Total Requests Processed</em>.</p>
-                                    
-                                    <table class="detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Validation Accuracy</th>
-                                                <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td>100%</td><td>5</td></tr>
-                                            <tr><td>≥99.9%</td><td>4</td></tr>
-                                            <tr><td>99.5-99.8%</td><td>3</td></tr>
-                                            <tr><td>98-99.4%</td><td>2</td></tr>
-                                            <tr><td>95-97.9%</td><td>1</td></tr>
-                                            <tr><td><95%</td><td>0</td></tr>
-                                        </tbody>
-                                    </table>
-                                    
-                                    <p><strong>Why it matters:</strong> Perfect alignment indicates complete data accounting with no missing or miscategorized cases. Accurate data enables informed policy decisions and maintains public trust in transparency metrics.</p>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -1549,20 +1809,6 @@ html, body {
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links (if any exist)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
         // Service cards hover effect
         document.querySelectorAll('.service-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -1597,20 +1843,65 @@ html, body {
             observer.observe(el);
         });
 
-        // Accordion functionality
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const accordionItem = this.parentElement;
-                const isActive = accordionItem.classList.contains('active');
+        // Table row expansion functionality (methodology scoring table)
+        document.querySelectorAll('.clickable-row').forEach(row => {
+            row.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const detailRow = document.getElementById(targetId);
+                const isActive = this.classList.contains('active');
                 
-                // Close all accordion items
-                document.querySelectorAll('.accordion-item').forEach(item => {
-                    item.classList.remove('active');
-                });
+                // Close all detail rows and remove active class from all clickable rows
+                document.querySelectorAll('.clickable-row').forEach(r => r.classList.remove('active'));
+                document.querySelectorAll('.table-detail-row').forEach(r => r.classList.remove('active'));
                 
-                // Open clicked item if it wasn't already open
+                // Open clicked row's details if it wasn't already open
                 if (!isActive) {
-                    accordionItem.classList.add('active');
+                    this.classList.add('active');
+                    detailRow.classList.add('active');
+                }
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Mobile dropdown toggle
+        document.querySelectorAll('.nav-dropdown > .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    this.parentElement.classList.toggle('active');
+                }
+            });
+        });
+
+        // Smooth scrolling with offset for fixed nav
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navHeight = 70; // Height of fixed nav
+                    const targetPosition = target.offsetTop - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
                 }
             });
         });
