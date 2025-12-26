@@ -641,16 +641,20 @@ html, body {
         }
 
         .link-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1B365D, #2A4A7A);
+            width: 80px;
+            height: 80px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            color: #FFFFFF;
-            font-size: 20px;
+            overflow: hidden;
+        }
+
+        .link-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .link-card h3 {
@@ -1641,29 +1645,36 @@ html, body {
                 </div>
                 <div class="links-grid">
                     <div class="link-card">
-                        <div class="link-icon">🚀</div>
+                        <div class="link-icon">
+                            <img src="FOIA Logo.png" alt="FOIA.gov Logo">
+                        </div>
                         <h3>NextGen FOIA Showcase</h3>
                         <p>Explore innovative FOIA programs and best practices from the Chief FOIA Officers Council.</p>
                         <a href="https://www.foia.gov/chief-foia-officers-council/nexgen2.0-foia-showcase" target="_blank" class="link-button">Visit Showcase →</a>
                     </div>
                     
                     <div class="link-card">
-                        <div class="link-icon">📚</div>
+                        <div class="link-icon">
+                            <img src="FOIA Project.jpg" alt="The FOIA Project">
+                        </div>
                         <h3>The FOIA Project</h3>
                         <p>Comprehensive research and analysis on Freedom of Information Act implementation and trends.</p>
                         <a href="https://foiaproject.org/" target="_blank" class="link-button">Explore Project →</a>
                     </div>
                     
                     <div class="link-card">
-                        <div class="link-icon">🎓</div>
-                        <h3>FOIA University</h3>
-                        <p>Professional training and education for FOIA practitioners and government transparency professionals.</p>
-                        <a href="#" class="link-button" style="background: #999; cursor: not-allowed;">Link Coming Soon</a>
-                        <!-- UPDATE THIS LINK WHEN AVAILABLE -->
+                        <div class="link-icon">
+                            <img src="Sunshine Week.jpg" alt="Sunshine Week">
+                        </div>
+                        <h3>Sunshine Week</h3>
+                        <p>Annual celebration of open government and freedom of information, promoting dialogue about government transparency.</p>
+                        <a href="https://sunshineweek.org/" target="_blank" class="link-button">Visit Website →</a>
                     </div>
                     
                     <div class="link-card">
-                        <div class="link-icon">📊</div>
+                        <div class="link-icon">
+                            <img src="FOIA Logo.png" alt="FOIA.gov Logo">
+                        </div>
                         <h3>Annual FOIA Reports</h3>
                         <p>Official source data: Agency annual reports on FOIA processing, requests, and compliance metrics.</p>
                         <a href="https://www.foia.gov/reports.html" target="_blank" class="link-button">View Reports →</a>
@@ -1819,7 +1830,6 @@ html, body {
                     <p>Let's discuss how federal data can drive your organization's success</p>
                     <div class="connect-grid">
                         <div class="connect-card">
-                            <div class="connect-icon">🔗</div>
                             <h3>LinkedIn</h3>
                             <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
                             <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">
@@ -1828,7 +1838,6 @@ html, body {
                             </a>
                         </div>
                         <div class="connect-card">
-                            <div class="connect-icon">📧</div>
                             <h3>Get In Touch</h3>
                             <p>Ready to transform your data challenges? Send me a message and let's start the conversation.</p>
                             <form class="contact-form" action="https://formsubmit.co/Joel@DataGlassLLC.com" method="POST">
