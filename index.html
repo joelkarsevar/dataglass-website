@@ -643,8 +643,8 @@ html, body {
         }
 
         .link-icon {
-            width: 80px;
-            height: 80px;
+            width: 96px;
+            height: 96px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -752,6 +752,41 @@ html, body {
         @keyframes barGrow {
             from { height: 0; opacity: 0; }
             to { opacity: 0.8; }
+        }
+
+        /* New About Me Section Styles */
+        .about-content-new {
+            max-width: 1000px;
+            margin: 40px auto 0;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .about-photo {
+            text-align: center;
+        }
+
+        .profile-photo {
+            width: 250px;
+            height: 250px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(27, 54, 93, 0.2);
+            border: 4px solid #FFFFFF;
+        }
+
+        .about-text-new {
+            padding-top: 10px;
+        }
+
+        .about-text-new p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.7;
         }
 
         /* Services Section (Now "How I Can Help") */
@@ -991,6 +1026,15 @@ html, body {
             transform: translateY(-2px);
         }
 
+        /* LinkedIn-specific button styling */
+        .linkedin-link {
+            background: #0A66C2;
+        }
+
+        .linkedin-link:hover {
+            background: #004182;
+        }
+
         /* Contact Form Styles */
         .contact-form {
             text-align: left;
@@ -1126,6 +1170,18 @@ html, body {
 
             .links-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .about-content-new {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .profile-photo {
+                width: 200px;
+                height: 200px;
+                margin: 0 auto;
             }
         }
     </style>
@@ -1687,25 +1743,6 @@ html, body {
         </section>
 
         <!-- About Section - Keeping current text, you can update later -->
-        <section id="about" class="powerbi-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>About Me</h2>
-                    <p>Federal FOIA expertise with deep government experience</p>
-                </div>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <!-- CURRENT TEXT - Update this when ready with your new content -->
-                    <p>As the primary data analyst for FOIA at the Department of Veterans Affairs, I've developed unparalleled expertise in navigating the complexities of federal transparency requirements and extracting actionable insights from government datasets.</p>
-                    <p>My hands-on experience with VA FOIA operations has given me unique insight into the challenges federal agencies face—from data validation and process optimization to meeting transparency mandates while protecting sensitive information.</p>
-                    <p>I leverage cutting-edge technology and AI to transform how agencies approach FOIA data. Rather than treating transparency as a compliance burden, I help organizations discover the strategic value hidden in their information assets and use data-driven decisions to modernize their FOIA processes and technology infrastructure.</p>
-                    <p>When federal agencies work with Data Glass, they get more than consulting—they get a partner who understands government operations from the inside and delivers measurable improvements to both transparency and efficiency.</p>
-                    <p style="margin-top: 30px; font-style: italic; color: #1B365D; font-weight: 500; font-size: 1.2em;">What data challenge can I help you solve?<br><span style="margin-left: 20px;">-Joel</span></p>
-                </div>
-            </div>
-        </section>
-
         <!-- UPDATED: Services Section renamed to "How I Can Help" -->
         <section id="services" class="services">
             <div class="container">
@@ -1880,6 +1917,27 @@ html, body {
             </div>
         </section>
 
+        <!-- About Me Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="section-title">
+                    <h2>About Me</h2>
+                </div>
+                <div class="about-content-new">
+                    <div class="about-photo">
+                        <img src="joel-photo.jpg" alt="Joel Karsevar" class="profile-photo">
+                        <!-- If you don't have a photo yet, I'll add a placeholder -->
+                    </div>
+                    <div class="about-text-new">
+                        <p>Thank you for visiting my website. I've had the privilege of working with the Veterans Affairs FOIA Office as a database administrator, Power BI developer, and data analyst. That experience gave me real insight into the challenges federal agencies face every day.</p>
+                        <p>By leveraging the latest technology, I'm able to promote transparency of federal FOIA data and help agencies improve their operations to better serve the public. If you're facing a data challenge, I'd love to hear about it.</p>
+                        <p style="margin-top: 20px; font-style: italic; color: #1B365D; font-weight: 500;">—Joel</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connect With Me Section -->
         <section id="connect" class="connect-section">
             <div class="container">
                 <div class="connect-content">
@@ -1889,8 +1947,8 @@ html, body {
                         <div class="connect-card">
                             <h3>LinkedIn</h3>
                             <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
-                            <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link">
-                                <span>View LinkedIn Profile</span>
+                            <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link linkedin-link">
+                                <span>Connect With Me on LinkedIn</span>
                                 <span>→</span>
                             </a>
                         </div>
