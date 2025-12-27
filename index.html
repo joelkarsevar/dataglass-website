@@ -55,22 +55,24 @@ html, body {
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 110px;
+            height: 100px;
         }
 
         .nav-logo {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 15px;
             color: white;
             text-decoration: none;
             font-size: 1.5em;
             font-weight: 700;
             transition: opacity 0.3s ease;
+            height: 100%;
         }
 
         .nav-logo:hover {
@@ -236,7 +238,7 @@ html, body {
 
         /* Add padding to body to account for fixed nav */
         body {
-            padding-top: 110px;
+            padding-top: 100px;
         }
 
         /* Hero Section */
@@ -1140,7 +1142,7 @@ html, body {
         <div class="nav-container">
             <!-- Logo -->
             <a href="#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 85px; width: auto;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 85px; width: auto; display: block; vertical-align: middle;">
             </a>
 
             <!-- Mobile Menu Toggle -->
@@ -1185,7 +1187,7 @@ html, body {
         <section id="home" class="hero">
             <div class="full-width-container">
                 <div class="hero-content">
-                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2px;">
                         <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 220px; width: auto;">
                     </div>
                     <h2>Federal FOIA Data Solutions</h2>
