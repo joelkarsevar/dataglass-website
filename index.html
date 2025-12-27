@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Glass LLC - Federal FOIA Data Solutions</title>
+    <!-- Lottie Player Library for Animated Icons -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
     /* CSS Reset for full screen display */
 * {
@@ -788,16 +790,17 @@ html, body {
         }
 
         .service-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1B365D, #2A4A7A);
-            border-radius: 10px;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            color: #FFFFFF;
-            font-size: 20px;
+        }
+
+        .service-icon lottie-player {
+            width: 120px;
+            height: 120px;
         }
 
         .service-card h3 {
@@ -1711,25 +1714,80 @@ html, body {
                     <p>Practical solutions to your FOIA data challenges</p>
                 </div>
                 <div class="services-grid">
+                    <!-- 1. FOIA Program Analytics -->
                     <div class="service-card">
-                        <div class="service-icon">📊</div>
-                        <h3>Federal FOIA Analytics</h3>
-                        <p>Advanced analytical techniques to extract meaningful insights from federal datasets and Freedom of Information Act releases.</p>
+                        <div class="service-icon">
+                            <lottie-player
+                                src="analytics.json"
+                                background="transparent"
+                                speed="1"
+                                loop
+                                autoplay>
+                            </lottie-player>
+                        </div>
+                        <h3>FOIA Program Analytics</h3>
+                        <p>Understand your program's performance and position in the federal landscape.</p>
+                        <ul style="text-align: left; margin-top: 10px; padding-left: 20px; color: #555;">
+                            <li>Extract meaningful insights from FOIA data and identify operational strengths and weaknesses</li>
+                            <li>Benchmark against peer agencies to understand where you stand and find improvement opportunities</li>
+                        </ul>
                     </div>
+                    
+                    <!-- 2. Custom Reporting -->
                     <div class="service-card">
-                        <div class="service-icon">📈</div>
+                        <div class="service-icon">
+                            <lottie-player
+                                src="reporting.json"
+                                background="transparent"
+                                speed="1"
+                                loop
+                                autoplay>
+                            </lottie-player>
+                        </div>
                         <h3>Custom Reporting</h3>
-                        <p>Tailored reports and visualizations that transform complex government data into actionable business intelligence.</p>
+                        <p>Transform complex FOIA data into clear, actionable visualizations tailored to your needs.</p>
+                        <ul style="text-align: left; margin-top: 10px; padding-left: 20px; color: #555;">
+                            <li>Automate recurring reports to save time, reduce errors, and ensure consistency</li>
+                            <li>Create custom dashboards and visualizations that make data accessible to all stakeholders</li>
+                        </ul>
                     </div>
+                    
+                    <!-- 3. Strategic Intelligence -->
                     <div class="service-card">
-                        <div class="service-icon">🔍</div>
-                        <h3>Data Consulting</h3>
-                        <p>Expert guidance through federal data processes, from FOIA requests to data interpretation and strategic implementation.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">🎯</div>
+                        <div class="service-icon">
+                            <lottie-player
+                                src="intelligence.json"
+                                background="transparent"
+                                speed="1"
+                                loop
+                                autoplay>
+                            </lottie-player>
+                        </div>
                         <h3>Strategic Intelligence</h3>
-                        <p>Market intelligence and competitive analysis derived from federal data sources and government information.</p>
+                        <p>Anticipate trends and build data-driven cases for what your program needs.</p>
+                        <ul style="text-align: left; margin-top: 10px; padding-left: 20px; color: #555;">
+                            <li>Use predictive analytics to forecast request volumes, processing times, and resource requirements</li>
+                            <li>Quantify accomplishments and create evidence-based justifications for budget and staffing requests</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 4. Technical Solutions -->
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <lottie-player
+                                src="technical.json"
+                                background="transparent"
+                                speed="1"
+                                loop
+                                autoplay>
+                            </lottie-player>
+                        </div>
+                        <h3>Technical Solutions</h3>
+                        <p>Streamline operations through automation and seamless data integration.</p>
+                        <ul style="text-align: left; margin-top: 10px; padding-left: 20px; color: #555;">
+                            <li>Build custom APIs for integration with existing platforms and enterprise systems</li>
+                            <li>Automate workflows to eliminate manual processes and improve operational efficiency</li>
+                        </ul>
                     </div>
                 </div>
             </div>
