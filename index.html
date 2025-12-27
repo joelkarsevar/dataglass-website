@@ -691,32 +691,26 @@ html, body {
         }
 
         /* About Section */
-        .about {
+        /* Combined About Me & Connect Section */
+        .about-connect-section {
             padding: 80px 0;
             background: #F8F9FA;
         }
 
-        .about-content {
+        .about-connect-grid {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 40px auto 0;
             padding: 0 40px;
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 60px;
-            align-items: center;
+            align-items: start;
         }
 
-        .about-text {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .about-text p {
-            color: #666;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            line-height: 1.7;
-            padding: 0 20px;
+        .about-side {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
 
         .about-image {
@@ -754,39 +748,76 @@ html, body {
             to { opacity: 0.8; }
         }
 
-        /* New About Me Section Styles */
-        .about-content-new {
-            max-width: 1000px;
-            margin: 40px auto 0;
-            padding: 0 40px;
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 50px;
-            align-items: start;
-        }
-
+        /* Profile Photo Styling */
         .about-photo {
             text-align: center;
         }
 
         .profile-photo {
-            width: 250px;
-            height: 250px;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            aspect-ratio: 1;
             border-radius: 12px;
             object-fit: cover;
             box-shadow: 0 10px 30px rgba(27, 54, 93, 0.2);
             border: 4px solid #FFFFFF;
         }
 
-        .about-text-new {
-            padding-top: 10px;
-        }
-
         .about-text-new p {
             color: #666;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+            font-size: 1.05em;
+            margin-bottom: 15px;
             line-height: 1.7;
+        }
+
+        /* LinkedIn Button in About Section */
+        .linkedin-button-container {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #E8E8E8;
+        }
+
+        .linkedin-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #0A66C2;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+        }
+
+        .linkedin-button:hover {
+            background: #004182;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(10, 102, 194, 0.4);
+        }
+
+        /* Contact Form Side */
+        .contact-side {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+        }
+
+        .contact-side h3 {
+            font-size: 1.8em;
+            color: #1B365D;
+            margin-bottom: 15px;
+        }
+
+        .form-intro {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
         /* Services Section (Now "How I Can Help") */
@@ -945,96 +976,6 @@ html, body {
             margin-bottom: 8px;
         }
 
-        /* Connect Section */
-        .connect-section {
-            padding: 80px 0;
-            background: #1B365D;
-            color: #FFFFFF;
-        }
-
-        .connect-content {
-            text-align: center;
-        }
-
-        .connect-content h2 {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .connect-content p {
-            font-size: 1.2em;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-
-        .connect-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .connect-card {
-            background: #FFFFFF;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .connect-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .connect-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .connect-card h3 {
-            font-size: 1.8rem;
-            color: #1B365D;
-            margin-bottom: 1rem;
-        }
-
-        .connect-card p {
-            color: #666;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .connect-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: #1B365D;
-            color: #FFFFFF;
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-        }
-
-        .connect-link:hover {
-            background: #0F2A4A;
-            transform: translateY(-2px);
-        }
-
-        /* LinkedIn-specific button styling */
-        .linkedin-link {
-            background: #0A66C2;
-        }
-
-        .linkedin-link:hover {
-            background: #004182;
-        }
-
         /* Contact Form Styles */
         .contact-form {
             text-align: left;
@@ -1163,25 +1104,26 @@ html, body {
                 grid-template-columns: 1fr;
             }
 
-            .connect-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
             .links-grid {
                 grid-template-columns: 1fr;
             }
 
-            .about-content-new {
+            .about-connect-grid {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 40px;
+            }
+
+            .about-side {
                 text-align: center;
             }
 
             .profile-photo {
-                width: 200px;
-                height: 200px;
+                max-width: 250px;
                 margin: 0 auto;
+            }
+
+            .contact-side {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -1219,10 +1161,6 @@ html, body {
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#about" class="nav-link">About</a>
-                </li>
-                
-                <li class="nav-item">
                     <a href="#services" class="nav-link">How I Can Help</a>
                 </li>
                 
@@ -1231,7 +1169,7 @@ html, body {
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#connect" class="nav-link">Connect</a>
+                    <a href="#about" class="nav-link">About & Contact</a>
                 </li>
             </ul>
         </div>
@@ -1917,71 +1855,59 @@ html, body {
             </div>
         </section>
 
-        <!-- About Me Section -->
-        <section id="about" class="about">
+        <!-- About Me & Connect Section Combined -->
+        <section id="about" class="about-connect-section">
             <div class="container">
                 <div class="section-title">
                     <h2>About Me</h2>
                 </div>
-                <div class="about-content-new">
-                    <div class="about-photo">
-                        <img src="joel-photo.jpg" alt="Joel Karsevar" class="profile-photo">
-                        <!-- If you don't have a photo yet, I'll add a placeholder -->
+                <div class="about-connect-grid">
+                    <!-- Left Side: About Text -->
+                    <div class="about-side">
+                        <div class="about-text-new">
+                            <p>Thank you for visiting my website. I've had the privilege of working with the Veterans Affairs FOIA Office as a database administrator, Power BI developer, and data analyst. That experience gave me real insight into the challenges federal agencies face every day.</p>
+                            <p>By leveraging the latest technology, I'm able to promote transparency of federal FOIA data and help agencies improve their operations to better serve the public. If you're facing a data challenge, I'd love to hear about it.</p>
+                            <p style="margin-top: 20px; font-style: italic; color: #1B365D; font-weight: 500;">—Joel</p>
+                        </div>
                     </div>
-                    <div class="about-text-new">
-                        <p>Thank you for visiting my website. I've had the privilege of working with the Veterans Affairs FOIA Office as a database administrator, Power BI developer, and data analyst. That experience gave me real insight into the challenges federal agencies face every day.</p>
-                        <p>By leveraging the latest technology, I'm able to promote transparency of federal FOIA data and help agencies improve their operations to better serve the public. If you're facing a data challenge, I'd love to hear about it.</p>
-                        <p style="margin-top: 20px; font-style: italic; color: #1B365D; font-weight: 500;">—Joel</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Connect With Me Section -->
-        <section id="connect" class="connect-section">
-            <div class="container">
-                <div class="connect-content">
-                    <h2>Connect With Me</h2>
-                    <p>Let's discuss how federal data can drive your organization's success</p>
-                    <div class="connect-grid">
-                        <div class="connect-card">
-                            <h3>LinkedIn</h3>
-                            <p>Connect with me on LinkedIn to discuss FOIA data opportunities and federal transparency initiatives.</p>
-                            <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="connect-link linkedin-link">
+                    
+                    <!-- Right Side: Contact Form -->
+                    <div class="contact-side">
+                        <h3>Get In Touch</h3>
+                        <p class="form-intro">Have a question or want to connect? Send me a message and let's start the conversation.</p>
+                        <form class="contact-form" action="https://formsubmit.co/Joel@DataGlassLLC.com" method="POST">
+                            <input type="hidden" name="_subject" value="New Contact from Data Glass Website">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_next" value="https://joelkarsevar.github.io/dataglass-website">
+                            
+                            <div class="form-group">
+                                <label for="name">Name *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="organization">Company/Agency</label>
+                                <input type="text" id="organization" name="organization">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea id="message" name="message" placeholder="Let's start a conversation about FOIA, data challenges, and how I can help!" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                        
+                        <div class="linkedin-button-container">
+                            <a href="https://www.linkedin.com/in/joelkarsevar/" target="_blank" class="linkedin-button">
                                 <span>Connect With Me on LinkedIn</span>
                                 <span>→</span>
                             </a>
-                        </div>
-                        <div class="connect-card">
-                            <h3>Get In Touch</h3>
-                            <p>Ready to transform your data challenges? Send me a message and let's start the conversation.</p>
-                            <form class="contact-form" action="https://formsubmit.co/Joel@DataGlassLLC.com" method="POST">
-                                <input type="hidden" name="_subject" value="New Contact from Data Glass Website">
-                                <input type="hidden" name="_captcha" value="false">
-                                <input type="hidden" name="_next" value="https://joelkarsevar.github.io/dataglass-website">
-                                
-                                <div class="form-group">
-                                    <label for="name">Name *</label>
-                                    <input type="text" id="name" name="name" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="organization">Company/Agency</label>
-                                    <input type="text" id="organization" name="organization">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="email">Email *</label>
-                                    <input type="email" id="email" name="email" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="message">Message *</label>
-                                    <textarea id="message" name="message" placeholder="Let's start a conversation about FOIA, data challenges, and how I can help!" required></textarea>
-                                </div>
-                                
-                                <button type="submit" class="submit-btn">Send Message</button>
-                            </form>
                         </div>
                     </div>
                 </div>
