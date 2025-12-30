@@ -720,7 +720,7 @@ html, body {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid-about" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid-about)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
             opacity: 0.3;
         }
 
@@ -748,16 +748,18 @@ html, body {
             display: flex;
             flex-direction: column;
             gap: 30px;
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
             padding: 35px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             position: relative;
             z-index: 2;
         }
 
         .about-image {
-            background: linear-gradient(135deg, #F8F9FA 0%, #E8E8E8 100%);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
@@ -803,12 +805,12 @@ html, body {
             aspect-ratio: 1;
             border-radius: 12px;
             object-fit: cover;
-            box-shadow: 0 10px 30px rgba(27, 54, 93, 0.2);
-            border: 4px solid #FFFFFF;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 4px solid rgba(255, 255, 255, 0.3);
         }
 
         .about-text-new p {
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 1em;
             margin-bottom: 15px;
             line-height: 1.7;
@@ -819,7 +821,7 @@ html, body {
             text-align: center;
             margin-top: 30px;
             padding-top: 30px;
-            border-top: 1px solid #E8E8E8;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .linkedin-button {
@@ -847,22 +849,24 @@ html, body {
 
         /* Contact Form Side */
         .contact-side {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             position: relative;
             z-index: 2;
         }
 
         .contact-side h3 {
             font-size: 1.6em;
-            color: #1B365D;
+            color: #FFFFFF;
             margin-bottom: 15px;
         }
 
         .form-intro {
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 30px;
             line-height: 1.6;
         }
@@ -1035,7 +1039,7 @@ html, body {
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #1B365D;
+            color: #FFFFFF;
             font-weight: 600;
         }
 
@@ -1859,7 +1863,7 @@ html, body {
                         <div class="about-text-new">
                             <p>Thank you for visiting my website. I've had the privilege of working with the Veterans Affairs FOIA Office as a database administrator, Power BI developer, and data analyst. That experience gave me real insight into the challenges federal agencies face every day.</p>
                             <p>By leveraging the latest technology, I'm able to promote transparency of federal FOIA data and help agencies improve their operations to better serve the public. If you're facing a data challenge, I'd love to hear about it.</p>
-                            <p style="margin-top: 20px; font-style: italic; color: #1B365D; font-weight: 500;">—Joel</p>
+                            <p style="margin-top: 20px; font-style: italic; color: #FFFFFF; font-weight: 500;">—Joel</p>
                         </div>
                     </div>
                     
