@@ -319,30 +319,19 @@ html, body {
         }
 
         .powerbi-container {
-            width: 100%;
-            padding: 0 20px;
-            margin-top: 40px;
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding: 0 40px;
         }
 
-        .powerbi-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1600px;
+        .powerbi-container iframe {
+            display: block;
             margin: 0 auto;
-            padding-bottom: 59.765625%; /* Exact 1024:612 ratio (612/1024) */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-
-        .powerbi-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            max-width: 1280px;
             border: none;
             border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(27, 54, 93, 0.15);
         }
 
         .powerbi-placeholder {
@@ -1270,9 +1259,7 @@ html, body {
                     <p>Yearly FOIA statistics at a glance</p>
                 </div>
                 <div class="powerbi-container">
-                    <div class="powerbi-wrapper">
-                        <iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9&pageName=1c3ea7ef9e0eb4bb7472" frameborder="0" allowFullScreen="true"></iframe>
-                    </div>
+                    <iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9&pageName=1c3ea7ef9e0eb4bb7472" frameborder="0" allowFullScreen="true"></iframe>
                 </div>
             </div>
         </section>
@@ -1287,9 +1274,7 @@ html, body {
                 
                 <!-- Placeholder for Power BI Embed - Replace with your embed code -->
                 <div class="powerbi-container">
-                    <div class="powerbi-wrapper">
-                        <iframe title="FOIA Data Tool for Rank" width="1024" height="804" src="https://app.powerbi.com/view?r=eyJrIjoiZDc4YmEwOTgtMzNiOC00MmQ5LTk2ODktNmY0Zjc1NmVmY2M5IiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
-                    </div>
+                    <iframe title="FOIA Data Tool for Rank" width="1024" height="804" src="https://app.powerbi.com/view?r=eyJrIjoiZDc4YmEwOTgtMzNiOC00MmQ5LTk2ODktNmY0Zjc1NmVmY2M5IiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
                 </div>
 
                 <!-- Methodology Text - Full Accordion Content -->
