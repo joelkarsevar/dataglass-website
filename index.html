@@ -982,10 +982,53 @@ html, body {
             box-shadow: 
                 0 4px 20px rgba(27, 54, 93, 0.12),
                 inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Static glass reflection at top */
+        .experience-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 100%
+            );
+            pointer-events: none;
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Glass reflection streak on hover */
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 100%
+            );
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            z-index: 2;
+        }
+
+        .experience-card:hover::before {
+            left: 150%;
         }
 
         .experience-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-4px) scale(1.01);
             box-shadow: 
                 0 8px 30px rgba(27, 54, 93, 0.18),
                 inset 0 1px 1px rgba(255, 255, 255, 0.9);
@@ -1000,6 +1043,8 @@ html, body {
             align-items: center;
             justify-content: center;
             background: transparent;
+            position: relative;
+            z-index: 1;
         }
 
         .logo-img {
@@ -1035,6 +1080,8 @@ html, body {
             font-weight: 600;
             margin-bottom: 8px;
             color: #1B365D;
+            position: relative;
+            z-index: 1;
         }
 
         .experience-card h4 {
@@ -1042,6 +1089,8 @@ html, body {
             color: #2A4A7A;
             font-weight: 500;
             margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
         }
 
         .experience-card p {
@@ -1049,6 +1098,8 @@ html, body {
             line-height: 1.6;
             font-size: 0.9em;
             margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Contact Form Styles */
