@@ -319,21 +319,17 @@ html, body {
         }
 
         .powerbi-container {
-            border-radius: 12px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 40px;
             width: 100%;
             padding: 0 20px;
+            margin-top: 40px;
         }
 
         .powerbi-wrapper {
             position: relative;
             width: 100%;
             max-width: 1600px;
-            padding-bottom: 59.77%; /* 1024:612 aspect ratio (612/1024 = 0.5977) */
+            margin: 0 auto;
+            padding-bottom: 59.765625%; /* Exact 1024:612 ratio (612/1024) */
             height: 0;
             overflow: hidden;
             border-radius: 8px;
