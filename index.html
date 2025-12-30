@@ -329,9 +329,9 @@ html, body {
         }
 
         .powerbi-container iframe {
-            width: 100%;
-            max-width: 800px;
-            height: auto;
+            width: 1024px;
+            max-width: 100%;
+            height: 804px;
             border: none;
             border-radius: 8px;
         }
@@ -628,34 +628,37 @@ html, body {
 
         .link-card {
             background: #FFFFFF;
-            padding: 20px 18px;
+            padding: 20px;
             border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 3px 15px rgba(27, 54, 93, 0.08);
             transition: all 0.3s ease;
             border-left: 4px solid #1B365D;
         }
 
         .link-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(27, 54, 93, 0.12);
         }
 
         .link-icon {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
             overflow: hidden;
+            margin: 0;
         }
 
         /* Larger size for FOIA Logo images only */
         .link-icon-large {
-            width: 85px;
-            height: 85px;
+            width: 95px;
+            height: 95px;
         }
 
         .link-icon img {
@@ -664,10 +667,17 @@ html, body {
             object-fit: contain;
         }
 
+        .link-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         .link-card h3 {
             font-size: 1.1em;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin: 0;
             color: #1B365D;
         }
 
@@ -675,31 +685,53 @@ html, body {
             color: #666;
             line-height: 1.5;
             font-size: 0.9em;
-            margin-bottom: 15px;
+            margin: 0;
         }
 
         .link-button {
             display: inline-block;
             background: #1B365D;
             color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.9em;
             transition: all 0.3s ease;
+            align-self: flex-start;
         }
 
         .link-button:hover {
             background: #0F2A4A;
-            transform: translateY(-2px);
+            transform: translateX(3px);
         }
 
         /* About Section */
         /* Combined About Me & Connect Section */
         .about-connect-section {
             padding: 80px 0;
-            background: #F8F9FA;
+            background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-connect-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid-about" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid-about)"/></svg>');
+            opacity: 0.3;
+        }
+
+        #about .section-title h2 {
+            color: #FFFFFF;
+        }
+
+        #about .section-title p {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .about-connect-grid {
@@ -710,12 +742,20 @@ html, body {
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: start;
+            position: relative;
+            z-index: 2;
         }
 
         .about-side {
             display: flex;
             flex-direction: column;
             gap: 30px;
+            background: #FFFFFF;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
         }
 
         .about-image {
@@ -787,6 +827,7 @@ html, body {
         .linkedin-button {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
             background: #0A66C2;
             color: #FFFFFF;
@@ -794,9 +835,10 @@ html, body {
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 1em;
+            font-size: 1.1em;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+            width: 100%;
         }
 
         .linkedin-button:hover {
@@ -810,7 +852,9 @@ html, body {
             background: #FFFFFF;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
         }
 
         .contact-side h3 {
@@ -847,44 +891,44 @@ html, body {
 
         .service-card {
             background: #FFFFFF;
-            padding: 20px 18px;
+            padding: 25px 20px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+            box-shadow: 0 3px 15px rgba(27, 54, 93, 0.08);
             transition: all 0.3s ease;
             border-top: 4px solid #1B365D;
         }
 
         .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(27, 54, 93, 0.12);
         }
 
         .service-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 12px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 18px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .service-icon lottie-player {
-            width: 70px;
-            height: 70px;
+            width: 100px;
+            height: 100px;
         }
 
         .service-card h3 {
-            font-size: 1.05em;
+            font-size: 1.2em;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #1B365D;
         }
 
         .service-card p {
             color: #666;
-            line-height: 1.5;
-            font-size: 0.85em;
+            line-height: 1.6;
+            font-size: 0.9em;
         }
 
         /* Experience Section */
@@ -909,23 +953,23 @@ html, body {
 
         .experience-card {
             background: #F8F9FA;
-            padding: 20px 18px;
+            padding: 22px 20px;
             border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
             border-left: 4px solid #1B365D;
-            box-shadow: 0 5px 20px rgba(27, 54, 93, 0.1);
+            box-shadow: 0 3px 15px rgba(27, 54, 93, 0.08);
         }
 
         .experience-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(27, 54, 93, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(27, 54, 93, 0.12);
             background: #FFFFFF;
         }
 
         .experience-logo {
-            margin-bottom: 15px;
-            height: 70px;
+            margin-bottom: 16px;
+            height: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -933,8 +977,8 @@ html, body {
         }
 
         .logo-img {
-            max-height: 50px;
-            max-width: 50px;
+            max-height: 55px;
+            max-width: 55px;
             object-fit: contain;
             filter: grayscale(20%);
             transition: filter 0.3s ease;
@@ -947,37 +991,37 @@ html, body {
         }
 
         .custom-logo {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: white;
             box-shadow: 0 4px 15px rgba(27, 54, 93, 0.3);
         }
 
         .experience-card h3 {
-            font-size: 1.15em;
+            font-size: 1.2em;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: #1B365D;
         }
 
         .experience-card h4 {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #2A4A7A;
             font-weight: 500;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .experience-card p {
             color: #666;
-            line-height: 1.5;
-            font-size: 0.85em;
+            line-height: 1.6;
+            font-size: 0.9em;
             margin-bottom: 6px;
         }
 
@@ -1113,6 +1157,23 @@ html, body {
                 grid-template-columns: 1fr;
             }
 
+            .link-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .link-icon, .link-icon-large {
+                margin: 0 auto 15px;
+            }
+
+            .link-content {
+                text-align: center;
+            }
+
+            .link-button {
+                align-self: center;
+            }
+
             .about-connect-grid {
                 grid-template-columns: 1fr;
                 gap: 40px;
@@ -1139,7 +1200,7 @@ html, body {
         <div class="nav-container">
             <!-- Logo -->
             <a href="#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 75px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 20px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 50px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 2px;">
             </a>
 
             <!-- Mobile Menu Toggle -->
@@ -1610,36 +1671,44 @@ html, body {
                         <div class="link-icon link-icon-large">
                             <img src="FOIA Logo.png" alt="FOIA.gov Logo">
                         </div>
-                        <h3>NextGen FOIA Showcase</h3>
-                        <p>Explore innovative FOIA programs and best practices from the Chief FOIA Officers Council.</p>
-                        <a href="https://www.foia.gov/chief-foia-officers-council/nexgen2.0-foia-showcase" target="_blank" class="link-button">Visit Showcase →</a>
+                        <div class="link-content">
+                            <h3>NextGen FOIA Showcase</h3>
+                            <p>Explore innovative FOIA programs and best practices from the Chief FOIA Officers Council.</p>
+                            <a href="https://www.foia.gov/chief-foia-officers-council/nexgen2.0-foia-showcase" target="_blank" class="link-button">Visit Showcase →</a>
+                        </div>
                     </div>
                     
                     <div class="link-card">
                         <div class="link-icon">
                             <img src="FOIA Project.jpg" alt="The FOIA Project">
                         </div>
-                        <h3>The FOIA Project</h3>
-                        <p>Comprehensive research and analysis on Freedom of Information Act implementation and trends.</p>
-                        <a href="https://foiaproject.org/" target="_blank" class="link-button">Explore Project →</a>
+                        <div class="link-content">
+                            <h3>The FOIA Project</h3>
+                            <p>Comprehensive research and analysis on Freedom of Information Act implementation and trends.</p>
+                            <a href="https://foiaproject.org/" target="_blank" class="link-button">Explore Project →</a>
+                        </div>
                     </div>
                     
                     <div class="link-card">
                         <div class="link-icon">
                             <img src="Sunshine Week.jpg" alt="Sunshine Week">
                         </div>
-                        <h3>Sunshine Week</h3>
-                        <p>Annual celebration of open government and freedom of information, promoting dialogue about government transparency.</p>
-                        <a href="https://sunshineweek.org/" target="_blank" class="link-button">Visit Website →</a>
+                        <div class="link-content">
+                            <h3>Sunshine Week</h3>
+                            <p>Annual celebration of open government and freedom of information, promoting dialogue about government transparency.</p>
+                            <a href="https://sunshineweek.org/" target="_blank" class="link-button">Visit Website →</a>
+                        </div>
                     </div>
                     
                     <div class="link-card">
                         <div class="link-icon link-icon-large">
                             <img src="FOIA Logo.png" alt="FOIA.gov Logo">
                         </div>
-                        <h3>Annual FOIA Reports</h3>
-                        <p>Official source data: Agency annual reports on FOIA processing, requests, and compliance metrics.</p>
-                        <a href="https://www.foia.gov/reports.html" target="_blank" class="link-button">View Reports →</a>
+                        <div class="link-content">
+                            <h3>Annual FOIA Reports</h3>
+                            <p>Official source data: Agency annual reports on FOIA processing, requests, and compliance metrics.</p>
+                            <a href="https://www.foia.gov/reports.html" target="_blank" class="link-button">View Reports →</a>
+                        </div>
                     </div>
                 </div>
             </div>
