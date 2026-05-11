@@ -1337,7 +1337,7 @@ html, body {
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             margin-top: 40px;
-            align-items: start;
+            align-items: stretch;
         }
 
         /* Video Panel */
@@ -1403,6 +1403,7 @@ html, body {
         .nexgen-details-panel {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             gap: 16px;
         }
 
@@ -1423,6 +1424,7 @@ html, body {
                 inset 0 1px 1px rgba(255, 255, 255, 0.8);
             position: relative;
             overflow: hidden;
+            flex: 1;
         }
 
         .nexgen-pdf-btn::before {
@@ -1512,6 +1514,7 @@ html, body {
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            flex: 1;
         }
 
         .nexgen-nara-text h4 {
@@ -2197,11 +2200,6 @@ html, body {
                 <div class="section-title">
                     <h2>NexGen FOIA Tech Showcase 3.0</h2>
                     <p>Data Glass LLC's submission to the Chief FOIA Officers Council's showcase for innovative federal FOIA solutions</p>
-                    <div class="nexgen-meta-row" style="justify-content: center; margin-top: 16px;">
-                        <span class="nexgen-meta-pill">Analytics</span>
-                        <span class="nexgen-meta-pill">Integration</span>
-                        <span class="nexgen-meta-pill">AI Implementation</span>
-                    </div>
                 </div>
 
                 <div class="nexgen-layout">
