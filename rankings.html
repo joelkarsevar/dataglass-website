@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOIA Agency Rankings - Data Glass LLC</title>
+    <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="assets/explore.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+    
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html#home" class="nav-logo">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#home" class="nav-link">Home</a></li>
+                <li class="nav-item nav-dropdown">
+                    <a href="overview.html" class="nav-link dropdown-toggle">FOIA Data</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-label">Data Explorer</li>
+                        <li><a href="overview.html">Overview</a></li>
+                        <li><a href="trends.html">Trends</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="compare.html">Compare Agencies</a></li>
+                        <li><a href="exemptions.html">Exemptions</a></li>
+                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-label">Capability Demo</li>
+                        <li><a href="index.html#analytics">Power BI Dashboard</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="index.html#links" class="nav-link">Resources</a></li>
+                <li class="nav-item"><a href="index.html#nexgen" class="nav-link">NexGen Showcase</a></li>
+                <li class="nav-item"><a href="index.html#services" class="nav-link">How I Can Help</a></li>
+                <li class="nav-item"><a href="index.html#experience" class="nav-link">Experience</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">About & Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="explorer-hero">
+            <div class="explorer-hero-inner">
+                <h1>Agency Rankings</h1>
+                <p>Every parent agency scored on the same 100-point framework, by fiscal year and peer size category.</p>
+            </div>
+        </section>
+    <div class="explorer-tabbar-wrap">
+        <div class="explorer-tabbar">
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab active" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <div class="explorer-tab-spacer"></div>
+            <div class="explorer-search">
+                <span>🔍</span>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <datalist id="agency-datalist"></datalist>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+            </div>
+        </div>
+    </div>
+
+        <div class="explorer-body">
+
+            <div class="explorer-controls">
+                <span class="explorer-select-label">Fiscal Year</span>
+                <select id="year-select" class="explorer-select"></select>
+                <span class="explorer-select-label" style="margin-left:14px;">Size Category</span>
+                <select id="size-select" class="explorer-select">
+                    <option value="ALL">All sizes</option>
+                </select>
+            </div>
+
+            <div class="note-banner">
+                Scores follow the 100-point methodology on the <a href="components.html" style="color:#1B365D;font-weight:600;">Scoring Methodology</a> page: Processing Time (30), Backlog Management (30), Cost Efficiency (15), Appeals Performance (10), Fee Collection (5), Staff Efficiency (5), Data Quality (5). Only parent agencies are scored to avoid double-counting subunits.
+            </div>
+
+            <div class="data-table-wrap">
+                <table class="data-table" id="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-key="agency">Agency</th>
+                            <th data-key="size_category">Size Category</th>
+                            <th data-key="requests_processed">Processed</th>
+                            <th data-key="backlog">Backlog</th>
+                            <th data-key="total_score" class="sorted">Total Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankings-tbody"><tr><td colspan="6" class="loading-msg">Loading agency scores…</td></tr></tbody>
+                </table>
+            </div>
+
+            <script>
+            (function() {
+                Explorer.initChrome('rankings');
+                let allRows = [];
+                let sortKey = 'total_score';
+                let sortDir = -1;
+
+                function render() {
+                    const yr = document.getElementById('year-select').value;
+                    const size = document.getElementById('size-select').value;
+                    let rows = allRows.filter(r => String(r.year) === yr && (size === 'ALL' || r.size_category === size));
+                    rows = rows.filter(r => r.total_score !== null);
+                    rows.sort((a,b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
+
+                    const tbody = document.getElementById('rankings-tbody');
+                    if (!rows.length) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="loading-msg">No scored agencies for this selection.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = rows.map((r, i) => `
+                        <tr>
+                            <td><span class="rank-badge ${i<3 ? 'top3' : ''}">${i+1}</span></td>
+                            <td><strong>${r.agency}</strong> <span style="color:#999;">(${r.abbrev || ''})</span></td>
+                            <td>${r.size_category || '—'}</td>
+                            <td>${Explorer.fmtNum(r.requests_processed)}</td>
+                            <td>${Explorer.fmtNum(r.backlog)}</td>
+                            <td><span class="score-pill ${Explorer.scoreClass(r.total_score)}">${r.total_score}</span></td>
+                        </tr>
+                    `).join('');
+                }
+
+                document.querySelectorAll('#rankings-table thead th[data-key]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const key = th.dataset.key;
+                        if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = key === 'agency' || key === 'size_category' ? 1 : -1; }
+                        document.querySelectorAll('#rankings-table thead th').forEach(x => x.classList.remove('sorted'));
+                        th.classList.add('sorted');
+                        render();
+                    });
+                });
+
+                Explorer.loadAgencyScores().then(rows => {
+                    allRows = rows;
+                    const years = [...new Set(rows.map(r => r.year))].sort((a,b)=>b-a);
+                    const yearSelect = document.getElementById('year-select');
+                    yearSelect.innerHTML = years.map(y => `<option value="${y}">FY ${y}</option>`).join('');
+                    yearSelect.addEventListener('change', render);
+
+                    const sizes = [...new Set(rows.map(r => r.size_category).filter(Boolean))].sort();
+                    const sizeSelect = document.getElementById('size-select');
+                    sizes.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s; opt.textContent = s;
+                        sizeSelect.appendChild(opt);
+                    });
+                    sizeSelect.addEventListener('change', render);
+
+                    render();
+                });
+            })();
+            </script>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Data Glass LLC</h3>
+                    <p>Federal FOIA Data Solutions</p>
+                    <p>Transforming government transparency through data</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Data Glass LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="site.js"></script>
+    <script src="assets/explore.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOIA Data Overview - Data Glass LLC</title>
+    <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="assets/explore.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+    
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html#home" class="nav-logo">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#home" class="nav-link">Home</a></li>
+                <li class="nav-item nav-dropdown">
+                    <a href="overview.html" class="nav-link dropdown-toggle">FOIA Data</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-label">Data Explorer</li>
+                        <li><a href="overview.html">Overview</a></li>
+                        <li><a href="trends.html">Trends</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="compare.html">Compare Agencies</a></li>
+                        <li><a href="exemptions.html">Exemptions</a></li>
+                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-label">Capability Demo</li>
+                        <li><a href="index.html#analytics">Power BI Dashboard</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="index.html#links" class="nav-link">Resources</a></li>
+                <li class="nav-item"><a href="index.html#nexgen" class="nav-link">NexGen Showcase</a></li>
+                <li class="nav-item"><a href="index.html#services" class="nav-link">How I Can Help</a></li>
+                <li class="nav-item"><a href="index.html#experience" class="nav-link">Experience</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">About & Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="explorer-hero">
+            <div class="explorer-hero-inner">
+                <h1>FOIA Data Overview</h1>
+                <p>A government-wide snapshot of federal FOIA performance, built from agencies’ own annual reports.</p>
+            </div>
+        </section>
+    <div class="explorer-tabbar-wrap">
+        <div class="explorer-tabbar">
+            <a href="overview.html" class="explorer-tab active" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <div class="explorer-tab-spacer"></div>
+            <div class="explorer-search">
+                <span>🔍</span>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <datalist id="agency-datalist"></datalist>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+            </div>
+        </div>
+    </div>
+
+        <div class="explorer-body">
+
+            <div id="kpi-row" class="kpi-grid">
+                <div class="kpi-card"><div class="kpi-label">Loading…</div></div>
+            </div>
+
+            <div class="chart-grid-2">
+                <div class="chart-panel">
+                    <h3>Requests Received vs. Processed</h3>
+                    <div class="chart-sub">Government-wide, all reporting parent agencies</div>
+                    <canvas id="chart-volume"></canvas>
+                </div>
+                <div class="chart-panel">
+                    <h3>Backlog Trend</h3>
+                    <div class="chart-sub">Total pending requests at fiscal year end</div>
+                    <canvas id="chart-backlog"></canvas>
+                </div>
+            </div>
+
+            <div class="note-banner">
+                Figures are aggregated from parent-agency annual FOIA reports (FY 2013–present), sourced from FOIA.gov. Updated once per year when the new Annual Report data is published.
+            </div>
+
+            <script>
+            (function() {
+                Explorer.initChrome('overview');
+                Explorer.loadTrends().then(rows => {
+                    const latest = rows[rows.length - 1];
+                    const prev = rows[rows.length - 2];
+                    function delta(cur, prior, invert) {
+                        if (!prior) return '';
+                        const pct = ((cur - prior) / prior * 100);
+                        const dir = pct >= 0 ? 'up' : 'down';
+                        const cls = invert ? (pct >= 0 ? 'down' : 'up') : dir;
+                        return `<div class="kpi-delta ${cls}">${pct >= 0 ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}% vs FY${prior_year}</div>`;
+                    }
+                    const prior_year = prev.year;
+                    const kpiRow = document.getElementById('kpi-row');
+                    kpiRow.innerHTML = `
+                        <div class="kpi-card">
+                            <div class="kpi-label">FY${latest.year} Requests Received</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.requests_received)}</div>
+                            ${delta(latest.requests_received, prev.requests_received, false)}
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Requests Processed</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.requests_processed)}</div>
+                            ${delta(latest.requests_processed, prev.requests_processed, false)}
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Backlog (FY End)</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.backlog)}</div>
+                            ${delta(latest.backlog, prev.backlog, true)}
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Total Program Cost</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.total_cost)}</div>
+                            ${delta(latest.total_cost, prev.total_cost, true)}
+                        </div>
+                    `;
+
+                    const years = rows.map(r => 'FY' + r.year);
+                    new Chart(document.getElementById('chart-volume'), {
+                        type: 'bar',
+                        data: {
+                            labels: years,
+                            datasets: [
+                                { label: 'Received', data: rows.map(r => r.requests_received), backgroundColor: Explorer.NAVY },
+                                { label: 'Processed', data: rows.map(r => r.requests_processed), backgroundColor: '#8FB4DE' }
+                            ]
+                        },
+                        options: Explorer.baseChartOptions()
+                    });
+
+                    new Chart(document.getElementById('chart-backlog'), {
+                        type: 'line',
+                        data: {
+                            labels: years,
+                            datasets: [{ label: 'Backlog', data: rows.map(r => r.backlog), borderColor: '#C0392B', backgroundColor: 'rgba(192,57,43,0.08)', fill: true, tension: 0.3 }]
+                        },
+                        options: Explorer.baseChartOptions()
+                    });
+                });
+            })();
+            </script>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Data Glass LLC</h3>
+                    <p>Federal FOIA Data Solutions</p>
+                    <p>Transforming government transparency through data</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Data Glass LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="site.js"></script>
+    <script src="assets/explore.js"></script>
+</body>
+</html>

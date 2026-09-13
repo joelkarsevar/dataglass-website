@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare FOIA Agencies - Data Glass LLC</title>
+    <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="assets/explore.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+    
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html#home" class="nav-logo">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#home" class="nav-link">Home</a></li>
+                <li class="nav-item nav-dropdown">
+                    <a href="overview.html" class="nav-link dropdown-toggle">FOIA Data</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-label">Data Explorer</li>
+                        <li><a href="overview.html">Overview</a></li>
+                        <li><a href="trends.html">Trends</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="compare.html">Compare Agencies</a></li>
+                        <li><a href="exemptions.html">Exemptions</a></li>
+                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-label">Capability Demo</li>
+                        <li><a href="index.html#analytics">Power BI Dashboard</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="index.html#links" class="nav-link">Resources</a></li>
+                <li class="nav-item"><a href="index.html#nexgen" class="nav-link">NexGen Showcase</a></li>
+                <li class="nav-item"><a href="index.html#services" class="nav-link">How I Can Help</a></li>
+                <li class="nav-item"><a href="index.html#experience" class="nav-link">Experience</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">About & Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="explorer-hero">
+            <div class="explorer-hero-inner">
+                <h1>Compare Agencies</h1>
+                <p>Put up to four agencies side by side across the same metrics and scoring categories.</p>
+            </div>
+        </section>
+    <div class="explorer-tabbar-wrap">
+        <div class="explorer-tabbar">
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab active" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <div class="explorer-tab-spacer"></div>
+            <div class="explorer-search">
+                <span>🔍</span>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <datalist id="agency-datalist"></datalist>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+            </div>
+        </div>
+    </div>
+
+        <div class="explorer-body">
+
+            <div class="explorer-controls">
+                <span class="explorer-select-label">Fiscal Year</span>
+                <select id="cmp-year-select" class="explorer-select"></select>
+            </div>
+
+            <div class="agency-picker" id="agency-chips"></div>
+
+            <div class="agency-add">
+                <select id="agency-add-select"><option>Loading agencies…</option></select>
+                <button id="agency-add-btn">+ Add Agency</button>
+            </div>
+
+            <div style="height:28px;"></div>
+
+            <div class="data-table-wrap" style="margin-bottom:28px;">
+                <table class="data-table" id="compare-table">
+                    <thead><tr id="compare-thead-row"><th>Metric</th></tr></thead>
+                    <tbody id="compare-tbody"><tr><td class="loading-msg">Pick agencies above to compare.</td></tr></tbody>
+                </table>
+            </div>
+
+            <div class="chart-panel">
+                <h3>Score Breakdown</h3>
+                <div class="chart-sub">By methodology category, selected agencies</div>
+                <canvas id="chart-cmp-radar"></canvas>
+            </div>
+
+            <script>
+            (function() {
+                Explorer.initChrome('compare');
+                let allRows = [];
+                let selected = [];
+                let radarChart = null;
+
+                const params = new URLSearchParams(window.location.search);
+                const preselect = params.get('a');
+
+                const METRICS = [
+                    { key: 'total_score', label: 'Total Score (/100)', fmt: v => v },
+                    { key: 'requests_received', label: 'Requests Received', fmt: Explorer.fmtNum },
+                    { key: 'requests_processed', label: 'Requests Processed', fmt: Explorer.fmtNum },
+                    { key: 'backlog', label: 'Backlog', fmt: Explorer.fmtNum },
+                    { key: 'simple_pct_u20', label: 'Simple Track % Under 20 Days', fmt: v => Explorer.fmtPct(v) },
+                    { key: 'complex_pct_u20', label: 'Complex Track % Under 20 Days', fmt: v => Explorer.fmtPct(v) },
+                    { key: 'cost_per_request', label: 'Cost Per Request', fmt: Explorer.fmtCurrency },
+                    { key: 'appeal_rate', label: 'Appeal Rate', fmt: v => Explorer.fmtPct(v) },
+                    { key: 'staff', label: 'FOIA Staff (FTE)', fmt: v => v },
+                ];
+
+                const RADAR_METRICS = [
+                    { key: 'processing_time_pts', label: 'Processing Time', max: 30 },
+                    { key: 'bpi_pts', label: 'Backlog Trend', max: 15 },
+                    { key: 'backlog_volume_pts', label: 'Backlog Volume', max: 10 },
+                    { key: 'cost_pts', label: 'Cost Efficiency', max: 10 },
+                    { key: 'appeal_rate_pts', label: 'Appeals', max: 8 },
+                    { key: 'quality_pts', label: 'Data Quality', max: 5 },
+                ];
+
+                function currentYear() { return document.getElementById('cmp-year-select').value; }
+
+                function findRow(agency, year) {
+                    return allRows.find(r => r.agency === agency && String(r.year) === String(year));
+                }
+
+                function renderChips() {
+                    document.getElementById('agency-chips').innerHTML = selected.map(a => `
+                        <div class="agency-chip">${a} <button data-a="${a}">×</button></div>
+                    `).join('');
+                    document.querySelectorAll('.agency-chip button').forEach(b => {
+                        b.addEventListener('click', () => {
+                            selected = selected.filter(a => a !== b.dataset.a);
+                            renderChips(); renderTable();
+                        });
+                    });
+                }
+
+                function renderTable() {
+                    const yr = currentYear();
+                    const thead = document.getElementById('compare-thead-row');
+                    const tbody = document.getElementById('compare-tbody');
+                    if (!selected.length) {
+                        thead.innerHTML = '<th>Metric</th>';
+                        tbody.innerHTML = '<tr><td class="loading-msg">Pick agencies above to compare.</td></tr>';
+                        if (radarChart) { radarChart.destroy(); radarChart = null; }
+                        return;
+                    }
+                    thead.innerHTML = '<th>Metric</th>' + selected.map(a => `<th>${a}</th>`).join('');
+                    tbody.innerHTML = METRICS.map(m => {
+                        const cells = selected.map(a => {
+                            const row = findRow(a, yr);
+                            const v = row ? row[m.key] : null;
+                            return `<td>${v === null || v === undefined ? '—' : m.fmt(v)}</td>`;
+                        }).join('');
+                        return `<tr><td><strong>${m.label}</strong></td>${cells}</tr>`;
+                    }).join('');
+
+                    const colors = Explorer.CHART_COLORS;
+                    const datasets = selected.map((a, i) => {
+                        const row = findRow(a, yr);
+                        return {
+                            label: a,
+                            data: RADAR_METRICS.map(rm => row && row[rm.key] !== null && row[rm.key] !== undefined ? (row[rm.key]/rm.max*100) : 0),
+                            borderColor: colors[i % colors.length],
+                            backgroundColor: colors[i % colors.length] + '22',
+                        };
+                    });
+                    if (radarChart) radarChart.destroy();
+                    radarChart = new Chart(document.getElementById('chart-cmp-radar'), {
+                        type: 'radar',
+                        data: { labels: RADAR_METRICS.map(r=>r.label), datasets },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } } }
+                    });
+                }
+
+                document.getElementById('agency-add-btn').addEventListener('click', () => {
+                    const sel = document.getElementById('agency-add-select');
+                    const val = sel.value;
+                    if (val && !selected.includes(val) && selected.length < 4) {
+                        selected.push(val); renderChips(); renderTable();
+                    }
+                });
+
+                document.getElementById('cmp-year-select').addEventListener('change', renderTable);
+
+                Explorer.loadAgencyScores().then(rows => {
+                    allRows = rows;
+                    const years = [...new Set(rows.map(r => r.year))].sort((a,b)=>b-a);
+                    document.getElementById('cmp-year-select').innerHTML = years.map(y => `<option value="${y}">FY ${y}</option>`).join('');
+
+                    const names = [...new Set(rows.map(r => r.agency))].sort();
+                    const addSelect = document.getElementById('agency-add-select');
+                    addSelect.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+
+                    if (preselect && names.includes(preselect)) {
+                        selected = [preselect];
+                    } else {
+                        selected = names.slice(0,2);
+                    }
+                    renderChips();
+                    renderTable();
+                });
+            })();
+            </script>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Data Glass LLC</h3>
+                    <p>Federal FOIA Data Solutions</p>
+                    <p>Transforming government transparency through data</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Data Glass LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="site.js"></script>
+    <script src="assets/explore.js"></script>
+</body>
+</html>
