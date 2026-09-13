@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOIA Scoring Methodology - Data Glass LLC</title>
+    <title>Power BI Reports - Data Glass LLC</title>
     <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <link rel="stylesheet" href="site.css">
-    <link rel="stylesheet" href="assets/explore.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
-    <script src="assets/explore.js"></script>
-    
 </head>
 <body>
     <nav>
         <div class="nav-container">
+            <!-- Logo -->
             <a href="index.html#home" class="nav-logo">
                 <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
             </a>
-            <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                Menu
+            </button>
+
+            <!-- Navigation Menu -->
             <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html#home" class="nav-link">Home</a></li>
+                <li class="nav-item">
+                    <a href="index.html#home" class="nav-link">Home</a>
+                </li>
+                
                 <li class="nav-item nav-dropdown">
                     <a href="overview.html" class="nav-link dropdown-toggle">FOIA Data</a>
                     <ul class="dropdown-menu">
@@ -35,41 +42,65 @@
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a href="index.html#links" class="nav-link">Resources</a></li>
-                <li class="nav-item"><a href="index.html#nexgen" class="nav-link">NexGen</a></li>
-                <li class="nav-item"><a href="index.html#services" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="index.html#experience" class="nav-link">Experience</a></li>
-                <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
+                
+                <li class="nav-item">
+                    <a href="index.html#links" class="nav-link">Resources</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.html#nexgen" class="nav-link">NexGen</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="index.html#services" class="nav-link">Services</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="index.html#experience" class="nav-link">Experience</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="index.html#about" class="nav-link">About</a>
+                </li>
             </ul>
         </div>
     </nav>
-
     <main>
-        <section class="explorer-hero">
-            <div class="explorer-hero-inner">
-                <h1>Scoring Methodology</h1>
-                <p>How the 100-point agency score is built — category by category, with the exact thresholds used.</p>
+        <section class="hero" style="padding: 40px 0;">
+            <div class="full-width-container">
+                <div class="hero-content">
+                    <h2>Power BI Capability Demo</h2>
+                    <p>A look at Power BI dashboard development — live reports and the scoring framework behind them.</p>
+                </div>
             </div>
         </section>
-    <div class="explorer-tabbar-wrap">
-        <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab active" data-tab="components">Methodology</a>
-            <div class="explorer-tab-spacer"></div>
-            <div class="explorer-search">
-                <span>🔍</span>
-                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
-                <datalist id="agency-datalist"></datalist>
-                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
-            </div>
-        </div>
-    </div>
 
-        <div class="explorer-body">
-
-            <div class="note-banner">
-                This is the same scoring framework used on the <a href="rankings.html" style="color:#1B365D;font-weight:600;">Rankings</a> page, applied consistently across all fiscal years back to 2013. Only parent agencies are scored, to prevent double-counting subunits (e.g. FDA rolls into HHS, Army into DOD, ICE into DHS).
+        <section id="analytics" class="powerbi-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Power BI Capability Demo</h2>
+                    <p>A sample of Power BI dashboard development — for the interactive data explorer with live, filterable data, see <a href="overview.html" style="color:#1B365D; font-weight:600;">FOIA Data Explorer</a></p>
+                </div>
+                <div class="powerbi-container">
+                    <iframe title="FOIA Data Tool For Web" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiYTIxY2FhYjgtNjhmMC00NmU5LTg3ZDMtNzExZTM4OGYyMTVhIiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9&pageName=1c3ea7ef9e0eb4bb7472" frameborder="0" allowFullScreen="true"></iframe>
+                </div>
             </div>
-<div class="methodology-text">
+        </section>
+
+        <!-- FOIA Agency Rankings Section -->
+        <section id="rankings" class="rankings-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>FOIA Agency Rankings</h2>
+                    <p>How agencies are measured and ranked</p>
+                </div>
+                
+                <div class="powerbi-container">
+                    <iframe title="FOIA Data Tool for Rank" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiZDc4YmEwOTgtMzNiOC00MmQ5LTk2ODktNmY0Zjc1NmVmY2M5IiwidCI6ImU5NDY5ZjQ1LTFmMmItNDZlYS05ODllLTNhZDJkMThhOGI5OSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                </div>
+
+                <!-- Methodology Text - Full Accordion Content -->
+                <div class="methodology-text">
                     <h3>FOIA Agency Scoring Methodology</h3>
                     
                     <!-- Overview Section -->
@@ -445,8 +476,9 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </section>
 
-        </div>
     </main>
 
     <footer>
