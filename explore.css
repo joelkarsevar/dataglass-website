@@ -1,0 +1,387 @@
+/* ============================================================
+   Data Glass — Data Explorer shared styles
+   Reuses the site's color system: #1B365D (navy), #2A4A7A (steel blue),
+   #F8F9FA (light bg), #666 (body text)
+   ============================================================ */
+
+.explorer-hero {
+    background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
+    color: #FFFFFF;
+    padding: 40px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.explorer-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.explorer-hero-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px 28px;
+    position: relative;
+    z-index: 2;
+}
+
+.explorer-hero h1 {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.explorer-hero p {
+    color: rgba(255,255,255,0.85);
+    font-size: 1em;
+    max-width: 640px;
+}
+
+/* ---------- Tab bar ---------- */
+.explorer-tabbar-wrap {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E8E8E8;
+    position: sticky;
+    top: 49px;
+    z-index: 500;
+    box-shadow: 0 2px 8px rgba(27,54,93,0.06);
+}
+
+.explorer-tabbar {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px 40px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.explorer-tab {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: #555;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92em;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.explorer-tab:hover {
+    background: #F0F3F8;
+    color: #1B365D;
+}
+
+.explorer-tab.active {
+    background: #1B365D;
+    color: #FFFFFF;
+}
+
+.explorer-tab-spacer {
+    flex: 1;
+}
+
+.explorer-search {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F8F9FA;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
+    padding: 7px 12px;
+    color: #999;
+    font-size: 0.88em;
+    min-width: 180px;
+}
+
+/* ---------- Page body ---------- */
+.explorer-body {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+}
+
+.explorer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.explorer-select-label {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #1B365D;
+    margin-right: 4px;
+}
+
+.explorer-select {
+    padding: 9px 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #1B365D;
+    font-weight: 600;
+    font-size: 0.92em;
+    font-family: inherit;
+}
+
+/* ---------- KPI cards ---------- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 36px;
+}
+
+.kpi-card {
+    background: #FFFFFF;
+    border: 1px solid #EDEDED;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(27,54,93,0.06);
+}
+
+.kpi-label {
+    font-size: 0.8em;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 1.7em;
+    font-weight: 700;
+    color: #1B365D;
+    line-height: 1.15;
+}
+
+.kpi-delta {
+    font-size: 0.82em;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.kpi-delta.up { color: #C0392B; }
+.kpi-delta.down { color: #1E8449; }
+.kpi-delta.flat { color: #888; }
+
+/* ---------- Chart panels ---------- */
+.chart-panel {
+    background: #FFFFFF;
+    border: 1px solid #EDEDED;
+    border-radius: 12px;
+    padding: 24px 26px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 10px rgba(27,54,93,0.06);
+}
+
+.chart-panel h3 {
+    color: #1B365D;
+    font-size: 1.15em;
+    margin-bottom: 4px;
+}
+
+.chart-panel .chart-sub {
+    color: #888;
+    font-size: 0.85em;
+    margin-bottom: 16px;
+}
+
+.chart-panel canvas {
+    max-height: 340px;
+}
+
+.chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* ---------- Tables ---------- */
+.data-table-wrap {
+    background: #FFFFFF;
+    border: 1px solid #EDEDED;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(27,54,93,0.06);
+}
+
+table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92em;
+}
+
+table.data-table thead th {
+    background: #F8F9FA;
+    color: #1B365D;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 700;
+    border-bottom: 2px solid #E8E8E8;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+}
+
+table.data-table thead th:hover {
+    background: #EFF2F6;
+}
+
+table.data-table thead th.sorted::after {
+    content: ' \25BC';
+    font-size: 0.7em;
+}
+
+table.data-table tbody td {
+    padding: 11px 16px;
+    border-bottom: 1px solid #F0F0F0;
+    color: #444;
+    white-space: nowrap;
+}
+
+table.data-table tbody tr:hover {
+    background: #F8F9FA;
+}
+
+table.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1B365D;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.8em;
+}
+
+.rank-badge.top3 {
+    background: linear-gradient(135deg, #1B365D, #2A4A7A);
+}
+
+.score-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.88em;
+}
+
+.score-high { background: #E8F5E9; color: #1E8449; }
+.score-mid { background: #FFF8E1; color: #B7791F; }
+.score-low { background: #FDEDEC; color: #C0392B; }
+
+/* ---------- Compare page chips ---------- */
+.agency-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.agency-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F0F3F8;
+    border: 1px solid #D8E0EC;
+    border-radius: 999px;
+    padding: 8px 14px 8px 16px;
+    font-weight: 600;
+    color: #1B365D;
+    font-size: 0.9em;
+}
+
+.agency-chip button {
+    background: none;
+    border: none;
+    color: #1B365D;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05em;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.agency-chip button:hover { opacity: 1; }
+
+.agency-add {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.agency-add select {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid #E0E0E0;
+    min-width: 260px;
+    font-family: inherit;
+}
+
+.agency-add button {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #1B365D;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.agency-add button:hover { background: #0F2A4A; }
+
+.note-banner {
+    background: #F0F3F8;
+    border-left: 3px solid #2A4A7A;
+    padding: 14px 18px;
+    border-radius: 8px;
+    color: #444;
+    font-size: 0.88em;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.loading-msg {
+    text-align: center;
+    color: #888;
+    padding: 60px 20px;
+    font-size: 0.95em;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .explorer-body { padding: 28px 18px 60px; }
+    .explorer-hero-inner { padding: 0 18px 22px; }
+    .explorer-tabbar { padding: 10px 12px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .kpi-value { font-size: 1.3em; }
+    .explorer-search { display: none; }
+    table.data-table { font-size: 0.82em; }
+    table.data-table thead th, table.data-table tbody td { padding: 9px 10px; }
+}
