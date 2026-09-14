@@ -167,10 +167,16 @@
                 function sparkline(canvasId, values, color) {
                     const ctx = document.getElementById(canvasId);
                     if (!ctx) return;
+                    const rect = ctx.parentElement.getBoundingClientRect();
+                    const w = Math.round(rect.width) || 240;
+                    const h = Math.round(rect.height) || 42;
+                    ctx.width = w;
+                    ctx.height = h;
+                    const cleanValues = values.map(v => (v === undefined || isNaN(v)) ? null : v);
                     new Chart(ctx, {
                         type: 'line',
-                        data: { labels: values.map((_,i)=>i), datasets: [{ data: values, borderColor: color, borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display:false }, tooltip: { enabled:false } }, scales: { x: { display:false }, y: { display:false } } }
+                        data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 2, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
+                        options: { responsive: false, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } }, scales: { x: { display:false }, y: { display:false } } }
                     });
                 }
 
