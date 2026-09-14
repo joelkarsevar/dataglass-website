@@ -46,6 +46,7 @@
 
     function renderHeader(a, latest, prior) {
         document.getElementById('agency-badge').textContent = (a.abbrev || a.agency.slice(0,3)).slice(0,4).toUpperCase();
+        document.getElementById('agency-badge').setAttribute('title', a.agency);
         document.getElementById('agency-eyebrow').textContent = `FY ${latest.year} Annual FOIA Report`;
         document.getElementById('agency-title').textContent = a.agency;
         document.getElementById('agency-subtitle').textContent = `${latest.component_count} reporting component${latest.component_count===1?'':'s'} \u00b7 slug: ${a.slug}`;
@@ -152,12 +153,12 @@
     function renderOverTime(a) {
         document.getElementById('panel-overtime').innerHTML = `
             <div class="agency-cards-row" style="grid-template-columns:1fr 1fr;">
-                <div class="agency-card"><h4>Requests</h4><div class="sub">Received vs. processed, by fiscal year</div><canvas id="agency-chart-volume" height="220"></canvas></div>
-                <div class="agency-card"><h4>Backlog</h4><div class="sub">Pending requests at fiscal year end</div><canvas id="agency-chart-backlog" height="220"></canvas></div>
+                <div class="agency-card"><h4>Requests</h4><div class="sub">Received vs. processed, by fiscal year</div><div class="chart-canvas-wrap"><canvas id="agency-chart-volume"></canvas></div></div>
+                <div class="agency-card"><h4>Backlog</h4><div class="sub">Pending requests at fiscal year end</div><div class="chart-canvas-wrap"><canvas id="agency-chart-backlog"></canvas></div></div>
             </div>
             <div class="agency-cards-row" style="grid-template-columns:1fr 1fr;">
-                <div class="agency-card"><h4>Total Cost</h4><div class="sub">Program cost by fiscal year</div><canvas id="agency-chart-cost" height="220"></canvas></div>
-                <div class="agency-card"><h4>Staffing</h4><div class="sub">Full-time FOIA staff (FTE)</div><canvas id="agency-chart-staff" height="220"></canvas></div>
+                <div class="agency-card"><h4>Total Cost</h4><div class="sub">Program cost by fiscal year</div><div class="chart-canvas-wrap"><canvas id="agency-chart-cost"></canvas></div></div>
+                <div class="agency-card"><h4>Staffing</h4><div class="sub">Full-time FOIA staff (FTE)</div><div class="chart-canvas-wrap"><canvas id="agency-chart-staff"></canvas></div></div>
             </div>
         `;
         const years = a.years;
@@ -221,7 +222,7 @@
         const oldest = (latest.oldest_pending||[]).slice().sort((x,y)=>y-x);
         document.getElementById('panel-backlog').innerHTML = `
             <div class="agency-cards-row" style="grid-template-columns:1.3fr 1fr;">
-                <div class="agency-card"><h4>Backlog Over Time</h4><canvas id="agency-chart-backlog2" height="200"></canvas></div>
+                <div class="agency-card"><h4>Backlog Over Time</h4><div class="chart-canvas-wrap"><canvas id="agency-chart-backlog2"></canvas></div></div>
                 <div class="agency-card">
                     <h4>Oldest Pending Requests</h4>
                     <div class="sub">Age in business days, FY${latest.year}</div>
@@ -244,7 +245,7 @@
                 <div class="agency-card"><h4>Litigation Cost Per Request</h4><div class="agency-kpi-value">${lcpr!==null?Explorer.fmtCurrency(lcpr):'\u2014'}</div><div class="sub">Litigation cost \u00f7 requests received</div></div>
                 <div class="agency-card"><h4>Fees Collected</h4><div class="agency-kpi-value">${Explorer.fmtCurrency(latest.fees_collected)}</div><div class="sub">FY${latest.year}</div></div>
             </div>
-            <div class="agency-card"><h4>Total Cost Over Time</h4><canvas id="agency-chart-cost2" height="200"></canvas></div>
+            <div class="agency-card"><h4>Total Cost Over Time</h4><div class="chart-canvas-wrap"><canvas id="agency-chart-cost2"></canvas></div></div>
         `;
         const years = a.years;
         new Chart(document.getElementById('agency-chart-cost2'), { type: 'bar', data: { labels: years.map(y=>'FY'+y.year), datasets: [

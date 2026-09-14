@@ -51,9 +51,9 @@ const Explorer = (() => {
 
     const NAVY = '#1B365D';
     const STEEL = '#2A4A7A';
-    // High-contrast qualitative palette — distinct hues, not shades of the same color,
-    // so multiple agencies/series are easy to tell apart at a glance.
-    const CHART_COLORS = ['#1B365D', '#C0392B', '#1E8449', '#B7791F', '#7D3C98', '#117864', '#D35400', '#2980B9'];
+    // High-contrast qualitative palette — spread across the color wheel with
+    // varied lightness, so adjacent agencies never look like shades of one another.
+    const CHART_COLORS = ['#1B365D', '#D7263D', '#2A9D8F', '#F4A100', '#8E44AD', '#3A86FF', '#6A994E', '#C2185B'];
 
     function baseChartOptions(overrides) {
         return Object.assign({
@@ -61,12 +61,22 @@ const Explorer = (() => {
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { labels: { color: '#444', font: { size: 12 } } },
-                tooltip: { backgroundColor: '#1B365D', titleFont: { size: 13 }, bodyFont: { size: 12 } }
+                legend: {
+                    labels: {
+                        color: '#555', font: { size: 11.5, weight: '600' },
+                        usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7,
+                        padding: 14,
+                    },
+                    position: 'top', align: 'end',
+                },
+                tooltip: {
+                    backgroundColor: '#1B365D', titleFont: { size: 13, weight: '600' }, bodyFont: { size: 12 },
+                    padding: 10, cornerRadius: 6, boxPadding: 4, usePointStyle: true,
+                }
             },
             scales: {
-                x: { ticks: { color: '#666' }, grid: { color: '#F0F0F0' } },
-                y: { ticks: { color: '#666' }, grid: { color: '#F0F0F0' } }
+                x: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } },
+                y: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } }
             }
         }, overrides || {});
     }
