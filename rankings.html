@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -56,10 +56,13 @@
             <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab active" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
-                <span>🔍</span>
-                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.92em;width:120px;color:#1B365D;min-width:0;">
                 <datalist id="agency-datalist"></datalist>
-                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+                <button id="explorer-search-btn" aria-label="Search" style="display:flex;align-items:center;justify-content:center;background:#1B365D;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.78em;color:#aaa;flex-shrink:0;">/</span>
             </div>
         </div>
     </div>
@@ -73,11 +76,38 @@
                 <select id="size-select" class="explorer-select">
                     <option value="ALL">All sizes</option>
                 </select>
+                <span class="size-info-trigger" id="size-info-trigger">What do size categories mean? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/></svg></span>
+            </div>
+
+            <div class="size-legend-panel" id="size-legend-panel" style="display:none;">
+                <strong>Peer size categories</strong> group agencies by annual request volume so scores are compared against similar-scale peers, not government-wide. Categories vary slightly by year as reporting bands were refined, but generally follow: <strong>Micro / Very Small</strong> (roughly 1–99 requests/year), <strong>Small</strong> (100–1,000), <strong>Medium</strong> (1,000–10,000), and <strong>Large</strong> (10,000+). "No Activity" agencies reported no processed requests that year; "No Data" agencies didn't report enough to classify.
+            </div>
+
+            <div class="awards-row" id="awards-row">
+                <div class="award-card"><div class="award-label">Loading awards…</div></div>
+            </div>
+
+            <div class="chart-panel">
+                <h3>Score Distribution</h3>
+                <div class="chart-sub">Top and bottom scoring agencies for the selected year and size category</div>
+                <canvas id="chart-heatmap" height="110"></canvas>
             </div>
 
             <div class="note-banner">
                 Scores follow the 100-point methodology on the <a href="components.html" style="color:#1B365D;font-weight:600;">Scoring Methodology</a> page: Processing Time (30), Backlog Management (30), Cost Efficiency (15), Appeals Performance (10), Fee Collection (5), Staff Efficiency (5), Data Quality (5). Only parent agencies are scored to avoid double-counting subunits.
             </div>
+
+            <div class="chart-panel">
+                <h3>Cross-Cut Leaderboards</h3>
+                <div class="chart-sub">Who's fast, slow, generous, stingy, or cheap — independent of the weighted score above. Tiny agencies are excluded to keep the ratios honest.</div>
+                <div class="explorer-controls" style="margin-top:14px;">
+                    <span class="explorer-select-label">Minimum Received (volume floor)</span>
+                    <input type="number" id="lb-floor" value="150" class="explorer-select" style="width:100px;">
+                    <span class="chart-sub" id="lb-floor-note" style="margin:0;"></span>
+                </div>
+            </div>
+
+            <div class="chart-grid-2" id="lb-grid" style="margin-bottom:28px;"></div>
 
             <div class="data-table-wrap">
                 <table class="data-table" id="rankings-table">
@@ -99,8 +129,41 @@
             (function() {
                 Explorer.initChrome('rankings');
                 let allRows = [];
+                let awardsData = {};
                 let sortKey = 'total_score';
                 let sortDir = -1;
+                let heatmapChart = null;
+
+                document.getElementById('size-info-trigger').addEventListener('click', () => {
+                    const panel = document.getElementById('size-legend-panel');
+                    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                });
+
+                function renderAwards(yr) {
+                    const a = awardsData[yr];
+                    const box = document.getElementById('awards-row');
+                    if (!a) { box.innerHTML = ''; return; }
+                    const ICONS = {
+                        trophy: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a1 1 0 0 0-1 1 5 5 0 0 0 4 5M17 5h3a1 1 0 0 1 1 1 5 5 0 0 1-4 5"/></svg>',
+                        trend: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></svg>',
+                        folder: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>',
+                        bolt: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+                    };
+                    const cards = [
+                        { icon: ICONS.trophy, label: 'Top Performer', ...a.top_performer },
+                        { icon: ICONS.trend, label: 'Most Improved (YoY)', ...a.most_improved, suffix: ' pts' },
+                        { icon: ICONS.folder, label: 'Backlog Buster', ...a.backlog_buster, suffix: '% reduced' },
+                        { icon: ICONS.bolt, label: 'Fastest Processor', ...a.fastest_processor, suffix: '% ≤20 days' },
+                    ].filter(c => c.agency);
+                    box.innerHTML = cards.map(c => `
+                        <a class="award-card" href="agency.html?a=${Explorer.slugify(c.agency)}">
+                            <div class="award-icon">${c.icon}</div>
+                            <div class="award-label">${c.label}</div>
+                            <div class="award-agency">${c.agency}</div>
+                            <div class="award-value">${c.value}${c.suffix||''}</div>
+                        </a>
+                    `).join('');
+                }
 
                 function render() {
                     const yr = document.getElementById('year-select').value;
@@ -109,21 +172,39 @@
                     rows = rows.filter(r => r.total_score !== null);
                     rows.sort((a,b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
 
+                    renderAwards(yr);
+
                     const tbody = document.getElementById('rankings-tbody');
                     if (!rows.length) {
                         tbody.innerHTML = '<tr><td colspan="6" class="loading-msg">No scored agencies for this selection.</td></tr>';
+                        if (heatmapChart) { heatmapChart.destroy(); heatmapChart = null; }
                         return;
                     }
                     tbody.innerHTML = rows.map((r, i) => `
                         <tr>
                             <td><span class="rank-badge ${i<3 ? 'top3' : ''}">${i+1}</span></td>
-                            <td><strong>${r.agency}</strong> <span style="color:#999;">(${r.abbrev || ''})</span></td>
+                            <td><a href="agency.html?a=${Explorer.slugify(r.agency)}" style="color:#1B365D;text-decoration:none;font-weight:600;">${r.agency}</a> <span style="color:#999;">(${r.abbrev || ''})</span></td>
                             <td>${r.size_category || '—'}</td>
                             <td>${Explorer.fmtNum(r.requests_processed)}</td>
                             <td>${Explorer.fmtNum(r.backlog)}</td>
                             <td><span class="score-pill ${Explorer.scoreClass(r.total_score)}">${r.total_score}</span></td>
                         </tr>
                     `).join('');
+
+                    const byScore = rows.slice().sort((a,b) => b.total_score - a.total_score);
+                    const top = byScore.slice(0, 10);
+                    const bottom = byScore.slice(-10).reverse();
+                    const combined = [...top, ...(bottom.length && bottom[0].agency !== top[top.length-1].agency ? bottom : [])];
+                    const seen = new Set();
+                    const uniqueCombined = combined.filter(r => { if (seen.has(r.agency)) return false; seen.add(r.agency); return true; }).slice(0, 20);
+
+                    const barColors = uniqueCombined.map(r => r.total_score >= 75 ? '#1E8449' : r.total_score >= 50 ? '#B7791F' : '#C0392B');
+                    if (heatmapChart) heatmapChart.destroy();
+                    heatmapChart = new Chart(document.getElementById('chart-heatmap'), {
+                        type: 'bar',
+                        data: { labels: uniqueCombined.map(r => r.abbrev || r.agency.slice(0,10)), datasets: [{ label: 'Score', data: uniqueCombined.map(r=>r.total_score), backgroundColor: barColors }] },
+                        options: Object.assign({}, Explorer.baseChartOptions(), { plugins: { legend: { display:false } }, scales: { x: { ticks: { color:'#666', maxRotation:60, minRotation:60 } }, y: { max:100, ticks:{color:'#666'} } } })
+                    });
                 }
 
                 document.querySelectorAll('#rankings-table thead th[data-key]').forEach(th => {
@@ -136,8 +217,9 @@
                     });
                 });
 
-                Explorer.loadAgencyScores().then(rows => {
+                Promise.all([Explorer.loadAgencyScores(), Explorer.loadAwards()]).then(([rows, awards]) => {
                     allRows = rows;
+                    awardsData = awards;
                     const years = [...new Set(rows.map(r => r.year))].sort((a,b)=>b-a);
                     const yearSelect = document.getElementById('year-select');
                     yearSelect.innerHTML = years.map(y => `<option value="${y}">FY ${y}</option>`).join('');
@@ -153,6 +235,46 @@
                     sizeSelect.addEventListener('change', render);
 
                     render();
+                });
+
+                // ---------- Cross-cut leaderboards ----------
+                let lbData = {};
+                function renderLeaderboards() {
+                    const yr = document.getElementById('year-select').value;
+                    const floor = parseInt(document.getElementById('lb-floor').value) || 0;
+                    const rows = (lbData[yr] || []).filter(r => (r.received||0) >= floor);
+                    document.getElementById('lb-floor-note').textContent = `${rows.length} of ${(lbData[yr]||[]).length} agencies meet this floor.`;
+
+                    function list(rows, key, fmt, dir) {
+                        const filtered = rows.filter(r => r[key] !== null && r[key] !== undefined).sort((a,b) => dir * (b[key]-a[key]));
+                        const top = filtered.slice(0, 8);
+                        if (!top.length) return '<div class="loading-msg">Not enough data.</div>';
+                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
+                    }
+
+                    const cards = [
+                        { title: 'Highest Grant Rate', sub: '% of processed requests that got some records', key: 'grant_rate', fmt: v => v.toFixed(1)+'%', dir: 1 },
+                        { title: 'Lowest Grant Rate', sub: 'Hardest to get records from', key: 'grant_rate', fmt: v => v.toFixed(1)+'%', dir: -1 },
+                        { title: 'Fastest Median (Simple)', sub: 'Days from request to closure', key: 'simple_median', fmt: v => v+'d', dir: -1 },
+                        { title: 'Slowest Median (Simple)', sub: 'Days from request to closure', key: 'simple_median', fmt: v => v+'d', dir: 1 },
+                        { title: 'Cheapest Per Request', sub: 'Total cost \u00f7 processed requests', key: 'cost_per_request', fmt: v => Explorer.fmtCurrency(v), dir: -1 },
+                        { title: 'Highest Fee Recovery', sub: 'Fees collected as % of total cost', key: 'fee_pct', fmt: v => v.toFixed(2)+'%', dir: 1 },
+                    ];
+                    document.getElementById('lb-grid').innerHTML = cards.map(c => `
+                        <div class="chart-panel">
+                            <h3>${c.title}</h3>
+                            <div class="chart-sub">${c.sub}</div>
+                            ${list(rows, c.key, c.fmt, c.dir)}
+                        </div>
+                    `).join('');
+                }
+
+                document.getElementById('lb-floor').addEventListener('input', renderLeaderboards);
+
+                fetch('data/leaderboards.json').then(r => r.json()).then(data => {
+                    lbData = data;
+                    document.getElementById('year-select').addEventListener('change', renderLeaderboards);
+                    renderLeaderboards();
                 });
             })();
             </script>

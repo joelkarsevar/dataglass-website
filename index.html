@@ -9,6 +9,7 @@
     <!-- Lottie Player Library for Animated Icons -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <link rel="stylesheet" href="site.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -16,7 +17,7 @@
         <div class="nav-container">
             <!-- Logo -->
             <a href="#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
 
             <!-- Mobile Menu Toggle -->
@@ -93,10 +94,14 @@
                         <span class="def-eyebrow">Flagship Tool</span>
                         <h2>FOIA Data Explorer</h2>
                         <p>Thirteen years of government-wide FOIA performance — request volume, backlog, cost, exemptions, and a fully computed 100-point agency scorecard. Explore it, filter it, compare agencies side by side.</p>
-                        <a href="overview.html" class="def-cta">Explore the Data →</a>
+                        <a href="overview.html" class="def-cta">Take Me to the Data →</a>
+                        <div class="def-stats" id="def-stats">
+                            <div class="def-stat"><div class="def-stat-label">Loading…</div></div>
+                        </div>
                     </div>
-                    <div class="def-stats" id="def-stats">
-                        <div class="def-stat"><div class="def-stat-label">Loading…</div></div>
+                    <div class="def-chart-panel">
+                        <div class="def-chart-label">Requests Received, FY2013–Present</div>
+                        <canvas id="def-chart" height="220"></canvas>
                     </div>
                 </div>
             </div>
@@ -121,6 +126,27 @@
                         <div class="def-stat-label">Total Program Cost</div>
                     </div>
                 `;
+
+                new Chart(document.getElementById('def-chart'), {
+                    type: 'line',
+                    data: {
+                        labels: rows.map(r => 'FY' + String(r.year).slice(2)),
+                        datasets: [{
+                            data: rows.map(r => r.requests_received),
+                            borderColor: '#FFFFFF',
+                            backgroundColor: 'rgba(255,255,255,0.12)',
+                            fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2.5,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => Explorer.fmtNum(ctx.parsed.y) + ' requests' } } },
+                        scales: {
+                            x: { ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.08)' } },
+                            y: { ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 }, callback: v => Explorer.fmtNum(v) }, grid: { color: 'rgba(255,255,255,0.08)' } }
+                        }
+                    }
+                });
             }).catch(() => {
                 document.getElementById('def-stats').innerHTML = '';
             });
@@ -296,7 +322,7 @@
                             </iframe>
                         </div>
                         <div class="nexgen-video-label">
-                            <span class="nexgen-badge">▶ Showcase Video</span>
+                            <span class="nexgen-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0;"><polygon points="6 4 20 12 6 20"/></svg> Showcase Video</span>
                             <span class="nexgen-video-caption">Data Glass LLC — NexGen FOIA Tech Showcase 3.0</span>
                         </div>
                     </div>

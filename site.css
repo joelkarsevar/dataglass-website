@@ -50,7 +50,7 @@ html, body {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 49px;
+            height: 80px;
         }
 
         .nav-logo {
@@ -241,7 +241,7 @@ html, body {
 
         /* Add padding to body to account for fixed nav */
         body {
-            padding-top: 49px;
+            padding-top: 80px;
         }
 
         /* Laptop-scale tightening: shrink nav spacing before the mobile
@@ -322,6 +322,7 @@ html, body {
             font-weight: 700;
             font-size: 1.05em;
             transition: all 0.3s ease;
+            margin-bottom: 28px;
         }
 
         .def-cta:hover {
@@ -331,28 +332,43 @@ html, body {
 
         .def-stats {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
+            flex-wrap: wrap;
+            gap: 14px;
         }
 
         .def-stat {
+            flex: 1 1 150px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 12px;
-            padding: 18px 22px;
+            padding: 16px 18px;
         }
 
         .def-stat-value {
             color: #FFFFFF;
-            font-size: 1.8em;
+            font-size: 1.5em;
             font-weight: 700;
             line-height: 1.2;
         }
 
         .def-stat-label {
             color: rgba(255,255,255,0.75);
-            font-size: 0.85em;
+            font-size: 0.82em;
             margin-top: 4px;
+        }
+
+        .def-chart-panel {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 14px;
+            padding: 20px 22px;
+        }
+
+        .def-chart-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
         /* Power BI capability demo callout */

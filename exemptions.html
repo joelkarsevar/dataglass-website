@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -56,10 +56,13 @@
             <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab active" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
-                <span>🔍</span>
-                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.92em;width:120px;color:#1B365D;min-width:0;">
                 <datalist id="agency-datalist"></datalist>
-                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+                <button id="explorer-search-btn" aria-label="Search" style="display:flex;align-items:center;justify-content:center;background:#1B365D;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.78em;color:#aaa;flex-shrink:0;">/</span>
             </div>
         </div>
     </div>
@@ -72,15 +75,26 @@
                 <canvas id="chart-ex-trend"></canvas>
             </div>
 
+            <div class="chart-panel">
+                <h3>Exemption Explorer</h3>
+                <div class="chart-sub">The nine FOIA exemptions let agencies withhold specific kinds of records. Pick one to see which agencies cite it most (FY<span id="ex-latest-year-label"></span>).</div>
+                <div class="ex-pill-grid" id="ex-pill-grid"></div>
+            </div>
+
             <div class="chart-grid-2">
                 <div class="chart-panel">
-                    <h3>Exemption Mix — Latest Fiscal Year</h3>
-                    <canvas id="chart-ex-mix"></canvas>
+                    <h3 id="ex-detail-code">Ex. 6</h3>
+                    <div class="chart-sub" id="ex-detail-name">Personal privacy</div>
+                    <p class="ex-detail-desc" id="ex-detail-desc"></p>
+                    <div class="ex-total-citations">
+                        <div class="kpi-label">Total Citations</div>
+                        <div class="kpi-value" id="ex-detail-total">—</div>
+                    </div>
                 </div>
                 <div class="chart-panel">
-                    <h3>Top Agencies by Exemption Citations</h3>
-                    <div class="chart-sub">Latest fiscal year, top 10</div>
-                    <canvas id="chart-ex-agency"></canvas>
+                    <h3>Top Agencies Citing This Exemption</h3>
+                    <div class="chart-sub">Counts of citations across all components</div>
+                    <div id="ex-agency-list"></div>
                 </div>
             </div>
 
@@ -91,17 +105,80 @@
             <script>
             (function() {
                 Explorer.initChrome('exemptions');
+
+                const EX_META = {
+                    exemptions_ex_1: { code: 'Ex. 1', name: 'National security', desc: 'Properly classified information concerning national defense or foreign policy.' },
+                    exemptions_ex_2: { code: 'Ex. 2', name: 'Internal personnel rules', desc: 'Records related solely to internal personnel rules and practices of an agency.' },
+                    exemptions_ex_3: { code: 'Ex. 3', name: 'Other statutes', desc: 'Information specifically exempted from disclosure by another federal statute.' },
+                    exemptions_ex_4: { code: 'Ex. 4', name: 'Trade secrets / business info', desc: 'Trade secrets and commercial or financial information obtained from a person and privileged or confidential.' },
+                    exemptions_ex_5: { code: 'Ex. 5', name: 'Privileged communications', desc: 'Inter-agency or intra-agency memoranda or letters that would not be available by law to a party in litigation (e.g., deliberative process, attorney-client).' },
+                    exemptions_ex_6: { code: 'Ex. 6', name: 'Personal privacy', desc: 'Personnel and medical files whose disclosure would be a clearly unwarranted invasion of personal privacy.' },
+                    exemptions_ex_7a: { code: 'Ex. 7(A)', name: 'Interfere with proceedings', desc: 'Records compiled for law enforcement purposes, disclosure of which could reasonably be expected to interfere with enforcement proceedings.' },
+                    exemptions_ex_7b: { code: 'Ex. 7(B)', name: 'Fair trial', desc: 'Law enforcement records that would deprive a person of a right to a fair trial or impartial adjudication.' },
+                    exemptions_ex_7c: { code: 'Ex. 7(C)', name: 'Personal privacy (law enforcement)', desc: 'Law enforcement records that could reasonably be expected to constitute an unwarranted invasion of personal privacy.' },
+                    exemptions_ex_7d: { code: 'Ex. 7(D)', name: 'Confidential source', desc: 'Law enforcement records that could reasonably be expected to disclose the identity of a confidential source.' },
+                    exemptions_ex_7e: { code: 'Ex. 7(E)', name: 'Law enforcement techniques', desc: 'Records that would disclose techniques, procedures, or guidelines for law enforcement investigations if disclosure could risk circumvention of the law.' },
+                    exemptions_ex_7f: { code: 'Ex. 7(F)', name: 'Safety of individuals', desc: 'Law enforcement records that could reasonably be expected to endanger the life or physical safety of any individual.' },
+                    exemptions_ex_8: { code: 'Ex. 8', name: 'Financial institutions', desc: 'Information contained in or related to examination, operating, or condition reports for regulated financial institutions.' },
+                    exemptions_ex_9: { code: 'Ex. 9', name: 'Geological info', desc: 'Geological and geophysical information and data, including maps, concerning wells.' },
+                };
+
+                let currentKey = 'exemptions_ex_6';
+
+                function renderPills(data) {
+                    const exKeys = Object.keys(data.labels);
+                    const totals = {};
+                    exKeys.forEach(k => { totals[k] = data.by_agency.reduce((s,a) => s + (a[k]||0), 0); });
+                    document.getElementById('ex-pill-grid').innerHTML = exKeys.map(k => `
+                        <div class="ex-pill ${k===currentKey?'active':''}" data-key="${k}">
+                            <div class="ex-pill-code">${EX_META[k] ? EX_META[k].code : k}</div>
+                            <div class="ex-pill-count">${Explorer.fmtNum(totals[k])}</div>
+                        </div>
+                    `).join('');
+                    document.querySelectorAll('.ex-pill').forEach(p => {
+                        p.addEventListener('click', () => {
+                            currentKey = p.dataset.key;
+                            document.querySelectorAll('.ex-pill').forEach(x => x.classList.remove('active'));
+                            p.classList.add('active');
+                            renderDetail(data);
+                        });
+                    });
+                }
+
+                function renderDetail(data) {
+                    const meta = EX_META[currentKey] || { code: currentKey, name: '', desc: '' };
+                    document.getElementById('ex-detail-code').textContent = meta.code;
+                    document.getElementById('ex-detail-name').textContent = meta.name;
+                    document.getElementById('ex-detail-desc').textContent = meta.desc;
+
+                    const total = data.by_agency.reduce((s,a) => s + (a[currentKey]||0), 0);
+                    document.getElementById('ex-detail-total').textContent = Explorer.fmtNum(total);
+
+                    const top = data.by_agency.filter(a => a[currentKey] > 0).sort((a,b) => b[currentKey]-a[currentKey]).slice(0, 20);
+                    if (!top.length) {
+                        document.getElementById('ex-agency-list').innerHTML = '<div class="loading-msg">No agencies cited this exemption in FY' + data.by_agency_latest_fy + '.</div>';
+                        return;
+                    }
+                    const max = top[0][currentKey];
+                    document.getElementById('ex-agency-list').innerHTML = top.map(a => `
+                        <div class="bar-list-row">
+                            <div class="bar-list-label-row"><span class="name"><a href="agency.html?a=${Explorer.slugify(a.agency)}" style="color:#1B365D;text-decoration:none;">${a.abbrev || a.agency}</a></span><span class="count">${Explorer.fmtNum(a[currentKey])} \u00b7 ${(a[currentKey]/total*100).toFixed(1)}%</span></div>
+                            <div class="bar-list-track"><div class="bar-list-fill" style="width:${(a[currentKey]/max*100).toFixed(1)}%;"></div></div>
+                        </div>
+                    `).join('');
+                }
+
                 Explorer.loadExemptions().then(data => {
                     const years = data.by_year.map(r => 'FY' + r.year);
                     const exKeys = Object.keys(data.labels);
-                    const colors = ['#1B365D','#2A4A7A','#5B8AC4','#8FB4DE','#C0392B','#B7791F','#1E8449','#7D3C98','#D35400','#16A085','#7F8C8D','#34495E','#E74C3C','#2980B9'];
+                    const colors = ['#1B365D','#C0392B','#1E8449','#B7791F','#7D3C98','#117864','#D35400','#2980B9','#8E44AD','#16A085','#7F8C8D','#34495E','#E74C3C','#3498DB'];
 
                     new Chart(document.getElementById('chart-ex-trend'), {
                         type: 'line',
                         data: {
                             labels: years,
                             datasets: exKeys.map((k,i) => ({
-                                label: data.labels[k].split('–')[0].trim(),
+                                label: EX_META[k] ? EX_META[k].code : k,
                                 data: data.by_year.map(r => r[k]),
                                 borderColor: colors[i % colors.length],
                                 fill: false, tension: 0.25, pointRadius: 2,
@@ -110,21 +187,9 @@
                         options: Explorer.baseChartOptions({ plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } })
                     });
 
-                    const latestYear = data.by_agency_latest_fy;
-                    const latestRow = data.by_year.find(r => r.year === latestYear);
-                    const mixData = exKeys.map(k => latestRow[k]);
-                    new Chart(document.getElementById('chart-ex-mix'), {
-                        type: 'doughnut',
-                        data: { labels: exKeys.map(k=>data.labels[k]), datasets: [{ data: mixData, backgroundColor: colors }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 9 } } } } }
-                    });
-
-                    const topAgencies = data.by_agency.slice(0, 10);
-                    new Chart(document.getElementById('chart-ex-agency'), {
-                        type: 'bar',
-                        data: { labels: topAgencies.map(a => a.abbrev || a.agency), datasets: [{ label: 'Exemption Citations', data: topAgencies.map(a=>a.total), backgroundColor: Explorer.NAVY }] },
-                        options: Object.assign({}, Explorer.baseChartOptions(), { indexAxis: 'y', plugins: { legend: { display: false } } })
-                    });
+                    document.getElementById('ex-latest-year-label').textContent = data.by_agency_latest_fy;
+                    renderPills(data);
+                    renderDetail(data);
                 });
             })();
             </script>

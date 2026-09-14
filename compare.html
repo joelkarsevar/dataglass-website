@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -56,10 +56,13 @@
             <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab active" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
-                <span>🔍</span>
-                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.92em;width:120px;color:#1B365D;min-width:0;">
                 <datalist id="agency-datalist"></datalist>
-                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+                <button id="explorer-search-btn" aria-label="Search" style="display:flex;align-items:center;justify-content:center;background:#1B365D;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.78em;color:#aaa;flex-shrink:0;">/</span>
             </div>
         </div>
     </div>
@@ -131,8 +134,8 @@
                 }
 
                 function renderChips() {
-                    document.getElementById('agency-chips').innerHTML = selected.map(a => `
-                        <div class="agency-chip">${a} <button data-a="${a}">×</button></div>
+                    document.getElementById('agency-chips').innerHTML = selected.map((a,i) => `
+                        <div class="agency-chip" style="border-left:4px solid ${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${a} <button data-a="${a}">×</button></div>
                     `).join('');
                     document.querySelectorAll('.agency-chip button').forEach(b => {
                         b.addEventListener('click', () => {
@@ -152,7 +155,7 @@
                         if (radarChart) { radarChart.destroy(); radarChart = null; }
                         return;
                     }
-                    thead.innerHTML = '<th>Metric</th>' + selected.map(a => `<th>${a}</th>`).join('');
+                    thead.innerHTML = '<th>Metric</th>' + selected.map((a,i) => `<th><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${a}</th>`).join('');
                     tbody.innerHTML = METRICS.map(m => {
                         const cells = selected.map(a => {
                             const row = findRow(a, yr);

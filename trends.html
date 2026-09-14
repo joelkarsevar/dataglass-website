@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 70px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 13px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -56,15 +56,33 @@
             <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab active" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
-                <span>🔍</span>
-                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency (press /)" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.95em;width:150px;color:#1B365D;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="explorer-search-input" list="agency-datalist" placeholder="Search agency" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:0.92em;width:120px;color:#1B365D;min-width:0;">
                 <datalist id="agency-datalist"></datalist>
-                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.8em;color:#aaa;">/</span>
+                <button id="explorer-search-btn" aria-label="Search" style="display:flex;align-items:center;justify-content:center;background:#1B365D;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <span style="border:1px solid #E0E0E0;border-radius:4px;padding:1px 6px;font-size:0.78em;color:#aaa;flex-shrink:0;">/</span>
             </div>
         </div>
     </div>
 
         <div class="explorer-body">
+
+            <div class="chart-panel">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;">
+                    <div>
+                        <h3>Compare Agencies Over Time</h3>
+                        <div class="chart-sub">Pick which agencies and which metric.</div>
+                    </div>
+                    <div class="metric-toggle-row" id="trend-metric-toggle"></div>
+                </div>
+                <div class="agency-pill-row" id="trend-agency-pills" style="margin-top:14px;"></div>
+                <div style="margin-top:16px;">
+                    <canvas id="chart-t-compare" height="110"></canvas>
+                </div>
+                <div class="chart-sub" style="margin-top:10px;">Gaps indicate years the agency wasn't in the report, or merged/renamed.</div>
+            </div>
 
             <div class="chart-panel">
                 <h3>Requests Received &amp; Processed</h3>
@@ -99,6 +117,106 @@
             <script>
             (function() {
                 Explorer.initChrome('trends');
+
+                // ---------- Compare Agencies Over Time ----------
+                (function() {
+                    const METRICS = [
+                        { key: 'received', label: 'Received' },
+                        { key: 'processed', label: 'Processed' },
+                        { key: 'backlog', label: 'Backlog' },
+                        { key: 'cost', label: 'Cost' },
+                        { key: 'staff', label: 'Staff' },
+                        { key: 'simple_median', label: 'Simple Median' },
+                    ];
+                    const DEFAULT_AGENCIES = ['dhs','doj','va','dod','hhs'];
+                    const PALETTE = Explorer.CHART_COLORS;
+                    let currentMetric = 'received';
+                    let selected = [];
+                    let agencies = {};
+                    let compareChart = null;
+
+                    function metricValue(yearRow, key) {
+                        if (key === 'simple_median') return yearRow.response_time ? yearRow.response_time.simple_median : null;
+                        return yearRow[key];
+                    }
+
+                    function render() {
+                        const allYears = [...new Set(Object.values(agencies).flatMap(a => a.years.map(y=>y.year)))].sort();
+                        const datasets = selected.map((slug, i) => {
+                            const a = agencies[slug];
+                            if (!a) return null;
+                            const byYear = {};
+                            a.years.forEach(y => byYear[y.year] = metricValue(y, currentMetric));
+                            return {
+                                label: a.abbrev || a.agency,
+                                data: allYears.map(yr => byYear[yr] !== undefined ? byYear[yr] : null),
+                                borderColor: PALETTE[i % PALETTE.length],
+                                backgroundColor: PALETTE[i % PALETTE.length],
+                                spanGaps: true, tension: 0.3, pointRadius: 2,
+                            };
+                        }).filter(Boolean);
+
+                        const metricMeta = METRICS.find(m => m.key === currentMetric);
+                        const isCurrency = currentMetric === 'cost';
+                        const isDays = currentMetric === 'simple_median';
+
+                        if (compareChart) compareChart.destroy();
+                        compareChart = new Chart(document.getElementById('chart-t-compare'), {
+                            type: 'line',
+                            data: { labels: allYears.map(y => 'FY'+y), datasets },
+                            options: Explorer.baseChartOptions({
+                                scales: {
+                                    x: { ticks: { color: '#666' }, grid: { color: '#F0F0F0' } },
+                                    y: { ticks: { color: '#666', callback: v => isCurrency ? Explorer.fmtCurrency(v) : (isDays ? v+'d' : Explorer.fmtNum(v)) }, grid: { color: '#F0F0F0' } }
+                                }
+                            })
+                        });
+                    }
+
+                    function renderPills() {
+                        const names = Object.values(agencies).sort((a,b) => a.agency.localeCompare(b.agency));
+                        document.getElementById('trend-agency-pills').innerHTML = names.map(a => `
+                            <button class="agency-pill ${selected.includes(a.slug)?'active':''}" data-slug="${a.slug}" ${selected.includes(a.slug) ? `style="background:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};border-color:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};"` : ''}>${a.abbrev || a.agency}</button>
+                        `).join('') + '<span class="chart-sub" style="align-self:center;">Pick up to 6</span>';
+
+                        document.querySelectorAll('.agency-pill').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const slug = btn.dataset.slug;
+                                if (selected.includes(slug)) {
+                                    selected = selected.filter(s => s !== slug);
+                                } else if (selected.length < 6) {
+                                    selected.push(slug);
+                                }
+                                renderPills();
+                                render();
+                            });
+                        });
+                    }
+
+                    function renderMetricToggle() {
+                        document.getElementById('trend-metric-toggle').innerHTML = METRICS.map(m => `
+                            <button class="metric-toggle-btn ${m.key===currentMetric?'active':''}" data-key="${m.key}">${m.label}</button>
+                        `).join('');
+                        document.querySelectorAll('.metric-toggle-btn').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                currentMetric = btn.dataset.key;
+                                document.querySelectorAll('.metric-toggle-btn').forEach(b => b.classList.remove('active'));
+                                btn.classList.add('active');
+                                render();
+                            });
+                        });
+                    }
+
+                    Explorer.loadAgencyDetail().then(data => {
+                        agencies = data;
+                        selected = DEFAULT_AGENCIES.filter(s => agencies[s]);
+                        if (!selected.length) selected = Object.keys(agencies).slice(0, 5);
+                        renderMetricToggle();
+                        renderPills();
+                        render();
+                    });
+                })();
+
                 Explorer.loadTrends().then(rows => {
                     const years = rows.map(r => 'FY' + r.year);
                     const opt = Explorer.baseChartOptions();
