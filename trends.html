@@ -79,7 +79,7 @@
                 </div>
                 <div class="agency-pill-row" id="trend-agency-pills" style="margin-top:14px;"></div>
                 <div style="margin-top:16px;">
-                    <canvas id="chart-t-compare" height="110"></canvas>
+                    <div class="chart-canvas-wrap tall"><canvas id="chart-t-compare"></canvas></div>
                 </div>
                 <div class="chart-sub" style="margin-top:10px;">Gaps indicate years the agency wasn't in the report, or merged/renamed.</div>
             </div>
@@ -87,17 +87,17 @@
             <div class="chart-panel">
                 <h3>Requests Received &amp; Processed</h3>
                 <div class="chart-sub">FY 2013 – present, government-wide</div>
-                <canvas id="chart-t-volume"></canvas>
+                <div class="chart-canvas-wrap"><canvas id="chart-t-volume"></canvas></div>
             </div>
 
             <div class="chart-grid-2">
                 <div class="chart-panel">
                     <h3>Backlog &amp; Appeals Backlog</h3>
-                    <canvas id="chart-t-backlog"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-t-backlog"></canvas></div>
                 </div>
                 <div class="chart-panel">
                     <h3>Total Program Cost &amp; Litigation Cost</h3>
-                    <canvas id="chart-t-cost"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-t-cost"></canvas></div>
                 </div>
             </div>
 
@@ -105,12 +105,12 @@
                 <div class="chart-panel">
                     <h3>% Processed Within 20 Days</h3>
                     <div class="chart-sub">Simple vs. complex track</div>
-                    <canvas id="chart-t-speed"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-t-speed"></canvas></div>
                 </div>
                 <div class="chart-panel">
                     <h3>Disposition of Processed Requests</h3>
                     <div class="chart-sub">Full grants, partial grants, full denials, no records</div>
-                    <canvas id="chart-t-disposition"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-t-disposition"></canvas></div>
                 </div>
             </div>
 
@@ -176,7 +176,7 @@
                     function renderPills() {
                         const names = Object.values(agencies).sort((a,b) => a.agency.localeCompare(b.agency));
                         document.getElementById('trend-agency-pills').innerHTML = names.map(a => `
-                            <button class="agency-pill ${selected.includes(a.slug)?'active':''}" data-slug="${a.slug}" ${selected.includes(a.slug) ? `style="background:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};border-color:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};"` : ''}>${a.abbrev || a.agency}</button>
+                            <button class="agency-pill ${selected.includes(a.slug)?'active':''}" data-slug="${a.slug}" title="${a.agency}" ${selected.includes(a.slug) ? `style="background:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};border-color:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};"` : ''}>${a.abbrev || a.agency}</button>
                         `).join('') + '<span class="chart-sub" style="align-self:center;">Pick up to 6</span>';
 
                         document.querySelectorAll('.agency-pill').forEach(btn => {

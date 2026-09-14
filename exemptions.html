@@ -72,7 +72,7 @@
             <div class="chart-panel">
                 <h3>Exemption Use Over Time</h3>
                 <div class="chart-sub">Government-wide count of exemptions cited, by fiscal year</div>
-                <canvas id="chart-ex-trend"></canvas>
+                <div class="chart-canvas-wrap"><canvas id="chart-ex-trend"></canvas></div>
             </div>
 
             <div class="chart-panel">
@@ -162,7 +162,7 @@
                     const max = top[0][currentKey];
                     document.getElementById('ex-agency-list').innerHTML = top.map(a => `
                         <div class="bar-list-row">
-                            <div class="bar-list-label-row"><span class="name"><a href="agency.html?a=${Explorer.slugify(a.agency)}" style="color:#1B365D;text-decoration:none;">${a.abbrev || a.agency}</a></span><span class="count">${Explorer.fmtNum(a[currentKey])} \u00b7 ${(a[currentKey]/total*100).toFixed(1)}%</span></div>
+                            <div class="bar-list-label-row"><span class="name"><a href="agency.html?a=${Explorer.slugify(a.agency)}" title="${a.agency}" style="color:#1B365D;text-decoration:none;">${a.abbrev || a.agency}</a></span><span class="count">${Explorer.fmtNum(a[currentKey])} \u00b7 ${(a[currentKey]/total*100).toFixed(1)}%</span></div>
                             <div class="bar-list-track"><div class="bar-list-fill" style="width:${(a[currentKey]/max*100).toFixed(1)}%;"></div></div>
                         </div>
                     `).join('');

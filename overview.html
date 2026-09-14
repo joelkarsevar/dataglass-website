@@ -77,12 +77,12 @@
                 <div class="chart-panel">
                     <h3>Requests Received vs. Processed</h3>
                     <div class="chart-sub">Government-wide, all reporting parent agencies</div>
-                    <canvas id="chart-volume"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-volume"></canvas></div>
                 </div>
                 <div class="chart-panel">
                     <h3>Backlog Trend</h3>
                     <div class="chart-sub">Total pending requests at fiscal year end</div>
-                    <canvas id="chart-backlog"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-backlog"></canvas></div>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
                 <div class="chart-panel">
                     <h3>Volume vs. Cost Per Request</h3>
                     <div class="chart-sub">Each dot is an agency. Log scale on both axes.</div>
-                    <canvas id="chart-scatter"></canvas>
+                    <div class="chart-canvas-wrap"><canvas id="chart-scatter"></canvas></div>
                 </div>
             </div>
 
@@ -180,10 +180,10 @@
 
                     // Top agencies by volume
                     const topVol = latestScores.filter(r => r.requests_received).sort((a,b) => b.requests_received - a.requests_received).slice(0, 10);
-                    document.getElementById('ov-top-volume').innerHTML = '<ol class="lb-list">' + topVol.map(r => `<li><a href="agency.html?a=${Explorer.slugify(r.agency)}">${r.abbrev || r.agency}</a><span>${Explorer.fmtNum(r.requests_received)}</span></li>`).join('') + '</ol>';
+                    document.getElementById('ov-top-volume').innerHTML = '<ol class="lb-list">' + topVol.map(r => `<li><a href="agency.html?a=${Explorer.slugify(r.agency)}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${Explorer.fmtNum(r.requests_received)}</span></li>`).join('') + '</ol>';
 
                     // Scatter: volume vs cost per request (log-log)
-                    const pts = latestScores.filter(r => r.requests_received > 0 && r.cost_per_request > 0).map(r => ({ x: r.requests_received, y: r.cost_per_request, label: r.abbrev || r.agency }));
+                    const pts = latestScores.filter(r => r.requests_received > 0 && r.cost_per_request > 0).map(r => ({ x: r.requests_received, y: r.cost_per_request, label: r.agency }));
                     new Chart(document.getElementById('chart-scatter'), {
                         type: 'scatter',
                         data: { datasets: [{ label: 'Agencies', data: pts, backgroundColor: 'rgba(27,54,93,0.55)' }] },
@@ -204,7 +204,7 @@
                         filtered = filtered.sort((a,b) => dir * (a[key]-b[key]));
                         const top = filtered.slice(0, 6);
                         if (!top.length) return '<div class="loading-msg">Not enough data.</div>';
-                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
+                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
                     }
                     document.getElementById('ov-system-health').innerHTML = `
                         <div>

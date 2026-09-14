@@ -121,16 +121,16 @@ html, body {
             top: 100%;
             left: 0;
             background: white;
-            min-width: 200px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 240px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
             margin-top: 10px;
             list-style: none;
-            padding: 10px 0;
+            padding: 12px 0;
         }
 
         .nav-dropdown:hover .dropdown-menu {
@@ -146,8 +146,10 @@ html, body {
         .dropdown-menu a {
             color: #1B365D;
             text-decoration: none;
-            padding: 12px 20px;
+            padding: 11px 24px;
             display: block;
+            line-height: 1.3;
+            font-size: 0.96em;
             transition: background 0.3s ease;
         }
 
@@ -156,7 +158,7 @@ html, body {
         }
 
         .dropdown-label {
-            padding: 6px 20px 4px;
+            padding: 10px 24px 6px;
             font-size: 0.72em;
             font-weight: 700;
             text-transform: uppercase;
@@ -167,7 +169,7 @@ html, body {
         .dropdown-divider {
             height: 1px;
             background: #EDEDED;
-            margin: 6px 0;
+            margin: 8px 0;
         }
 
         /* Mobile Menu Toggle */
@@ -369,6 +371,12 @@ html, body {
             font-size: 0.85em;
             font-weight: 600;
             margin-bottom: 12px;
+        }
+
+        .def-chart-canvas-wrap {
+            position: relative;
+            height: 260px;
+            width: 100%;
         }
 
         /* Power BI capability demo callout */

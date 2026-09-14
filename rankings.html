@@ -90,7 +90,7 @@
             <div class="chart-panel">
                 <h3>Score Distribution</h3>
                 <div class="chart-sub">Top and bottom scoring agencies for the selected year and size category</div>
-                <canvas id="chart-heatmap" height="110"></canvas>
+                <div class="chart-canvas-wrap short"><canvas id="chart-heatmap"></canvas></div>
             </div>
 
             <div class="note-banner">
@@ -203,7 +203,7 @@
                     heatmapChart = new Chart(document.getElementById('chart-heatmap'), {
                         type: 'bar',
                         data: { labels: uniqueCombined.map(r => r.abbrev || r.agency.slice(0,10)), datasets: [{ label: 'Score', data: uniqueCombined.map(r=>r.total_score), backgroundColor: barColors }] },
-                        options: Object.assign({}, Explorer.baseChartOptions(), { plugins: { legend: { display:false } }, scales: { x: { ticks: { color:'#666', maxRotation:60, minRotation:60 } }, y: { max:100, ticks:{color:'#666'} } } })
+                        options: Object.assign({}, Explorer.baseChartOptions(), { plugins: { legend: { display:false }, tooltip: { callbacks: { title: (items) => uniqueCombined[items[0].dataIndex].agency } } }, scales: { x: { ticks: { color:'#666', maxRotation:60, minRotation:60 } }, y: { max:100, ticks:{color:'#666'} } } })
                     });
                 }
 
@@ -249,7 +249,7 @@
                         const filtered = rows.filter(r => r[key] !== null && r[key] !== undefined).sort((a,b) => dir * (b[key]-a[key]));
                         const top = filtered.slice(0, 8);
                         if (!top.length) return '<div class="loading-msg">Not enough data.</div>';
-                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
+                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
                     }
 
                     const cards = [
