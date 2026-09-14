@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 62px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 50px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -27,6 +27,7 @@
                         <li><a href="overview.html">Overview</a></li>
                         <li><a href="trends.html">Trends</a></li>
                         <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="components.html">Components</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
                         <li><a href="methodology.html">Scoring Methodology</a></li>
@@ -70,13 +71,6 @@
         <div class="explorer-body">
 
             <div class="chart-panel">
-                <h3>Exemption Use Over Time</h3>
-                <div class="chart-sub">Government-wide count of exemptions cited, by fiscal year. Toggle categories to focus the chart.</div>
-                <div class="ex-trend-toggle-row" id="ex-trend-toggle"></div>
-                <div class="chart-canvas-wrap"><canvas id="chart-ex-trend"></canvas></div>
-            </div>
-
-            <div class="chart-panel">
                 <h3>Exemption Explorer</h3>
                 <div class="chart-sub">The nine FOIA exemptions let agencies withhold specific kinds of records. Pick one to see which agencies cite it most (FY<span id="ex-latest-year-label"></span>).</div>
                 <div class="ex-pill-grid" id="ex-pill-grid"></div>
@@ -97,6 +91,13 @@
                     <div class="chart-sub">Counts of citations across all components</div>
                     <div id="ex-agency-list"></div>
                 </div>
+            </div>
+
+            <div class="chart-panel">
+                <h3>Exemption Use Over Time</h3>
+                <div class="chart-sub">Government-wide count of exemptions cited, by fiscal year. Toggle categories to focus the chart.</div>
+                <div class="ex-trend-toggle-row" id="ex-trend-toggle"></div>
+                <div class="chart-canvas-wrap"><canvas id="chart-ex-trend"></canvas></div>
             </div>
 
             <div class="note-banner">
@@ -172,7 +173,7 @@
                 Explorer.loadExemptions().then(data => {
                     const years = data.by_year.map(r => 'FY' + r.year);
                     const exKeys = Object.keys(data.labels);
-                    const colors = ['#1B365D','#C0392B','#1E8449','#B7791F','#7D3C98','#117864','#D35400','#2980B9','#8E44AD','#16A085','#7F8C8D','#34495E','#E74C3C','#3498DB'];
+                    const colors = ['#1B365D','#CD6E27','#A28F1F','#27963E','#2B9668','#1F6AA2','#374ABD','#6A2FA2','#9E27CD','#CD2790','#CD276E','#A2271F','#7A7A2B','#4A4A4A'];
 
                     // Default to the 5 most-cited categories so the chart isn't cluttered on load
                     const totals = {};
