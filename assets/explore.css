@@ -1,5 +1,5 @@
 /* ============================================================
-   Data Glass — Data Explorer shared styles
+   Data Glass - Data Explorer shared styles
    Reuses the site's color system: #1B365D (navy), #2A4A7A (steel blue),
    #F8F9FA (light bg), #666 (body text)
    ============================================================ */
@@ -398,6 +398,31 @@ table.data-table tbody tr:last-child td {
     border-bottom: 1px solid #F0F0F0;
 }
 
+.ex-trend-toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.ex-trend-pill {
+    border: 1px solid #E0E0E0;
+    background: #FFFFFF;
+    color: #666;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 0.78em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ex-trend-pill:hover { border-color: #2A4A7A; }
+
+.ex-trend-pill.active {
+    color: #FFFFFF;
+}
+
 .ex-total-citations .kpi-label {
     font-size: 0.78em;
     color: #999;
@@ -480,6 +505,39 @@ table.data-table tbody tr:last-child td {
 .metric-toggle-btn.active {
     background: #1B365D;
     color: #FFFFFF;
+}
+
+.metric-toggle-row.sub {
+    background: transparent;
+    padding: 0;
+    border-top: 1px dashed #E8E8E8;
+    padding-top: 10px;
+}
+
+.metric-toggle-row.sub .metric-toggle-btn {
+    background: #F8F9FA;
+    font-size: 0.8em;
+    padding: 6px 11px;
+}
+
+.metric-toggle-row.sub .metric-toggle-btn.active {
+    background: #2A4A7A;
+    color: #FFFFFF;
+}
+
+.agency-search-input {
+    padding: 9px 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9em;
+    color: #1B365D;
+    min-width: 220px;
+}
+
+.agency-search-input:focus {
+    outline: none;
+    border-color: #2A4A7A;
 }
 
 .agency-pill-row {
@@ -581,6 +639,49 @@ table.data-table tbody tr:last-child td {
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     margin-bottom: 24px;
+}
+
+.awards-section {
+    background: linear-gradient(135deg, #F0F3F8, #F8F9FA);
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 20px 22px 6px;
+    margin-bottom: 24px;
+}
+
+.awards-section-label {
+    font-size: 0.78em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #2A4A7A;
+    margin-bottom: 14px;
+}
+
+.awards-section .awards-row {
+    margin-bottom: 14px;
+}
+
+.award-winners {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 6px 0 4px;
+}
+
+.award-winner-link {
+    color: #1B365D;
+    font-weight: 700;
+    font-size: 0.95em;
+    text-decoration: none;
+    background: rgba(27,54,93,0.06);
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+
+.award-winner-link:hover {
+    background: rgba(27,54,93,0.12);
+    text-decoration: underline;
 }
 
 .award-card {

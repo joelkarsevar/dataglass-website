@@ -12,9 +12,9 @@
         duplicate: 'Duplicate', other: 'Other',
     };
     const DISP_COLORS = {
-        full_grants: '#1E8449', partial_grants: '#2980B9', full_denials: '#C0392B', no_records: '#B0B0B0',
-        referred: '#B7791F', withdrawn: '#7D3C98', fee_related: '#D35400', not_described: '#888',
-        improper: '#888', not_agency_record: '#888', duplicate: '#888', other: '#AAA',
+        full_grants: '#2A9D8F', partial_grants: '#F4A100', full_denials: '#9B2226', no_records: '#94A3B8',
+        referred: '#6A4C93', withdrawn: '#5B7B9C', fee_related: '#B08968', not_described: '#8895A7',
+        improper: '#8895A7', not_agency_record: '#8895A7', duplicate: '#8895A7', other: '#A9B4C2',
     };
     const EX_LABELS = {
         exemptions_ex_1:'Ex 1 \u2013 National Security', exemptions_ex_2:'Ex 2 \u2013 Internal Personnel Rules',
@@ -169,7 +169,7 @@
             { label: 'Processed', data: years.map(y=>y.processed), borderColor: '#2980B9', tension:0.3 },
         ]}, options: opt });
         new Chart(document.getElementById('agency-chart-backlog'), { type: 'line', data: { labels, datasets: [
-            { label: 'Backlog', data: years.map(y=>y.backlog), borderColor: '#C0392B', backgroundColor:'rgba(192,57,43,0.08)', fill:true, tension:0.3 },
+            { label: 'Backlog', data: years.map(y=>y.backlog), borderColor: Explorer.METRIC_COLORS.backlog, fill:false, tension:0.3 },
         ]}, options: opt });
         new Chart(document.getElementById('agency-chart-cost'), { type: 'bar', data: { labels, datasets: [
             { label: 'Total Cost', data: years.map(y=>y.cost), backgroundColor: Explorer.NAVY },
@@ -232,7 +232,7 @@
         `;
         const years = a.years;
         new Chart(document.getElementById('agency-chart-backlog2'), { type: 'line', data: { labels: years.map(y=>'FY'+y.year), datasets: [
-            { label: 'Backlog', data: years.map(y=>y.backlog), borderColor: '#C0392B', backgroundColor:'rgba(192,57,43,0.08)', fill:true, tension:0.3 },
+            { label: 'Backlog', data: years.map(y=>y.backlog), borderColor: Explorer.METRIC_COLORS.backlog, fill:false, tension:0.3 },
         ]}, options: Explorer.baseChartOptions() });
     }
 
