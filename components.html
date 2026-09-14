@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOIA Scoring Methodology - Data Glass LLC</title>
+    <title>FOIA Components - Data Glass LLC</title>
     <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
     <link rel="stylesheet" href="site.css">
     <link rel="stylesheet" href="assets/explore.css">
@@ -29,7 +29,7 @@
                         <li><a href="rankings.html">Rankings</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
-                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li><a href="methodology.html">Scoring Methodology</a></li>
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-label">Capability Demo</li>
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
@@ -47,13 +47,13 @@
     <main>
         <section class="explorer-hero">
             <div class="explorer-hero-inner">
-                <h1>Scoring Methodology</h1>
-                <p>How the 100-point agency score is built — category by category, with the exact thresholds used.</p>
+                <h1>Components</h1>
+                <p>Every reporting component, bureau, and office across government, alongside agency-level rollups.</p>
             </div>
         </section>
     <div class="explorer-tabbar-wrap">
         <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab active" data-tab="components">Methodology</a>
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab active" data-tab="components">Components</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -69,386 +69,105 @@
 
         <div class="explorer-body">
 
-            <div class="note-banner">
-                This is the same scoring framework used on the <a href="rankings.html" style="color:#1B365D;font-weight:600;">Rankings</a> page, applied consistently across all fiscal years back to 2013. Only parent agencies are scored, to prevent double-counting subunits (e.g. FDA rolls into HHS, Army into DOD, ICE into DHS).
+            <div class="explorer-controls">
+                <span class="explorer-select-label">Show</span>
+                <select id="comp-show-select" class="explorer-select">
+                    <option value="component">Components only</option>
+                    <option value="agency">Agency-level rollups</option>
+                    <option value="both">Both</option>
+                </select>
+                <input id="comp-search-input" type="text" class="agency-search-input" placeholder="Search components or agencies...">
+                <span class="chart-sub" id="comp-count-note" style="margin:0;"></span>
             </div>
-<div class="methodology-text">
-                    <h3>FOIA Agency Scoring Methodology</h3>
-                    
-                    <!-- Overview Section -->
-                    <div class="methodology-overview">
-                        <p style="max-width: 900px; margin: 0 auto 20px; color: #666;">FOIA agency rankings use 7 categories to grade each agency's performance for the fiscal year. Data used for these rankings are directly reported from each agency and are aggregated on FOIA.gov. Agencies are classified into seven tiers based on annual requests processed, enabling appropriate peer comparisons.</p>
-                        
-                        <p style="max-width: 900px; margin: 0 auto 20px; color: #666;"><strong>Only parent agencies are scored</strong> to prevent double-counting. (For example, FDA is included in HHS, Army is included in DOD, ICE is included in DHS, etc.)</p>
-                        
-                        <h4>Scoring Framework (100 Points)</h4>
-                        <p style="margin: 10px auto 20px; color: #999; font-size: 0.95em;">Click any category to view detailed scoring methodology</p>
-                        
-                        <table class="methodology-table">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- 1. Processing Time -->
-                                <tr class="clickable-row" data-target="processing-detail">
-                                    <td><strong>Processing Time</strong></td>
-                                    <td>30</td>
-                                </tr>
-                                <tr class="table-detail-row" id="processing-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Percentage of requests processed within 20 days for both simple track and complex track requests.</p>
-                                        
-                                        <p><strong>Scoring approach:</strong> Split evenly between simple track (15 points max) and complex track (15 points max). Each track uses a base point system with performance-based bonus points. Agencies are ranked within their size category, and those meeting threshold percentages earn additional bonus points based on their percentile ranking among peers.</p>
-                                        
-                                        <h5>Simple Track Scoring (15 points max)</h5>
-                                        <p><strong>Base Points:</strong> Awarded based on percentage of simple track requests processed under 20 days.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>% Processed Under 20 Days</th>
-                                                    <th>Base Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>≥90%</td><td>13</td></tr>
-                                                <tr><td>85-89%</td><td>11</td></tr>
-                                                <tr><td>80-84%</td><td>9</td></tr>
-                                                <tr><td>75-79%</td><td>7</td></tr>
-                                                <tr><td>70-74%</td><td>5</td></tr>
-                                                <tr><td>65-69%</td><td>3</td></tr>
-                                                <tr><td>&lt;65%</td><td>1</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Bonus Points:</strong> Agencies achieving ≥80% earn bonus points (1–2 points) based on their percentile ranking within their size category, for a maximum of 15 total points.</p>
-                                        
-                                        <h5>Complex Track Scoring (15 points max)</h5>
-                                        <p><strong>Base Points:</strong> Awarded based on percentage of complex track requests processed under 20 days.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>% Processed Under 20 Days</th>
-                                                    <th>Base Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>≥70%</td><td>13</td></tr>
-                                                <tr><td>60-69%</td><td>11</td></tr>
-                                                <tr><td>50-59%</td><td>9</td></tr>
-                                                <tr><td>40-49%</td><td>7</td></tr>
-                                                <tr><td>30-39%</td><td>5</td></tr>
-                                                <tr><td>25-29%</td><td>3</td></tr>
-                                                <tr><td>&lt;25%</td><td>1</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Bonus Points:</strong> Agencies achieving ≥60% earn bonus points (1–2 points) based on their percentile ranking within their size category, for a maximum of 15 total points.</p>
-                                        
-                                        <p style="margin-top: 15px;"><em>Note: Total score is the sum of simple track points + complex track points, with a maximum of 30 points possible. If an agency has only one track type, that track's score is doubled.</em></p>
-                                        
-                                        <p><strong>Why it matters:</strong> Processing the majority of requests within 20 days demonstrates strong operational efficiency and commitment to timely transparency. The 20-day threshold represents best-practice responsiveness in FOIA operations.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 2. Backlog Management -->
-                                <tr class="clickable-row" data-target="backlog-detail">
-                                    <td><strong>Backlog Management</strong></td>
-                                    <td>30</td>
-                                </tr>
-                                <tr class="table-detail-row" id="backlog-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Three dimensions of backlog health—backlog trajectory (15 pts), absolute size (10 pts), and oldest case age (5 pts).</p>
-                                        
-                                        <h5>Component 1: Backlog Performance Index - BPI (15 points)</h5>
-                                        <p><strong>Formula:</strong> <em>(Current Year Backlog − Previous Year Backlog) ÷ Requests Processed</em></p>
-                                        
-                                        <p><strong>Understanding BPI values:</strong></p>
-                                        <ul>
-                                            <li><strong>Negative BPI (e.g., −0.25):</strong> Backlog is shrinking. Agency processed more cases than it added. <em>This is excellent performance.</em></li>
-                                            <li><strong>Zero BPI (0.00):</strong> Backlog is stable. Agency is keeping pace with incoming requests. <em>This is good performance.</em></li>
-                                            <li><strong>Positive BPI (e.g., +0.35):</strong> Backlog is growing. Agency is adding cases faster than it processes them. <em>This indicates operational challenges.</em></li>
-                                        </ul>
-                                        
-                                        <p><strong>Example:</strong> An agency with 500 requests in backlog last year, 600 this year, and 1,000 processed has BPI = (600−500)/1,000 = 0.10, meaning their backlog grew by 10% of their processing capacity.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>BPI Value</th>
-                                                    <th>Points</th>
-                                                    <th>Meaning</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>≤0.00</td><td>15</td><td>Backlog shrinking or stable</td></tr>
-                                                <tr><td>0.01–0.05</td><td>14</td><td>Minimal growth (1–5% of capacity)</td></tr>
-                                                <tr><td>0.06–0.12</td><td>12</td><td>Modest growth (6–12% of capacity)</td></tr>
-                                                <tr><td>0.13–0.20</td><td>10</td><td>Moderate growth (13–20% of capacity)</td></tr>
-                                                <tr><td>0.21–0.30</td><td>8</td><td>Concerning growth (21–30% of capacity)</td></tr>
-                                                <tr><td>0.31–0.45</td><td>6</td><td>Significant growth (31–45% of capacity)</td></tr>
-                                                <tr><td>0.46–0.65</td><td>4</td><td>Substantial growth (46–65% of capacity)</td></tr>
-                                                <tr><td>0.66–1.00</td><td>2</td><td>Severe growth (66–100% of capacity)</td></tr>
-                                                <tr><td>&gt;1.00</td><td>1</td><td>Critical growth (backlog grew more than entire year's processing)</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <h5>Component 2: Backlog Volume (10 points)</h5>
-                                        <p><strong>Method:</strong> Government-wide comparison of absolute backlog size using LOG10 transformation to ensure fair scoring across all agency sizes.</p>
-                                        
-                                        <p><strong>Why LOG10?</strong> This mathematical transformation ensures that a 10× increase in backlog results in the same proportional point penalty, whether an agency grows from 100 to 1,000 cases or from 10,000 to 100,000 cases. This prevents agencies with extremely large backlogs from distorting the scoring scale.</p>
-                                        
-                                        <p><strong>How it works:</strong> Each agency's backlog is compared to the government-wide minimum and maximum backlog for that fiscal year. Agencies with smaller backlogs (closer to the minimum) receive higher scores, while agencies with larger backlogs (closer to the maximum) receive lower scores.</p>
-                                        
-                                        <p><em>Maximum: 10 points (smallest backlog in comparison group)<br>Minimum: 0 points (largest backlog in comparison group)</em></p>
-                                        
-                                        <h5>Component 3: Persistence Score (5 points)</h5>
-                                        <p><strong>Method:</strong> Evaluates the age of an agency's 10 oldest pending requests. Each case receives 0–10 points based on age bands, then all 10 scores are averaged and scaled to a maximum of 5 points.</p>
-                                        
-                                        <p><strong>Age Band Scoring (per case):</strong></p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Days Pending (Business Days)</th>
-                                                    <th>Points (per case)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>&lt;300 days</td><td>10</td></tr>
-                                                <tr><td>300–499 days</td><td>9</td></tr>
-                                                <tr><td>500–749 days</td><td>8</td></tr>
-                                                <tr><td>750–999 days</td><td>7</td></tr>
-                                                <tr><td>1,000–1,499 days</td><td>6</td></tr>
-                                                <tr><td>1,500–1,999 days</td><td>5</td></tr>
-                                                <tr><td>2,000–2,499 days</td><td>4</td></tr>
-                                                <tr><td>2,500–2,999 days</td><td>3</td></tr>
-                                                <tr><td>3,000–3,499 days</td><td>2</td></tr>
-                                                <tr><td>3,500–4,999 days</td><td>1</td></tr>
-                                                <tr><td>≥5,000 days</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Calculation example:</strong> If the 10 oldest cases have ages that score 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (averaging to 5.5), the persistence score is 5.5 / 10 × 5 = 2.75 points.</p>
-                                        
-                                        <p><strong>Why it matters:</strong> Effective backlog management prevents multi-year delays and demonstrates sustainable operations. The BPI shows trajectory, volume shows current burden, and persistence reveals whether the oldest cases are being forgotten or actively resolved.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 3. Cost Efficiency -->
-                                <tr class="clickable-row" data-target="cost-detail">
-                                    <td><strong>Cost Efficiency</strong></td>
-                                    <td>15</td>
-                                </tr>
-                                <tr class="table-detail-row" id="cost-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Total costs per request (10 pts) and litigation expenses per request (5 pts), evaluated using government-wide thresholds.</p>
-                                        
-                                        <h5>Component 1: Cost Per Request (10 points)</h5>
-                                        <p><strong>Formula:</strong> <em>Total Cost ÷ Requests Processed</em></p>
-                                        <p>Includes all FOIA program costs (personnel, technology, operations) divided by the number of requests processed during the fiscal year.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Cost Per Request</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>≤$250</td><td>10</td></tr>
-                                                <tr><td>$251–750</td><td>9</td></tr>
-                                                <tr><td>$751–1,500</td><td>8</td></tr>
-                                                <tr><td>$1,501–2,500</td><td>6</td></tr>
-                                                <tr><td>$2,501–4,000</td><td>4</td></tr>
-                                                <tr><td>$4,001–6,000</td><td>2</td></tr>
-                                                <tr><td>$6,001–8,000</td><td>1</td></tr>
-                                                <tr><td>&gt;$8,000</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <h5>Component 2: Litigation Cost Per Request (5 points)</h5>
-                                        <p><strong>Formula:</strong> <em>Litigation Costs ÷ Requests Received</em></p>
-                                        <p>Litigation-related expenses divided by the total number of requests received during the fiscal year.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Litigation Cost Per Request</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>$0</td><td>5</td></tr>
-                                                <tr><td>$1–10</td><td>4</td></tr>
-                                                <tr><td>$11–50</td><td>3</td></tr>
-                                                <tr><td>$51–100</td><td>2</td></tr>
-                                                <tr><td>$101–250</td><td>1</td></tr>
-                                                <tr><td>&gt;$250</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Why it matters:</strong> Efficient resource use maximizes transparency while respecting taxpayer dollars. Low litigation costs indicate well-justified decisions that withstand legal challenge.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 4. Appeals Performance -->
-                                <tr class="clickable-row" data-target="appeals-detail">
-                                    <td><strong>Appeals Performance</strong></td>
-                                    <td>10</td>
-                                </tr>
-                                <tr class="table-detail-row" id="appeals-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Appeal rate (8 pts) and total backlogged appeals (2 pts).</p>
-                                        
-                                        <h5>Component 1: Appeal Rate (8 points)</h5>
-                                        <p><strong>Definition:</strong> Appeal rate is the percentage of incoming FOIA requests that result in an administrative appeal.</p>
-                                        
-                                        <p><strong>Formula:</strong> <em>(Appeals Received ÷ Requests Received) × 100</em></p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Appeal Rate</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>≤0.50%</td><td>8</td></tr>
-                                                <tr><td>0.51–1.00%</td><td>7</td></tr>
-                                                <tr><td>1.01–1.50%</td><td>6</td></tr>
-                                                <tr><td>1.51–2.50%</td><td>5</td></tr>
-                                                <tr><td>2.51–3.00%</td><td>4</td></tr>
-                                                <tr><td>3.01–4.50%</td><td>3</td></tr>
-                                                <tr><td>4.51–6.50%</td><td>2</td></tr>
-                                                <tr><td>6.51–10.00%</td><td>1</td></tr>
-                                                <tr><td>&gt;10%</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <h5>Component 2: Appeals Backlog (2 points)</h5>
-                                        <p><strong>Method:</strong> Government-wide comparison using LOG10 transformation to ensure fair scoring across all agency sizes. This transformation treats a 10× increase in backlog (e.g., 10→100 or 1,000→10,000) as equivalent, preventing extreme outliers from distorting the scale.</p>
-                                        
-                                        <p>Agencies with smaller appeals backlogs receive higher scores (up to 2 points), while those with larger backlogs receive lower scores (down to 0 points).</p>
-                                        
-                                        <p><strong>Why it matters:</strong> Low appeal rates signal accurate initial decisions that requesters accept without challenge, reducing downstream litigation and administrative burden. Small appeals backlogs demonstrate efficient processing and prevent delays from compounding.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 5. Fee Collection -->
-                                <tr class="clickable-row" data-target="fee-detail">
-                                    <td><strong>Fee Collection</strong></td>
-                                    <td>5</td>
-                                </tr>
-                                <tr class="table-detail-row" id="fee-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Effectiveness in recovering program costs through fee collection, evaluated within size categories.</p>
-                                        
-                                        <p><strong>Scoring approach:</strong> Agencies are ranked by fee recovery percentage (fees collected ÷ total costs). Only the top 5 agencies in each size category earn points:</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rank Within Category</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>1st place</td><td>5</td></tr>
-                                                <tr><td>2nd place</td><td>4</td></tr>
-                                                <tr><td>3rd place</td><td>3</td></tr>
-                                                <tr><td>4th place</td><td>2</td></tr>
-                                                <tr><td>5th place</td><td>1</td></tr>
-                                                <tr><td>6th+ place</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Eligibility:</strong> Agencies must collect fees &gt;$0 to qualify for ranking.</p>
-                                        
-                                        <p><strong>Why it matters:</strong> Appropriate fee collection balances public access with cost recovery, ensuring FOIA programs operate sustainably.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 6. Staff Efficiency -->
-                                <tr class="clickable-row" data-target="staff-detail">
-                                    <td><strong>Staff Efficiency</strong></td>
-                                    <td>5</td>
-                                </tr>
-                                <tr class="table-detail-row" id="staff-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Staff efficiency based on requests processed per total full-time staff member, evaluated within size categories.</p>
-                                        
-                                        <p><strong>Scoring approach:</strong> Agencies are ranked by efficiency rate (requests processed ÷ total full-time staff). Only the top 5 agencies in each size category earn points:</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rank Within Category</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>1st place</td><td>5</td></tr>
-                                                <tr><td>2nd place</td><td>4</td></tr>
-                                                <tr><td>3rd place</td><td>3</td></tr>
-                                                <tr><td>4th place</td><td>2</td></tr>
-                                                <tr><td>5th place</td><td>1</td></tr>
-                                                <tr><td>6th+ place</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Staff calculation:</strong> Total full-time staff includes both full-time employees and employees who handle FOIA on a part-time basis.</p>
-                                        
-                                        <p><strong>Why it matters:</strong> High staff efficiency can indicate effective workforce deployment and process optimization.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- 7. Data Quality -->
-                                <tr class="clickable-row" data-target="quality-detail">
-                                    <td><strong>Data Quality</strong></td>
-                                    <td>5</td>
-                                </tr>
-                                <tr class="table-detail-row" id="quality-detail">
-                                    <td colspan="2" class="table-detail-cell">
-                                        <p><strong>What it measures:</strong> Accuracy and completeness of reported FOIA data through track type validation.</p>
-                                        
-                                        <p><strong>Validation method:</strong> Compares the number of requests processed by track type (simple + complex + expedited) to the reported total number of requests processed. The formula for this score is <em>(simple + complex + expedited) ÷ Total Requests Processed</em>.</p>
-                                        
-                                        <table class="detail-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Validation Accuracy</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td>100%</td><td>5</td></tr>
-                                                <tr><td>≥99.9%</td><td>4</td></tr>
-                                                <tr><td>99.5–99.8%</td><td>3</td></tr>
-                                                <tr><td>98–99.4%</td><td>2</td></tr>
-                                                <tr><td>95–97.9%</td><td>1</td></tr>
-                                                <tr><td>&lt;95%</td><td>0</td></tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <p><strong>Why it matters:</strong> A perfect 100% score indicates no missing or miscategorized cases. Lower percentages could indicate inaccurate reporting. Accurate data enables informed policy decisions and maintains public trust in transparency metrics.</p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Total Row -->
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td><strong>100</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-<script>Explorer.initChrome('components');</script>
+
+            <div class="note-banner">
+                Every federal agency reports both its own totals and the totals of its reporting components (bureaus, offices, and sub-agencies). This table lets you drill into the component level, roll up to agency level, or see both side by side. Data shown is FY<span id="comp-year-label"></span>, the latest year reported.
+            </div>
+
+            <div class="data-table-wrap">
+                <table class="data-table" id="comp-table">
+                    <thead>
+                        <tr>
+                            <th data-key="parent_abbrev">Parent</th>
+                            <th data-key="name">Name</th>
+                            <th data-key="received">Received</th>
+                            <th data-key="processed">Processed</th>
+                            <th data-key="backlog">Backlog</th>
+                            <th data-key="grant_rate">Grant Rate</th>
+                            <th data-key="simple_median">Simple Median</th>
+                            <th data-key="cost" class="sorted">Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comp-tbody"><tr><td colspan="8" class="loading-msg">Loading components...</td></tr></tbody>
+                </table>
+            </div>
+
+            <script>
+            (function() {
+                Explorer.initChrome('components');
+                let allRows = [];
+                let sortKey = 'cost';
+                let sortDir = -1;
+
+                function render() {
+                    const show = document.getElementById('comp-show-select').value;
+                    const q = document.getElementById('comp-search-input').value.trim().toLowerCase();
+                    let rows = allRows.filter(r => show === 'both' || r.level === show);
+                    if (q) {
+                        rows = rows.filter(r => (r.name||'').toLowerCase().includes(q) || (r.abbrev||'').toLowerCase().includes(q) || (r.parent_abbrev||'').toLowerCase().includes(q));
+                    }
+                    rows = rows.slice().sort((a,b) => {
+                        const av = a[sortKey], bv = b[sortKey];
+                        if (av === null || av === undefined) return 1;
+                        if (bv === null || bv === undefined) return -1;
+                        if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+                        return (av - bv) * sortDir;
+                    });
+
+                    document.getElementById('comp-count-note').textContent = `${rows.length} of ${allRows.filter(r => show==='both'||r.level===show).length} shown`;
+
+                    const tbody = document.getElementById('comp-tbody');
+                    if (!rows.length) {
+                        tbody.innerHTML = '<tr><td colspan="8" class="loading-msg">No matches.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = rows.slice(0, 300).map(r => `
+                        <tr>
+                            <td><a href="agency.html?a=${r.slug}" title="${r.parent_name||''}" style="color:#1B365D;text-decoration:none;font-weight:600;">${r.parent_abbrev||'-'}</a></td>
+                            <td>${r.name}${r.level==='agency' ? ' <span style=\'color:#999;font-size:0.85em;\'>(agency total)</span>' : ''}</td>
+                            <td>${Explorer.fmtNum(r.received)}</td>
+                            <td>${Explorer.fmtNum(r.processed)}</td>
+                            <td>${Explorer.fmtNum(r.backlog)}</td>
+                            <td>${r.grant_rate !== null && r.grant_rate !== undefined ? r.grant_rate.toFixed(1)+'%' : '-'}</td>
+                            <td>${r.simple_median !== null && r.simple_median !== undefined ? r.simple_median+'d' : '-'}</td>
+                            <td>${Explorer.fmtCurrency(r.cost)}</td>
+                        </tr>
+                    `).join('');
+                    if (rows.length > 300) {
+                        tbody.innerHTML += `<tr><td colspan="8" class="loading-msg">Showing first 300 of ${rows.length} matches. Refine your search to narrow further.</td></tr>`;
+                    }
+                }
+
+                document.querySelectorAll('#comp-table thead th[data-key]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const key = th.dataset.key;
+                        if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = (key === 'name' || key === 'parent_abbrev') ? 1 : -1; }
+                        document.querySelectorAll('#comp-table thead th').forEach(x => x.classList.remove('sorted'));
+                        th.classList.add('sorted');
+                        render();
+                    });
+                });
+
+                document.getElementById('comp-show-select').addEventListener('change', render);
+                document.getElementById('comp-search-input').addEventListener('input', render);
+
+                fetch('data/components.json').then(r => r.json()).then(data => {
+                    allRows = data.rows;
+                    document.getElementById('comp-year-label').textContent = data.year;
+                    render();
+                });
+            })();
+            </script>
 
         </div>
     </main>

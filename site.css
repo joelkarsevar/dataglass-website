@@ -272,11 +272,24 @@ html, body {
         }
 
         /* ============================================
-           FOIA Data Explorer — premiere feature section
+           FOIA Data Explorer - premiere feature section
         ============================================ */
         .data-explorer-feature {
             background: linear-gradient(135deg, #1B365D 0%, #2A4A7A 100%);
             padding: 56px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-explorer-feature::before {
+            content: '';
+            position: absolute;
+            top: -20%; right: -8%;
+            width: 46%; height: 140%;
+            background: linear-gradient(125deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 40%, transparent 70%);
+            transform: skewX(-14deg);
+            pointer-events: none;
+            z-index: 1;
         }
 
         .def-grid {
@@ -284,19 +297,61 @@ html, body {
             grid-template-columns: 1.1fr 1fr;
             gap: 40px;
             align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
-        .def-eyebrow {
-            display: inline-block;
-            background: rgba(255,255,255,0.15);
-            color: #FFFFFF;
-            font-size: 0.78em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 5px 14px;
-            border-radius: 999px;
-            margin-bottom: 14px;
+        /* Gentle one-time entrance: content settles in rather than popping,
+           and never repeats or loops so it stays out of the way. */
+        @keyframes defFadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .def-copy h2,
+        .def-copy p,
+        .def-copy .def-tagline,
+        .def-copy .def-cta,
+        .def-copy .def-stats,
+        .def-chart-panel {
+            opacity: 0;
+            animation: defFadeUp 0.7s ease-out forwards;
+        }
+
+        .def-copy h2 { animation-delay: 0.05s; }
+        .def-copy p { animation-delay: 0.15s; }
+        .def-copy .def-tagline { animation-delay: 0.25s; }
+        .def-copy .def-cta { animation-delay: 0.35s; }
+        .def-copy .def-stats { animation-delay: 0.45s; }
+        .def-chart-panel { animation-delay: 0.3s; }
+
+        /* Single glass-reflection sweep across the chart panel on load,
+           echoing the glass-card shimmer used elsewhere on the site. Runs once. */
+        .def-chart-panel {
+            position: relative;
+        }
+
+        .def-chart-panel::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -60%;
+            width: 45%; height: 100%;
+            background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.16) 45%, transparent 100%);
+            transform: skewX(-20deg);
+            animation: defGlassSweep 1.4s ease-out 0.9s 1 forwards;
+            pointer-events: none;
+        }
+
+        @keyframes defGlassSweep {
+            from { left: -60%; }
+            to { left: 130%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .def-copy h2, .def-copy p, .def-copy .def-tagline, .def-copy .def-cta, .def-copy .def-stats, .def-chart-panel {
+                animation: none; opacity: 1;
+            }
+            .def-chart-panel::after { animation: none; display: none; }
         }
 
         .def-copy h2 {
@@ -310,8 +365,15 @@ html, body {
             color: rgba(255,255,255,0.88);
             font-size: 1.05em;
             line-height: 1.7;
-            margin-bottom: 24px;
+            margin-bottom: 10px;
             max-width: 520px;
+        }
+
+        .def-tagline {
+            color: rgba(255,255,255,0.65);
+            font-size: 0.92em;
+            font-style: italic;
+            margin-bottom: 22px;
         }
 
         .def-cta {

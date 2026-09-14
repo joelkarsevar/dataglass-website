@@ -29,7 +29,7 @@
                         <li><a href="rankings.html">Rankings</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
-                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li><a href="methodology.html">Scoring Methodology</a></li>
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-label">Capability Demo</li>
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
@@ -48,12 +48,12 @@
         <section class="explorer-hero">
             <div class="explorer-hero-inner">
                 <h1>Trends Over Time</h1>
-                <p>Thirteen years of government-wide FOIA activity — volume, backlog, cost, and processing speed.</p>
+                <p>Thirteen years of government-wide FOIA activity: volume, backlog, cost, and processing speed.</p>
             </div>
         </section>
     <div class="explorer-tabbar-wrap">
         <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab active" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab active" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Components</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -70,33 +70,20 @@
         <div class="explorer-body">
 
             <div class="chart-panel">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;">
-                    <div>
-                        <h3>Compare Agencies Over Time</h3>
-                        <div class="chart-sub">Pick which agencies and which metric.</div>
-                    </div>
-                    <div class="metric-toggle-row" id="trend-metric-toggle"></div>
-                </div>
-                <div class="agency-pill-row" id="trend-agency-pills" style="margin-top:14px;"></div>
-                <div style="margin-top:16px;">
-                    <div class="chart-canvas-wrap tall"><canvas id="chart-t-compare"></canvas></div>
-                </div>
-                <div class="chart-sub" style="margin-top:10px;">Gaps indicate years the agency wasn't in the report, or merged/renamed.</div>
-            </div>
-
-            <div class="chart-panel">
                 <h3>Requests Received &amp; Processed</h3>
-                <div class="chart-sub">FY 2013 – present, government-wide</div>
+                <div class="chart-sub">FY 2013 - present, government-wide</div>
                 <div class="chart-canvas-wrap"><canvas id="chart-t-volume"></canvas></div>
             </div>
 
             <div class="chart-grid-2">
                 <div class="chart-panel">
                     <h3>Backlog &amp; Appeals Backlog</h3>
+                    <div class="chart-sub">Note the two different scales (left: requests, right: appeals)</div>
                     <div class="chart-canvas-wrap"><canvas id="chart-t-backlog"></canvas></div>
                 </div>
                 <div class="chart-panel">
-                    <h3>Total Program Cost &amp; Litigation Cost</h3>
+                    <h3>Program Cost</h3>
+                    <div class="chart-sub">Processing cost + litigation cost, stacked</div>
                     <div class="chart-canvas-wrap"><canvas id="chart-t-cost"></canvas></div>
                 </div>
             </div>
@@ -114,39 +101,149 @@
                 </div>
             </div>
 
+            <div class="chart-panel">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;">
+                    <div>
+                        <h3>Compare Agencies Over Time</h3>
+                        <div class="chart-sub">Pick which agencies and which metric.</div>
+                    </div>
+                </div>
+
+                <div class="metric-toggle-row" id="trend-metric-toggle" style="margin-top:14px;"></div>
+                <div class="metric-toggle-row sub" id="trend-submetric-toggle" style="margin-top:8px;display:none;"></div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;">
+                    <input id="trend-agency-search" type="text" placeholder="Search agency..." class="agency-search-input">
+                </div>
+                <div class="agency-pill-row" id="trend-agency-pills" style="margin-top:10px;"></div>
+
+                <div style="margin-top:16px;">
+                    <div class="chart-canvas-wrap tall"><canvas id="chart-t-compare"></canvas></div>
+                </div>
+                <div class="chart-sub" style="margin-top:10px;">Gaps indicate years the agency wasn't in the report, or merged/renamed.</div>
+            </div>
+
             <script>
             (function() {
                 Explorer.initChrome('trends');
+                Explorer.loadTrends().then(rows => {
+                    const years = rows.map(r => 'FY' + r.year);
+                    const opt = Explorer.baseChartOptions();
+
+                    new Chart(document.getElementById('chart-t-volume'), {
+                        type: 'bar',
+                        data: { labels: years, datasets: [
+                            { label: 'Received', data: rows.map(r=>r.requests_received), backgroundColor: Explorer.METRIC_COLORS.received, borderRadius: 3 },
+                            { label: 'Processed', data: rows.map(r=>r.requests_processed), backgroundColor: Explorer.METRIC_COLORS.processed, borderRadius: 3 }
+                        ]}, options: opt
+                    });
+
+                    new Chart(document.getElementById('chart-t-backlog'), {
+                        type: 'line',
+                        data: { labels: years, datasets: [
+                            { label: 'Request Backlog', data: rows.map(r=>r.backlog), borderColor: Explorer.METRIC_COLORS.backlog, fill: false, tension: 0.3, yAxisID: 'y' },
+                            { label: 'Appeals Backlog', data: rows.map(r=>r.appeals_backlog), borderColor: Explorer.METRIC_COLORS.appeals_backlog, tension: 0.3, yAxisID: 'y1' }
+                        ]}, options: Object.assign({}, opt, {
+                            scales: {
+                                x: opt.scales.x,
+                                y: Object.assign({}, opt.scales.y, { position: 'left', title: { display: true, text: 'Request Backlog', color: '#666', font: { size: 11 } } }),
+                                y1: { position: 'right', ticks: { color: '#666' }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Appeals Backlog', color: '#666', font: { size: 11 } } }
+                            }
+                        })
+                    });
+
+                    new Chart(document.getElementById('chart-t-cost'), {
+                        type: 'bar',
+                        data: { labels: years, datasets: [
+                            { label: 'Processing Cost', data: rows.map(r=>r.processing_cost), backgroundColor: '#1B4332', stack: 'cost' },
+                            { label: 'Litigation Cost', data: rows.map(r=>r.litigation_cost), backgroundColor: '#74C69D', stack: 'cost' }
+                        ]}, options: Object.assign({}, opt, {
+                            plugins: Object.assign({}, opt.plugins, {
+                                tooltip: Object.assign({}, opt.plugins.tooltip, {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.dataset.label}: ${Explorer.fmtCurrency(ctx.parsed.y)}`,
+                                        footer: (items) => {
+                                            const i = items[0].dataIndex;
+                                            return `Total: ${Explorer.fmtCurrency(rows[i].total_cost)}`;
+                                        }
+                                    }
+                                })
+                            }),
+                            scales: { x: Object.assign({}, opt.scales.x, { stacked: true }), y: Object.assign({}, opt.scales.y, { stacked: true, ticks: { callback: v => Explorer.fmtCurrency(v) } }) }
+                        })
+                    });
+
+                    new Chart(document.getElementById('chart-t-speed'), {
+                        type: 'line',
+                        data: { labels: years, datasets: [
+                            { label: 'Simple Track', data: rows.map(r=>r.simple_pct_under_20), borderColor: Explorer.METRIC_COLORS.simple, tension: 0.3 },
+                            { label: 'Complex Track', data: rows.map(r=>r.complex_pct_under_20), borderColor: Explorer.METRIC_COLORS.complex, tension: 0.3 }
+                        ]}, options: Object.assign({}, opt, { scales: { x: opt.scales.x, y: Object.assign({}, opt.scales.y, { max: 100, ticks: { callback: v => v + '%' } }) } })
+                    });
+
+                    new Chart(document.getElementById('chart-t-disposition'), {
+                        type: 'bar',
+                        data: { labels: years, datasets: [
+                            { label: 'Full Grants', data: rows.map(r=>r.disposition.full_grants), backgroundColor: Explorer.METRIC_COLORS.grant },
+                            { label: 'Partial Grants', data: rows.map(r=>r.disposition.partial_grants), backgroundColor: Explorer.METRIC_COLORS.partial },
+                            { label: 'Full Denials', data: rows.map(r=>r.disposition.full_denials), backgroundColor: Explorer.METRIC_COLORS.denial },
+                            { label: 'No Records', data: rows.map(r=>r.disposition.no_records), backgroundColor: Explorer.METRIC_COLORS.closed }
+                        ]}, options: Object.assign({}, opt, { scales: { x: Object.assign({}, opt.scales.x, { stacked: true }), y: Object.assign({}, opt.scales.y, { stacked: true }) } })
+                    });
+                });
 
                 // ---------- Compare Agencies Over Time ----------
                 (function() {
-                    const METRICS = [
+                    const CATEGORIES = [
                         { key: 'received', label: 'Received' },
                         { key: 'processed', label: 'Processed' },
                         { key: 'backlog', label: 'Backlog' },
-                        { key: 'cost', label: 'Cost' },
                         { key: 'staff', label: 'Staff' },
-                        { key: 'simple_median', label: 'Simple Median' },
+                        { key: 'cost', label: 'Costs', sub: [
+                            { key: 'cost', label: 'Total Cost' },
+                            { key: 'processing_cost', label: 'Processing Cost' },
+                            { key: 'litigation_cost', label: 'Litigation Cost' },
+                            { key: 'cost_per_request', label: 'Cost per Request' },
+                        ]},
+                        { key: 'time', label: 'Processing Time', sub: [
+                            { key: 'simple_median', label: 'Simple (Median)' },
+                            { key: 'simple_avg', label: 'Simple (Average)' },
+                            { key: 'complex_median', label: 'Complex (Median)' },
+                            { key: 'complex_avg', label: 'Complex (Average)' },
+                        ]},
                     ];
-                    const DEFAULT_AGENCIES = ['dhs','doj','va','dod','hhs'];
+                    const DEFAULT_AGENCIES = ['doj','treasury','va','dod'];
                     const PALETTE = Explorer.CHART_COLORS;
-                    let currentMetric = 'received';
+                    let currentCategory = 'received';
+                    let currentSub = null;
                     let selected = [];
                     let agencies = {};
                     let compareChart = null;
+                    let searchQuery = '';
+
+                    function activeMetricKey() {
+                        const cat = CATEGORIES.find(c => c.key === currentCategory);
+                        if (cat.sub) return currentSub || cat.sub[0].key;
+                        return cat.key;
+                    }
 
                     function metricValue(yearRow, key) {
                         if (key === 'simple_median') return yearRow.response_time ? yearRow.response_time.simple_median : null;
+                        if (key === 'simple_avg') return yearRow.response_time ? yearRow.response_time.simple_avg : null;
+                        if (key === 'complex_median') return yearRow.response_time ? yearRow.response_time.complex_median : null;
+                        if (key === 'complex_avg') return yearRow.response_time ? yearRow.response_time.complex_avg : null;
+                        if (key === 'cost_per_request') return (yearRow.cost && yearRow.processed) ? yearRow.cost / yearRow.processed : null;
                         return yearRow[key];
                     }
 
                     function render() {
                         const allYears = [...new Set(Object.values(agencies).flatMap(a => a.years.map(y=>y.year)))].sort();
+                        const key = activeMetricKey();
                         const datasets = selected.map((slug, i) => {
                             const a = agencies[slug];
                             if (!a) return null;
                             const byYear = {};
-                            a.years.forEach(y => byYear[y.year] = metricValue(y, currentMetric));
+                            a.years.forEach(y => byYear[y.year] = metricValue(y, key));
                             return {
                                 label: a.abbrev || a.agency,
                                 data: allYears.map(yr => byYear[yr] !== undefined ? byYear[yr] : null),
@@ -156,9 +253,8 @@
                             };
                         }).filter(Boolean);
 
-                        const metricMeta = METRICS.find(m => m.key === currentMetric);
-                        const isCurrency = currentMetric === 'cost';
-                        const isDays = currentMetric === 'simple_median';
+                        const isCurrency = ['cost','processing_cost','litigation_cost','cost_per_request'].includes(key);
+                        const isDays = ['simple_median','simple_avg','complex_median','complex_avg'].includes(key);
 
                         if (compareChart) compareChart.destroy();
                         compareChart = new Chart(document.getElementById('chart-t-compare'), {
@@ -166,15 +262,17 @@
                             data: { labels: allYears.map(y => 'FY'+y), datasets },
                             options: Explorer.baseChartOptions({
                                 scales: {
-                                    x: { ticks: { color: '#666' }, grid: { color: '#F0F0F0' } },
-                                    y: { ticks: { color: '#666', callback: v => isCurrency ? Explorer.fmtCurrency(v) : (isDays ? v+'d' : Explorer.fmtNum(v)) }, grid: { color: '#F0F0F0' } }
+                                    x: { ticks: { color: '#666' }, grid: { color: '#F5F5F5' } },
+                                    y: { ticks: { color: '#666', callback: v => isCurrency ? Explorer.fmtCurrency(v) : (isDays ? v+'d' : Explorer.fmtNum(v)) }, grid: { color: '#F5F5F5' } }
                                 }
                             })
                         });
                     }
 
                     function renderPills() {
-                        const names = Object.values(agencies).sort((a,b) => a.agency.localeCompare(b.agency));
+                        const names = Object.values(agencies)
+                            .filter(a => !searchQuery || a.agency.toLowerCase().includes(searchQuery) || (a.abbrev||'').toLowerCase().includes(searchQuery))
+                            .sort((a,b) => a.agency.localeCompare(b.agency));
                         document.getElementById('trend-agency-pills').innerHTML = names.map(a => `
                             <button class="agency-pill ${selected.includes(a.slug)?'active':''}" data-slug="${a.slug}" title="${a.agency}" ${selected.includes(a.slug) ? `style="background:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};border-color:${PALETTE[selected.indexOf(a.slug) % PALETTE.length]};"` : ''}>${a.abbrev || a.agency}</button>
                         `).join('') + '<span class="chart-sub" style="align-self:center;">Pick up to 6</span>';
@@ -193,76 +291,56 @@
                         });
                     }
 
-                    function renderMetricToggle() {
-                        document.getElementById('trend-metric-toggle').innerHTML = METRICS.map(m => `
-                            <button class="metric-toggle-btn ${m.key===currentMetric?'active':''}" data-key="${m.key}">${m.label}</button>
+                    function renderSubToggle() {
+                        const cat = CATEGORIES.find(c => c.key === currentCategory);
+                        const wrap = document.getElementById('trend-submetric-toggle');
+                        if (!cat.sub) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+                        if (!currentSub) currentSub = cat.sub[0].key;
+                        wrap.style.display = 'flex';
+                        wrap.innerHTML = cat.sub.map(s => `
+                            <button class="metric-toggle-btn ${s.key===currentSub?'active':''}" data-key="${s.key}">${s.label}</button>
                         `).join('');
-                        document.querySelectorAll('.metric-toggle-btn').forEach(btn => {
+                        wrap.querySelectorAll('.metric-toggle-btn').forEach(btn => {
                             btn.addEventListener('click', () => {
-                                currentMetric = btn.dataset.key;
-                                document.querySelectorAll('.metric-toggle-btn').forEach(b => b.classList.remove('active'));
+                                currentSub = btn.dataset.key;
+                                wrap.querySelectorAll('.metric-toggle-btn').forEach(b => b.classList.remove('active'));
                                 btn.classList.add('active');
                                 render();
                             });
                         });
                     }
 
+                    function renderMetricToggle() {
+                        document.getElementById('trend-metric-toggle').innerHTML = CATEGORIES.map(c => `
+                            <button class="metric-toggle-btn ${c.key===currentCategory?'active':''}" data-key="${c.key}">${c.label}</button>
+                        `).join('');
+                        document.querySelectorAll('#trend-metric-toggle .metric-toggle-btn').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                currentCategory = btn.dataset.key;
+                                currentSub = null;
+                                document.querySelectorAll('#trend-metric-toggle .metric-toggle-btn').forEach(b => b.classList.remove('active'));
+                                btn.classList.add('active');
+                                renderSubToggle();
+                                render();
+                            });
+                        });
+                    }
+
+                    document.getElementById('trend-agency-search').addEventListener('input', (e) => {
+                        searchQuery = e.target.value.trim().toLowerCase();
+                        renderPills();
+                    });
+
                     Explorer.loadAgencyDetail().then(data => {
                         agencies = data;
                         selected = DEFAULT_AGENCIES.filter(s => agencies[s]);
-                        if (!selected.length) selected = Object.keys(agencies).slice(0, 5);
+                        if (!selected.length) selected = Object.keys(agencies).slice(0, 4);
                         renderMetricToggle();
+                        renderSubToggle();
                         renderPills();
                         render();
                     });
                 })();
-
-                Explorer.loadTrends().then(rows => {
-                    const years = rows.map(r => 'FY' + r.year);
-                    const opt = Explorer.baseChartOptions();
-
-                    new Chart(document.getElementById('chart-t-volume'), {
-                        type: 'line',
-                        data: { labels: years, datasets: [
-                            { label: 'Received', data: rows.map(r=>r.requests_received), borderColor: Explorer.NAVY, backgroundColor: 'rgba(27,54,93,0.08)', fill: true, tension: 0.3 },
-                            { label: 'Processed', data: rows.map(r=>r.requests_processed), borderColor: '#5B8AC4', backgroundColor: 'rgba(91,138,196,0.08)', fill: true, tension: 0.3 }
-                        ]}, options: opt
-                    });
-
-                    new Chart(document.getElementById('chart-t-backlog'), {
-                        type: 'line',
-                        data: { labels: years, datasets: [
-                            { label: 'Request Backlog', data: rows.map(r=>r.backlog), borderColor: '#C0392B', tension: 0.3 },
-                            { label: 'Appeals Backlog', data: rows.map(r=>r.appeals_backlog), borderColor: '#B7791F', tension: 0.3 }
-                        ]}, options: opt
-                    });
-
-                    new Chart(document.getElementById('chart-t-cost'), {
-                        type: 'bar',
-                        data: { labels: years, datasets: [
-                            { label: 'Total Cost', data: rows.map(r=>r.total_cost), backgroundColor: Explorer.NAVY },
-                            { label: 'Litigation Cost', data: rows.map(r=>r.litigation_cost), backgroundColor: '#C0392B' }
-                        ]}, options: Object.assign({}, opt, { scales: { x: opt.scales.x, y: Object.assign({}, opt.scales.y, { ticks: { callback: v => Explorer.fmtCurrency(v) } }) } }) 
-                    });
-
-                    new Chart(document.getElementById('chart-t-speed'), {
-                        type: 'line',
-                        data: { labels: years, datasets: [
-                            { label: 'Simple Track', data: rows.map(r=>r.simple_pct_under_20), borderColor: '#1E8449', tension: 0.3 },
-                            { label: 'Complex Track', data: rows.map(r=>r.complex_pct_under_20), borderColor: '#B7791F', tension: 0.3 }
-                        ]}, options: Object.assign({}, opt, { scales: { x: opt.scales.x, y: Object.assign({}, opt.scales.y, { max: 100, ticks: { callback: v => v + '%' } }) } })
-                    });
-
-                    new Chart(document.getElementById('chart-t-disposition'), {
-                        type: 'bar',
-                        data: { labels: years, datasets: [
-                            { label: 'Full Grants', data: rows.map(r=>r.full_grants), backgroundColor: '#1E8449' },
-                            { label: 'Partial Grants', data: rows.map(r=>r.partial_grants), backgroundColor: '#5B8AC4' },
-                            { label: 'Full Denials', data: rows.map(r=>r.full_denials), backgroundColor: '#C0392B' },
-                            { label: 'No Records', data: rows.map(r=>r.no_records), backgroundColor: '#B0B0B0' }
-                        ]}, options: Object.assign({}, opt, { scales: { x: Object.assign({}, opt.scales.x, { stacked: true }), y: Object.assign({}, opt.scales.y, { stacked: true }) } })
-                    });
-                });
             })();
             </script>
 

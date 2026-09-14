@@ -29,7 +29,7 @@
                         <li><a href="rankings.html">Rankings</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
-                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li><a href="methodology.html">Scoring Methodology</a></li>
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-label">Capability Demo</li>
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
@@ -53,7 +53,7 @@
         </section>
     <div class="explorer-tabbar-wrap">
         <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab active" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab active" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Components</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -71,7 +71,8 @@
 
             <div class="chart-panel">
                 <h3>Exemption Use Over Time</h3>
-                <div class="chart-sub">Government-wide count of exemptions cited, by fiscal year</div>
+                <div class="chart-sub">Government-wide count of exemptions cited, by fiscal year. Toggle categories to focus the chart.</div>
+                <div class="ex-trend-toggle-row" id="ex-trend-toggle"></div>
                 <div class="chart-canvas-wrap"><canvas id="chart-ex-trend"></canvas></div>
             </div>
 
@@ -88,7 +89,7 @@
                     <p class="ex-detail-desc" id="ex-detail-desc"></p>
                     <div class="ex-total-citations">
                         <div class="kpi-label">Total Citations</div>
-                        <div class="kpi-value" id="ex-detail-total">—</div>
+                        <div class="kpi-value" id="ex-detail-total">-</div>
                     </div>
                 </div>
                 <div class="chart-panel">
@@ -173,19 +174,47 @@
                     const exKeys = Object.keys(data.labels);
                     const colors = ['#1B365D','#C0392B','#1E8449','#B7791F','#7D3C98','#117864','#D35400','#2980B9','#8E44AD','#16A085','#7F8C8D','#34495E','#E74C3C','#3498DB'];
 
-                    new Chart(document.getElementById('chart-ex-trend'), {
-                        type: 'line',
-                        data: {
-                            labels: years,
-                            datasets: exKeys.map((k,i) => ({
-                                label: EX_META[k] ? EX_META[k].code : k,
-                                data: data.by_year.map(r => r[k]),
-                                borderColor: colors[i % colors.length],
-                                fill: false, tension: 0.25, pointRadius: 2,
-                            }))
-                        },
-                        options: Explorer.baseChartOptions({ plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } })
-                    });
+                    // Default to the 5 most-cited categories so the chart isn't cluttered on load
+                    const totals = {};
+                    exKeys.forEach(k => { totals[k] = data.by_year.reduce((s,r) => s + (r[k]||0), 0); });
+                    const sortedByTotal = exKeys.slice().sort((a,b) => totals[b]-totals[a]);
+                    let activeKeys = new Set(sortedByTotal.slice(0, 5));
+                    let trendChart = null;
+
+                    function renderToggleRow() {
+                        document.getElementById('ex-trend-toggle').innerHTML = exKeys.map((k,i) => `
+                            <button class="ex-trend-pill ${activeKeys.has(k)?'active':''}" data-key="${k}" style="${activeKeys.has(k) ? `background:${colors[i%colors.length]};border-color:${colors[i%colors.length]};` : ''}">${EX_META[k] ? EX_META[k].code : k}</button>
+                        `).join('');
+                        document.querySelectorAll('.ex-trend-pill').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const k = btn.dataset.key;
+                                if (activeKeys.has(k)) activeKeys.delete(k); else activeKeys.add(k);
+                                renderToggleRow();
+                                renderTrendChart();
+                            });
+                        });
+                    }
+
+                    function renderTrendChart() {
+                        const keys = exKeys.filter(k => activeKeys.has(k));
+                        if (trendChart) trendChart.destroy();
+                        trendChart = new Chart(document.getElementById('chart-ex-trend'), {
+                            type: 'line',
+                            data: {
+                                labels: years,
+                                datasets: keys.map((k) => ({
+                                    label: EX_META[k] ? EX_META[k].code : k,
+                                    data: data.by_year.map(r => r[k]),
+                                    borderColor: colors[exKeys.indexOf(k) % colors.length],
+                                    fill: false, tension: 0.25, pointRadius: 2,
+                                }))
+                            },
+                            options: Explorer.baseChartOptions()
+                        });
+                    }
+
+                    renderToggleRow();
+                    renderTrendChart();
 
                     document.getElementById('ex-latest-year-label').textContent = data.by_agency_latest_fy;
                     renderPills(data);

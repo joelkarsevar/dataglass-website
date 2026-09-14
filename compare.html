@@ -29,7 +29,7 @@
                         <li><a href="rankings.html">Rankings</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
-                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li><a href="methodology.html">Scoring Methodology</a></li>
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-label">Capability Demo</li>
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
@@ -53,7 +53,7 @@
         </section>
     <div class="explorer-tabbar-wrap">
         <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab active" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <a href="overview.html" class="explorer-tab" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab active" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Components</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -77,7 +77,8 @@
             <div class="agency-picker" id="agency-chips"></div>
 
             <div class="agency-add">
-                <select id="agency-add-select"><option>Loading agencies…</option></select>
+                <input id="agency-search-input" type="text" class="agency-search-input" placeholder="Search agency...">
+                <select id="agency-add-select"><option>Loading agencies...</option></select>
                 <button id="agency-add-btn">+ Add Agency</button>
             </div>
 
@@ -100,11 +101,14 @@
             (function() {
                 Explorer.initChrome('compare');
                 let allRows = [];
+                let allNames = [];
                 let selected = [];
                 let radarChart = null;
+                const MAX_SELECTED = 6;
 
                 const params = new URLSearchParams(window.location.search);
                 const preselect = params.get('a');
+                const DEFAULT_AGENCIES = ['Department of Justice', 'Department of the Treasury', 'Department of Veterans Affairs', 'Department of Defense'];
 
                 const METRICS = [
                     { key: 'total_score', label: 'Total Score (/100)', fmt: v => v },
@@ -128,14 +132,17 @@
                 ];
 
                 function currentYear() { return document.getElementById('cmp-year-select').value; }
-
+                function abbrevFor(agency) {
+                    const row = allRows.find(r => r.agency === agency);
+                    return (row && row.abbrev) || agency;
+                }
                 function findRow(agency, year) {
                     return allRows.find(r => r.agency === agency && String(r.year) === String(year));
                 }
 
                 function renderChips() {
                     document.getElementById('agency-chips').innerHTML = selected.map((a,i) => `
-                        <div class="agency-chip" style="border-left:4px solid ${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${a} <button data-a="${a}">×</button></div>
+                        <div class="agency-chip" style="border-left:4px solid ${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${a} <button data-a="${a}">\u00d7</button></div>
                     `).join('');
                     document.querySelectorAll('.agency-chip button').forEach(b => {
                         b.addEventListener('click', () => {
@@ -155,12 +162,12 @@
                         if (radarChart) { radarChart.destroy(); radarChart = null; }
                         return;
                     }
-                    thead.innerHTML = '<th>Metric</th>' + selected.map((a,i) => `<th><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${a}</th>`).join('');
+                    thead.innerHTML = '<th>Metric</th>' + selected.map((a,i) => `<th title="${a}"><span class="chip-dot" style="background:${Explorer.CHART_COLORS[i % Explorer.CHART_COLORS.length]};"></span>${abbrevFor(a)}</th>`).join('');
                     tbody.innerHTML = METRICS.map(m => {
                         const cells = selected.map(a => {
                             const row = findRow(a, yr);
                             const v = row ? row[m.key] : null;
-                            return `<td>${v === null || v === undefined ? '—' : m.fmt(v)}</td>`;
+                            return `<td>${v === null || v === undefined ? '-' : m.fmt(v)}</td>`;
                         }).join('');
                         return `<tr><td><strong>${m.label}</strong></td>${cells}</tr>`;
                     }).join('');
@@ -169,7 +176,7 @@
                     const datasets = selected.map((a, i) => {
                         const row = findRow(a, yr);
                         return {
-                            label: a,
+                            label: abbrevFor(a),
                             data: RADAR_METRICS.map(rm => row && row[rm.key] !== null && row[rm.key] !== undefined ? (row[rm.key]/rm.max*100) : 0),
                             borderColor: colors[i % colors.length],
                             backgroundColor: colors[i % colors.length] + '22',
@@ -179,14 +186,29 @@
                     radarChart = new Chart(document.getElementById('chart-cmp-radar'), {
                         type: 'radar',
                         data: { labels: RADAR_METRICS.map(r=>r.label), datasets },
-                        options: { responsive: true, maintainAspectRatio: false, scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } } }
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { labels: { color: '#555', font: { size: 11.5, weight: '600' }, usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 14 } } },
+                            scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } }
+                        }
                     });
                 }
+
+                function refreshAddSelect(filterText) {
+                    const addSelect = document.getElementById('agency-add-select');
+                    const q = (filterText || '').toLowerCase();
+                    const filtered = allNames.filter(n => !q || n.toLowerCase().includes(q) || abbrevFor(n).toLowerCase().includes(q));
+                    addSelect.innerHTML = filtered.length ? filtered.map(n => `<option value="${n}">${n} (${abbrevFor(n)})</option>`).join('') : '<option value="">No matches</option>';
+                }
+
+                document.getElementById('agency-search-input').addEventListener('input', (e) => {
+                    refreshAddSelect(e.target.value.trim());
+                });
 
                 document.getElementById('agency-add-btn').addEventListener('click', () => {
                     const sel = document.getElementById('agency-add-select');
                     const val = sel.value;
-                    if (val && !selected.includes(val) && selected.length < 4) {
+                    if (val && !selected.includes(val) && selected.length < MAX_SELECTED) {
                         selected.push(val); renderChips(); renderTable();
                     }
                 });
@@ -198,14 +220,14 @@
                     const years = [...new Set(rows.map(r => r.year))].sort((a,b)=>b-a);
                     document.getElementById('cmp-year-select').innerHTML = years.map(y => `<option value="${y}">FY ${y}</option>`).join('');
 
-                    const names = [...new Set(rows.map(r => r.agency))].sort();
-                    const addSelect = document.getElementById('agency-add-select');
-                    addSelect.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+                    allNames = [...new Set(rows.map(r => r.agency))].sort();
+                    refreshAddSelect('');
 
-                    if (preselect && names.includes(preselect)) {
+                    if (preselect && allNames.includes(preselect)) {
                         selected = [preselect];
                     } else {
-                        selected = names.slice(0,2);
+                        const defaults = DEFAULT_AGENCIES.filter(n => allNames.includes(n));
+                        selected = defaults.length ? defaults : allNames.slice(0,4);
                     }
                     renderChips();
                     renderTable();

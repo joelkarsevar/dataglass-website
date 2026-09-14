@@ -29,7 +29,7 @@
                         <li><a href="rankings.html">Rankings</a></li>
                         <li><a href="compare.html">Compare Agencies</a></li>
                         <li><a href="exemptions.html">Exemptions</a></li>
-                        <li><a href="components.html">Scoring Methodology</a></li>
+                        <li><a href="methodology.html">Scoring Methodology</a></li>
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-label">Capability Demo</li>
                         <li><a href="powerbi-reports.html">Power BI Reports</a></li>
@@ -53,7 +53,7 @@
         </section>
     <div class="explorer-tabbar-wrap">
         <div class="explorer-tabbar">
-            <a href="overview.html" class="explorer-tab active" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Methodology</a>
+            <a href="overview.html" class="explorer-tab active" data-tab="overview">Overview</a><a href="trends.html" class="explorer-tab" data-tab="trends">Trends</a><a href="rankings.html" class="explorer-tab" data-tab="rankings">Rankings</a><a href="compare.html" class="explorer-tab" data-tab="compare">Compare</a><a href="exemptions.html" class="explorer-tab" data-tab="exemptions">Exemptions</a><a href="components.html" class="explorer-tab" data-tab="components">Components</a>
             <div class="explorer-tab-spacer"></div>
             <div class="explorer-search">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.2" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -86,8 +86,35 @@
                 </div>
             </div>
 
-            <div class="note-banner">
-                Figures are aggregated from parent-agency annual FOIA reports (FY 2013–present), sourced from FOIA.gov. Updated once per year when the new Annual Report data is published.
+            <div class="chart-panel">
+                <h3 id="cost-tile-title">The Cost of Transparency</h3>
+                <div class="chart-sub" id="cost-tile-sub">Processing + litigation cost</div>
+                <div class="kpi-grid" id="cost-tile-grid" style="margin-top:14px;"></div>
+            </div>
+
+            <div class="chart-panel">
+                <h3 id="disp-title">Disposition of Processed Requests</h3>
+                <div class="chart-sub" id="disp-sub">Across all federal agencies</div>
+                <div id="disp-summary"></div>
+                <div style="margin-top:22px;padding-top:18px;border-top:1px solid #F0F0F0;">
+                    <div class="chart-sub" style="font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.03em;font-size:0.78em;margin-bottom:12px;">Why "Non-Exemption" Closures Happen</div>
+                    <div id="disp-closure-reasons"></div>
+                </div>
+            </div>
+
+            <div class="chart-grid-2">
+                <div class="chart-panel">
+                    <h3 id="appeals-title">Appeals Workflow</h3>
+                    <div class="chart-sub">What happens after a requester appeals a denial</div>
+                    <div class="kpi-grid" id="appeals-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px;margin-bottom:14px;"></div>
+                    <div id="appeals-outcomes" class="chart-sub"></div>
+                </div>
+                <div class="chart-panel">
+                    <h3 id="ex-snap-title">Exemptions Snapshot</h3>
+                    <div class="chart-sub">Top exemption categories cited</div>
+                    <div id="ex-snapshot-list" style="margin-top:14px;"></div>
+                    <a href="exemptions.html" style="display:inline-block;margin-top:8px;color:#1B365D;font-weight:600;font-size:0.9em;text-decoration:none;">See full Exemption Explorer →</a>
+                </div>
             </div>
 
             <div class="chart-grid-2">
@@ -103,24 +130,32 @@
                 </div>
             </div>
 
-            <div class="chart-panel">
-                <h3>System Health</h3>
-                <div class="chart-sub">Fastest, slowest, biggest backlogs — latest fiscal year</div>
-                <div class="chart-grid-3" id="ov-system-health" style="margin-top:14px;"></div>
+            <div class="note-banner">
+                Figures are aggregated from parent-agency annual FOIA reports (FY 2013-present), sourced from FOIA.gov. Updated once per year when the new Annual Report data is published.
             </div>
 
             <script>
             (function() {
                 Explorer.initChrome('overview');
+
+                const DISP_LABELS = {
+                    full_grants: 'Full grant', partial_grants: 'Partial grant', full_denials: 'Full denial (exemption)',
+                    no_records: 'No records', referred: 'Referred', withdrawn: 'Withdrawn', fee_related: 'Fee related',
+                    not_described: 'Not reasonably described', improper: 'Improper request', not_agency_record: 'Not agency record',
+                    duplicate: 'Duplicate', other: 'Other',
+                };
+                const CLOSURE_KEYS = ['no_records','improper','duplicate','other','withdrawn','not_agency_record','not_described','referred'];
+
                 Explorer.loadTrends().then(rows => {
                     const latest = rows[rows.length - 1];
                     const prev = rows[rows.length - 2];
-                    function delta(cur, prior, invert) {
+                    function delta(cur, prior, badIfUp) {
                         if (!prior) return '';
                         const pct = ((cur - prior) / prior * 100);
-                        const dir = pct >= 0 ? 'up' : 'down';
-                        const cls = invert ? (pct >= 0 ? 'down' : 'up') : dir;
-                        return `<div class="kpi-delta ${cls}">${pct >= 0 ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}% vs FY${prior_year}</div>`;
+                        const increased = pct >= 0;
+                        const bad = badIfUp ? increased : !increased;
+                        const cls = bad ? 'up' : 'down';
+                        return `<div class="kpi-delta ${cls}">${increased ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}% vs FY${prior_year}</div>`;
                     }
                     const prior_year = prev.year;
                     const kpiRow = document.getElementById('kpi-row');
@@ -153,8 +188,8 @@
                         data: {
                             labels: years,
                             datasets: [
-                                { label: 'Received', data: rows.map(r => r.requests_received), backgroundColor: Explorer.NAVY },
-                                { label: 'Processed', data: rows.map(r => r.requests_processed), backgroundColor: '#8FB4DE' }
+                                { label: 'Received', data: rows.map(r => r.requests_received), backgroundColor: Explorer.METRIC_COLORS.received },
+                                { label: 'Processed', data: rows.map(r => r.requests_processed), backgroundColor: Explorer.METRIC_COLORS.processed }
                             ]
                         },
                         options: Explorer.baseChartOptions()
@@ -164,62 +199,136 @@
                         type: 'line',
                         data: {
                             labels: years,
-                            datasets: [{ label: 'Backlog', data: rows.map(r => r.backlog), borderColor: '#C0392B', backgroundColor: 'rgba(192,57,43,0.08)', fill: true, tension: 0.3 }]
+                            datasets: [{ label: 'Backlog', data: rows.map(r => r.backlog), borderColor: Explorer.METRIC_COLORS.backlog, fill: false, tension: 0.3 }]
                         },
                         options: Explorer.baseChartOptions()
                     });
+
+                    // ---------- The Cost of Transparency ----------
+                    document.getElementById('cost-tile-sub').textContent = `Processing + litigation cost, FY${latest.year}`;
+                    document.getElementById('cost-tile-grid').innerHTML = `
+                        <div class="kpi-card">
+                            <div class="kpi-label">Cost Per Processed Request</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.cost_per_request)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">per request</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Fees Collected</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.fees_collected)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">${latest.total_cost ? (latest.fees_collected/latest.total_cost*100).toFixed(1) : '0'}% of total cost</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Processing Cost</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.processing_cost)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">staff time, systems</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Litigation Cost</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.litigation_cost)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">${latest.total_cost ? (latest.litigation_cost/latest.total_cost*100).toFixed(1) : '0'}% of total</div>
+                        </div>
+                    `;
+
+                    // ---------- Disposition of Processed Requests ----------
+                    const d = latest.disposition;
+                    const totalDisp = d.total || 1;
+                    const grantRate = (d.full_grants + d.partial_grants) / totalDisp * 100;
+                    document.getElementById('disp-sub').textContent = `Across all federal agencies, FY ${latest.year}`;
+                    document.getElementById('disp-summary').innerHTML = `
+                        <div style="font-size:0.95em;color:#444;margin-bottom:10px;">${Explorer.fmtNum(d.full_grants + d.partial_grants)} requests received some records (${grantRate.toFixed(1)}%) &middot; ${Explorer.fmtNum(d.full_denials)} fully denied for exemptions (${(d.full_denials/totalDisp*100).toFixed(1)}%)</div>
+                        <div class="disposition-bar">
+                            <div style="width:${(d.full_grants/totalDisp*100).toFixed(2)}%;background:${Explorer.METRIC_COLORS.grant};" title="Full grant"></div>
+                            <div style="width:${(d.partial_grants/totalDisp*100).toFixed(2)}%;background:${Explorer.METRIC_COLORS.partial};" title="Partial grant"></div>
+                            <div style="width:${(d.full_denials/totalDisp*100).toFixed(2)}%;background:${Explorer.METRIC_COLORS.denial};" title="Full denial"></div>
+                            <div style="width:${((totalDisp-d.full_grants-d.partial_grants-d.full_denials)/totalDisp*100).toFixed(2)}%;background:${Explorer.METRIC_COLORS.closed};" title="Closed, no records/other"></div>
+                        </div>
+                        <div class="disposition-legend">
+                            <span><span class="dot" style="background:${Explorer.METRIC_COLORS.grant};"></span>Full grant &middot; ${Explorer.fmtNum(d.full_grants)} &middot; ${(d.full_grants/totalDisp*100).toFixed(1)}%</span>
+                            <span><span class="dot" style="background:${Explorer.METRIC_COLORS.partial};"></span>Partial grant &middot; ${Explorer.fmtNum(d.partial_grants)} &middot; ${(d.partial_grants/totalDisp*100).toFixed(1)}%</span>
+                            <span><span class="dot" style="background:${Explorer.METRIC_COLORS.denial};"></span>Full denial (exemption) &middot; ${Explorer.fmtNum(d.full_denials)} &middot; ${(d.full_denials/totalDisp*100).toFixed(1)}%</span>
+                            <span><span class="dot" style="background:${Explorer.METRIC_COLORS.closed};"></span>Closed, no records/other &middot; ${Explorer.fmtNum(totalDisp-d.full_grants-d.partial_grants-d.full_denials)} &middot; ${((totalDisp-d.full_grants-d.partial_grants-d.full_denials)/totalDisp*100).toFixed(1)}%</span>
+                        </div>
+                    `;
+                    const closureTotal = CLOSURE_KEYS.reduce((s,k) => s + (d[k]||0), 0);
+                    const closureEntries = CLOSURE_KEYS.map(k => [DISP_LABELS[k], d[k]||0]).sort((a,b) => b[1]-a[1]);
+                    const closureMax = closureEntries[0][1];
+                    document.getElementById('disp-closure-reasons').innerHTML = closureEntries.map(([label,v]) => `
+                        <div class="bar-list-row">
+                            <div class="bar-list-label-row"><span class="name">${label}</span><span class="count">${Explorer.fmtNum(v)} &middot; ${closureTotal ? (v/closureTotal*100).toFixed(1) : 0}%</span></div>
+                            <div class="bar-list-track"><div class="bar-list-fill" style="width:${(v/closureMax*100).toFixed(1)}%;"></div></div>
+                        </div>
+                    `).join('');
+
+                    // ---------- Appeals Workflow ----------
+                    document.getElementById('appeals-kpis').innerHTML = `
+                        <div class="kpi-card">
+                            <div class="kpi-label">Appeals Received</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.appeals_received)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">this fiscal year</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Appeals Processed</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.appeals_processed)}</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">${latest.appeals_received ? (latest.appeals_processed/latest.appeals_received*100).toFixed(1) : '0'}% of received</div>
+                        </div>
+                    `;
+                    const appealsTotal = (latest.appeals_affirmed||0) + (latest.appeals_partially_reversed||0) + (latest.appeals_reversed||0);
+                    if (appealsTotal) {
+                        document.getElementById('appeals-outcomes').innerHTML = `<strong>${(latest.appeals_affirmed/appealsTotal*100).toFixed(0)}%</strong> affirmed &middot; <strong>${(latest.appeals_reversed/appealsTotal*100).toFixed(0)}%</strong> reversed in whole or part &middot; <strong>${(latest.appeals_partially_reversed/appealsTotal*100).toFixed(0)}%</strong> partially reversed. See agency profiles for per-agency breakdowns.`;
+                    }
+                });
+
+                // ---------- Exemptions Snapshot ----------
+                Explorer.loadExemptions().then(data => {
+                    const latestYr = data.by_year.find(r => r.year === data.by_agency_latest_fy);
+                    const exKeys = Object.keys(data.labels);
+                    const entries = exKeys.map(k => [data.labels[k], latestYr[k]]).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]).slice(0, 5);
+                    const total = exKeys.reduce((s,k) => s + latestYr[k], 0);
+                    const max = entries[0][1];
+                    document.getElementById('ex-snap-title').textContent = `Exemptions Snapshot, FY${data.by_agency_latest_fy}`;
+                    document.getElementById('ex-snapshot-list').innerHTML = entries.map(([label,v]) => `
+                        <div class="bar-list-row">
+                            <div class="bar-list-label-row"><span class="name">${label}</span><span class="count">${Explorer.fmtNum(v)} &middot; ${(v/total*100).toFixed(1)}%</span></div>
+                            <div class="bar-list-track"><div class="bar-list-fill" style="width:${(v/max*100).toFixed(1)}%;"></div></div>
+                        </div>
+                    `).join('');
                 });
 
                 Promise.all([
                     Explorer.loadAgencyScores(),
-                    fetch('data/leaderboards.json').then(r => r.json())
-                ]).then(([scores, lb]) => {
+                ]).then(([scores]) => {
                     const latestYear = Math.max(...scores.map(r => r.year));
                     const latestScores = scores.filter(r => r.year === latestYear);
-                    const latestLb = lb[latestYear] || [];
 
-                    // Top agencies by volume
                     const topVol = latestScores.filter(r => r.requests_received).sort((a,b) => b.requests_received - a.requests_received).slice(0, 10);
                     document.getElementById('ov-top-volume').innerHTML = '<ol class="lb-list">' + topVol.map(r => `<li><a href="agency.html?a=${Explorer.slugify(r.agency)}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${Explorer.fmtNum(r.requests_received)}</span></li>`).join('') + '</ol>';
 
-                    // Scatter: volume vs cost per request (log-log)
                     const pts = latestScores.filter(r => r.requests_received > 0 && r.cost_per_request > 0).map(r => ({ x: r.requests_received, y: r.cost_per_request, label: r.agency }));
                     new Chart(document.getElementById('chart-scatter'), {
                         type: 'scatter',
                         data: { datasets: [{ label: 'Agencies', data: pts, backgroundColor: 'rgba(27,54,93,0.55)' }] },
                         options: {
                             responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label}: ${Explorer.fmtNum(ctx.raw.x)} requests, ${Explorer.fmtCurrency(ctx.raw.y)}/request` } } },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label}: ${Explorer.fmtNum(ctx.raw.x)} requests, ${Explorer.fmtCurrency(ctx.raw.y)}/request` } }
+                            },
                             scales: {
-                                x: { type: 'logarithmic', title: { display: true, text: 'Requests Received' }, ticks: { color: '#666' }, grid: { color: '#F0F0F0' } },
-                                y: { type: 'logarithmic', title: { display: true, text: 'Cost Per Request ($)' }, ticks: { color: '#666' }, grid: { color: '#F0F0F0' } }
+                                x: {
+                                    type: 'logarithmic', title: { display: true, text: 'Requests Received', color: '#666', font: { size: 12 } },
+                                    ticks: { color: '#666', font: { size: 10 }, callback: (v) => Explorer.fmtNum(v) },
+                                    grid: { color: '#F5F5F5' },
+                                    afterBuildTicks: (axis) => { axis.ticks = axis.ticks.filter(t => Math.abs(Math.log10(t.value) - Math.round(Math.log10(t.value))) < 1e-9); }
+                                },
+                                y: {
+                                    type: 'logarithmic', title: { display: true, text: 'Cost Per Request ($)', color: '#666', font: { size: 12 } },
+                                    ticks: { color: '#666', font: { size: 10 }, callback: (v) => Explorer.fmtCurrency(v) },
+                                    grid: { color: '#F5F5F5' },
+                                    afterBuildTicks: (axis) => { axis.ticks = axis.ticks.filter(t => Math.abs(Math.log10(t.value) - Math.round(Math.log10(t.value))) < 1e-9); }
+                                }
                             }
                         }
                     });
-
-                    // System health: fastest/slowest/largest backlog
-                    function healthList(rows, key, fmt, dir, filterFn) {
-                        let filtered = rows.filter(r => r[key] !== null && r[key] !== undefined);
-                        if (filterFn) filtered = filtered.filter(filterFn);
-                        filtered = filtered.sort((a,b) => dir * (a[key]-b[key]));
-                        const top = filtered.slice(0, 6);
-                        if (!top.length) return '<div class="loading-msg">Not enough data.</div>';
-                        return '<ol class="lb-list">' + top.map(r => `<li><a href="agency.html?a=${r.slug}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${fmt(r[key])}</span></li>`).join('') + '</ol>';
-                    }
-                    document.getElementById('ov-system-health').innerHTML = `
-                        <div>
-                            <h4 style="color:#1B365D;font-size:0.95em;margin-bottom:8px;">Fastest Median (Simple)</h4>
-                            ${healthList(latestLb, 'simple_median', v => v+'d', 1)}
-                        </div>
-                        <div>
-                            <h4 style="color:#1B365D;font-size:0.95em;margin-bottom:8px;">Slowest Median (Simple)</h4>
-                            ${healthList(latestLb, 'simple_median', v => v+'d', -1)}
-                        </div>
-                        <div>
-                            <h4 style="color:#1B365D;font-size:0.95em;margin-bottom:8px;">Largest Year-End Backlog</h4>
-                            ${healthList(latestLb, 'backlog', v => Explorer.fmtNum(v), -1)}
-                        </div>
-                    `;
                 });
             })();
             </script>
