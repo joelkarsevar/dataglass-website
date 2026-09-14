@@ -46,7 +46,7 @@
     background: #FFFFFF;
     border-bottom: 1px solid #E8E8E8;
     position: sticky;
-    top: 49px;
+    top: 80px;
     z-index: 500;
     box-shadow: 0 2px 8px rgba(27,54,93,0.06);
 }
@@ -211,6 +211,12 @@
     gap: 24px;
 }
 
+.chart-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
 /* ---------- Tables ---------- */
 .data-table-wrap {
     background: #FFFFFF;
@@ -325,6 +331,172 @@ table.data-table tbody tr:last-child td {
 
 .agency-chip button:hover { opacity: 1; }
 
+.chip-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 2px;
+}
+
+/* ---------- Exemption explorer pills ---------- */
+.ex-pill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+}
+
+.ex-pill {
+    border: 1px solid #E0E0E0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: #FFFFFF;
+}
+
+.ex-pill:hover { border-color: #2A4A7A; }
+
+.ex-pill.active {
+    background: #1B365D;
+    border-color: #1B365D;
+}
+
+.ex-pill-code {
+    font-size: 0.85em;
+    font-weight: 700;
+    color: #1B365D;
+}
+
+.ex-pill.active .ex-pill-code { color: #FFFFFF; }
+
+.ex-pill-count {
+    font-size: 0.78em;
+    color: #999;
+    margin-top: 2px;
+}
+
+.ex-pill.active .ex-pill-count { color: rgba(255,255,255,0.75); }
+
+.ex-detail-desc {
+    color: #555;
+    font-size: 0.92em;
+    line-height: 1.6;
+    margin: 10px 0 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.ex-total-citations .kpi-label {
+    font-size: 0.78em;
+    color: #999;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.ex-total-citations .kpi-value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #1B365D;
+    margin-top: 4px;
+}
+
+/* ---------- Rankings cross-cut leaderboards ---------- */
+.lb-list {
+    list-style: none;
+    counter-reset: lb;
+    margin-top: 12px;
+}
+
+.lb-list li {
+    counter-increment: lb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #F5F5F5;
+    font-size: 0.92em;
+}
+
+.lb-list li:last-child { border-bottom: none; }
+
+.lb-list li::before {
+    content: counter(lb) ". ";
+    color: #999;
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+.lb-list li a {
+    color: #1B365D;
+    text-decoration: none;
+    font-weight: 600;
+    flex: 1;
+}
+
+.lb-list li a:hover { text-decoration: underline; }
+
+.lb-list li span {
+    color: #444;
+    font-weight: 600;
+}
+
+/* ---------- Trends: agency compare panel ---------- */
+.metric-toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    background: #F8F9FA;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.metric-toggle-btn {
+    border: none;
+    background: transparent;
+    color: #666;
+    padding: 7px 13px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.metric-toggle-btn:hover { color: #1B365D; }
+
+.metric-toggle-btn.active {
+    background: #1B365D;
+    color: #FFFFFF;
+}
+
+.agency-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.agency-pill {
+    border: 1px solid #E0E0E0;
+    background: #FFFFFF;
+    color: #444;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.agency-pill:hover { border-color: #2A4A7A; }
+
+.agency-pill.active {
+    color: #FFFFFF;
+}
+
 .agency-add {
     display: flex;
     gap: 10px;
@@ -369,10 +541,90 @@ table.data-table tbody tr:last-child td {
     font-size: 0.95em;
 }
 
+/* ---------- Rankings: awards + size legend ---------- */
+.size-info-trigger {
+    margin-left: 14px;
+    color: #2A4A7A;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.size-info-trigger:hover { text-decoration: underline; }
+
+.size-legend-panel {
+    background: #F0F3F8;
+    border-left: 3px solid #2A4A7A;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.88em;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.awards-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.award-card {
+    display: block;
+    background: linear-gradient(135deg, #FFFFFF, #F8F9FA);
+    border: 1px solid #EDEDED;
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(27,54,93,0.06);
+    transition: all 0.2s ease;
+}
+
+.award-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(27,54,93,0.12);
+}
+
+.award-icon {
+    color: #2A4A7A;
+    margin-bottom: 8px;
+}
+
+.award-label {
+    font-size: 0.75em;
+    color: #999;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.award-agency {
+    color: #1B365D;
+    font-weight: 700;
+    font-size: 0.98em;
+    margin-top: 4px;
+    line-height: 1.3;
+}
+
+.award-value {
+    color: #2A4A7A;
+    font-size: 0.88em;
+    margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+    .awards-row { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .chart-grid-2 { grid-template-columns: 1fr; }
+    .chart-grid-3 { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {

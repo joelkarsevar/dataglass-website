@@ -17,6 +17,8 @@ const Explorer = (() => {
     const loadTrends = () => loadJSON('data/govtwide_trends.json');
     const loadAgencyScores = () => loadJSON('data/agency_scores.json');
     const loadExemptions = () => loadJSON('data/exemptions.json');
+    const loadAgencyDetail = () => loadJSON('data/agency_detail.json');
+    const loadAwards = () => loadJSON('data/awards.json');
 
     function fmtNum(n) {
         if (n === null || n === undefined || isNaN(n)) return '—';
@@ -43,9 +45,15 @@ const Explorer = (() => {
         return 'score-low';
     }
 
+    function slugify(name) {
+        return (name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'agency';
+    }
+
     const NAVY = '#1B365D';
     const STEEL = '#2A4A7A';
-    const CHART_COLORS = ['#1B365D', '#2A4A7A', '#5B8AC4', '#8FB4DE', '#C0392B', '#B7791F'];
+    // High-contrast qualitative palette — distinct hues, not shades of the same color,
+    // so multiple agencies/series are easy to tell apart at a glance.
+    const CHART_COLORS = ['#1B365D', '#C0392B', '#1E8449', '#B7791F', '#7D3C98', '#117864', '#D35400', '#2980B9'];
 
     function baseChartOptions(overrides) {
         return Object.assign({
@@ -70,6 +78,7 @@ const Explorer = (() => {
         });
 
         const searchInput = document.getElementById('explorer-search-input');
+        const searchBtn = document.getElementById('explorer-search-btn');
         if (!searchInput) return;
 
         document.addEventListener('keydown', (e) => {
@@ -79,24 +88,33 @@ const Explorer = (() => {
             }
         });
 
-        loadAgencyScores().then(rows => {
-            const names = [...new Set(rows.map(r => r.agency))].sort();
+        let nameToSlug = {};
+        loadAgencyDetail().then(agencies => {
+            nameToSlug = {};
+            Object.values(agencies).forEach(a => { nameToSlug[a.agency] = a.slug; });
+            const names = Object.values(agencies).map(a => a.agency).sort();
             const datalist = document.getElementById('agency-datalist');
             if (datalist) {
                 datalist.innerHTML = names.map(n => `<option value="${n}">`).join('');
             }
         }).catch(() => {});
 
+        function goSearch() {
+            const val = searchInput.value.trim();
+            if (!val) return;
+            const slug = nameToSlug[val] || val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            window.location.href = 'agency.html?a=' + encodeURIComponent(slug);
+        }
+
         searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && searchInput.value.trim()) {
-                window.location.href = 'compare.html?a=' + encodeURIComponent(searchInput.value.trim());
-            }
+            if (e.key === 'Enter') goSearch();
         });
+        if (searchBtn) searchBtn.addEventListener('click', goSearch);
     }
 
     return {
-        loadTrends, loadAgencyScores, loadExemptions,
-        fmtNum, fmtCurrency, fmtPct, scoreClass,
+        loadTrends, loadAgencyScores, loadExemptions, loadAgencyDetail, loadAwards,
+        fmtNum, fmtCurrency, fmtPct, scoreClass, slugify,
         NAVY, STEEL, CHART_COLORS, baseChartOptions, initChrome
     };
 })();
