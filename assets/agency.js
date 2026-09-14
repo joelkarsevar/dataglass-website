@@ -29,10 +29,20 @@
     function sparkline(canvasId, values, color) {
         const ctx = document.getElementById(canvasId);
         if (!ctx || !values.length) return;
+        // Fixed, non-responsive size measured once from the container avoids
+        // Chart.js's ResizeObserver-driven resizing, which is what causes
+        // tiny sparklines to render inconsistently (or stretch) depending on
+        // exact layout timing.
+        const rect = ctx.parentElement.getBoundingClientRect();
+        const w = Math.round(rect.width) || 60;
+        const h = Math.round(rect.height) || 22;
+        ctx.width = w;
+        ctx.height = h;
+        const cleanValues = values.map(v => (v === undefined || isNaN(v)) ? null : v);
         new Chart(ctx, {
             type: 'line',
-            data: { labels: values.map((_,i)=>i), datasets: [{ data: values, borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display:false }, tooltip: { enabled:false } },
+            data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
+            options: { responsive: false, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } },
                 scales: { x: { display:false }, y: { display:false } }, elements: { line: { borderJoinStyle: 'round' } } }
         });
     }
@@ -84,8 +94,8 @@
         `;
 
         const years = a.years.slice(-8);
-        sparkline('spark-received', years.map(y=>y.received||0), '#2980B9');
-        sparkline('spark-backlog', years.map(y=>y.backlog||0), '#C0392B');
+        sparkline('spark-received', years.map(y=>y.received), '#2980B9');
+        sparkline('spark-backlog', years.map(y=>y.backlog), '#C0392B');
     }
 
     function renderOverview(latest) {
