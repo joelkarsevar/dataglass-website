@@ -12,9 +12,9 @@
         duplicate: 'Duplicate', other: 'Other',
     };
     const DISP_COLORS = {
-        full_grants: '#2A9D8F', partial_grants: '#F4A100', full_denials: '#9B2226', no_records: '#94A3B8',
-        referred: '#6A4C93', withdrawn: '#5B7B9C', fee_related: '#B08968', not_described: '#8895A7',
-        improper: '#8895A7', not_agency_record: '#8895A7', duplicate: '#8895A7', other: '#A9B4C2',
+        full_grants: '#2A9D8F', partial_grants: '#F4A100', full_denials: '#9B2226', no_records: '#5C6BC0',
+        referred: '#6A4C93', withdrawn: '#457B9D', fee_related: '#B08968', not_described: '#588157',
+        improper: '#BC6C25', not_agency_record: '#C9184A', duplicate: '#8D99AE', other: '#495057',
     };
     const EX_LABELS = {
         exemptions_ex_1:'Ex 1 \u2013 National Security', exemptions_ex_2:'Ex 2 \u2013 Internal Personnel Rules',
@@ -55,7 +55,7 @@
         const kpiRow = document.getElementById('agency-kpi-row');
         kpiRow.innerHTML = `
             <div class="agency-kpi-card">
-                <div class="agency-kpi-label"><span>Received</span><canvas id="spark-received" class="agency-kpi-spark"></canvas></div>
+                <div class="agency-kpi-label"><span>Received</span><div class="agency-kpi-spark"><canvas id="spark-received"></canvas></div></div>
                 <div class="agency-kpi-value">${Explorer.fmtNum(latest.received)}</div>
                 ${delta(latest.received, prior && prior.received)}
             </div>
@@ -69,7 +69,7 @@
                 <div class="agency-kpi-value">${Explorer.fmtNum(latest.pending_end)}</div>
             </div>
             <div class="agency-kpi-card">
-                <div class="agency-kpi-label"><span>Backlog</span><canvas id="spark-backlog" class="agency-kpi-spark"></canvas></div>
+                <div class="agency-kpi-label"><span>Backlog</span><div class="agency-kpi-spark"><canvas id="spark-backlog"></canvas></div></div>
                 <div class="agency-kpi-value">${Explorer.fmtNum(latest.backlog)}</div>
                 ${delta(latest.backlog, prior && prior.backlog)}
             </div>
