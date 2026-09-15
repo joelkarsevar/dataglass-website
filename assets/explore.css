@@ -46,7 +46,7 @@
     background: #FFFFFF;
     border-bottom: 1px solid #E8E8E8;
     position: sticky;
-    top: 68px;
+    top: 48px;
     z-index: 500;
     box-shadow: 0 2px 8px rgba(27,54,93,0.06);
 }
@@ -166,7 +166,7 @@
 /* ---------- Flip KPI cards (front: headline stat, back: glass trend panel) ---------- */
 .kpi-flip {
     perspective: 1200px;
-    height: 172px;
+    height: 198px;
 }
 
 .kpi-flip-inner {
@@ -187,7 +187,7 @@
     inset: 0;
     backface-visibility: hidden;
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 22px 24px;
     box-sizing: border-box;
 }
 
@@ -195,6 +195,9 @@
     background: #FFFFFF;
     border: 1px solid #EDEDED;
     box-shadow: 0 3px 14px rgba(27,54,93,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .kpi-flip-front::before {
@@ -258,20 +261,20 @@
     z-index: 1;
 }
 
-.kpi-flip-back canvas {
-    width: 100% !important;
-    height: 42px !important;
-    margin-bottom: 8px;
+.kpi-spark-wrap {
     position: relative;
+    width: 100%;
+    height: 42px;
+    margin-bottom: 8px;
     z-index: 1;
 }
 
 .kpi-tooltip-breakdown {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    font-size: 0.8em;
-    padding-top: 7px;
+    gap: 7px;
+    font-size: 0.82em;
+    padding-top: 10px;
     border-top: 1px solid rgba(255,255,255,0.15);
     position: relative;
     z-index: 1;
@@ -801,6 +804,36 @@ table.data-table tbody tr:last-child td {
 
 @media (max-width: 900px) {
     .insights-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Ranked bar list (used for exemptions, disposition closures) ---------- */
+.bar-list-row {
+    margin-bottom: 16px;
+}
+
+.bar-list-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 0.9em;
+    margin-bottom: 6px;
+}
+
+.bar-list-label-row .name { color: #333; font-weight: 600; white-space: nowrap; }
+.bar-list-label-row .count { color: #888; white-space: nowrap; }
+
+.bar-list-track {
+    background: #F0F0F0;
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.bar-list-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: #1B365D;
 }
 
 /* ---------- Disposition bar (shared: Overview + agency profile) ---------- */

@@ -41,7 +41,7 @@
         const cleanValues = values.map(v => (v === undefined || isNaN(v)) ? null : v);
         new Chart(ctx, {
             type: 'line',
-            data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
+            data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 2.5, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
             options: { responsive: false, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } },
                 scales: { x: { display:false }, y: { display:false } }, elements: { line: { borderJoinStyle: 'round' } } }
         });
