@@ -84,7 +84,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const navHeight = 68; // Height of fixed nav
+                    const navHeight = 48; // Height of fixed nav
                     const targetPosition = target.offsetTop - navHeight;
                     
                     window.scrollTo({

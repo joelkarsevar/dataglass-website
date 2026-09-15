@@ -15,7 +15,7 @@
     <nav>
         <div class="nav-container">
             <a href="index.html#home" class="nav-logo">
-                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 50px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 9px;">
+                <img src="dataglass-logo-white.svg" alt="Data Glass LLC" style="height: 32px; width: auto; display: block; vertical-align: middle; padding: 0; margin-top: 8px;">
             </a>
             <button class="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
             <ul class="nav-menu">
@@ -167,16 +167,11 @@
                 function sparkline(canvasId, values, color) {
                     const ctx = document.getElementById(canvasId);
                     if (!ctx) return;
-                    const rect = ctx.parentElement.getBoundingClientRect();
-                    const w = Math.round(rect.width) || 240;
-                    const h = Math.round(rect.height) || 42;
-                    ctx.width = w;
-                    ctx.height = h;
                     const cleanValues = values.map(v => (v === undefined || isNaN(v)) ? null : v);
                     new Chart(ctx, {
                         type: 'line',
-                        data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 2, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
-                        options: { responsive: false, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } }, scales: { x: { display:false }, y: { display:false } } }
+                        data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 2.75, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
+                        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } }, scales: { x: { display:false }, y: { display:false } } }
                     });
                 }
 
@@ -206,7 +201,7 @@
                                 </div>
                                 <div class="kpi-flip-back">
                                     <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <canvas id="spark-received"></canvas>
+                                    <div class="kpi-spark-wrap"><canvas id="spark-received"></canvas></div>
                                     <div class="kpi-tooltip-breakdown">
                                         <div class="row"><span>vs. Processed</span><span>${Explorer.fmtNum(latest.requests_received - latest.requests_processed)} more received</span></div>
                                         <div class="row"><span>FY${first.year} baseline</span><span>${Explorer.fmtNum(first.requests_received)}</span></div>
@@ -224,7 +219,7 @@
                                 </div>
                                 <div class="kpi-flip-back">
                                     <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <canvas id="spark-processed"></canvas>
+                                    <div class="kpi-spark-wrap"><canvas id="spark-processed"></canvas></div>
                                     <div class="kpi-tooltip-breakdown">
                                         <div class="row"><span>% of Received</span><span>${(latest.requests_processed/latest.requests_received*100).toFixed(1)}%</span></div>
                                         <div class="row"><span>FY${first.year} baseline</span><span>${Explorer.fmtNum(first.requests_processed)}</span></div>
@@ -242,7 +237,7 @@
                                 </div>
                                 <div class="kpi-flip-back">
                                     <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <canvas id="spark-backlog"></canvas>
+                                    <div class="kpi-spark-wrap"><canvas id="spark-backlog"></canvas></div>
                                     <div class="kpi-tooltip-breakdown">
                                         <div class="row"><span>Pending, FY Start</span><span>${Explorer.fmtNum(latest.pending_start)}</span></div>
                                         <div class="row"><span>Pending, FY End</span><span>${Explorer.fmtNum(latest.pending_end)}</span></div>
@@ -260,10 +255,10 @@
                                 </div>
                                 <div class="kpi-flip-back">
                                     <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <canvas id="spark-cost"></canvas>
+                                    <div class="kpi-spark-wrap"><canvas id="spark-cost"></canvas></div>
                                     <div class="kpi-tooltip-breakdown">
-                                        <div class="row"><span><span class="dot" style="background:#89C2A3;"></span>Processing</span><span>${Explorer.fmtCurrency(latest.processing_cost)}</span></div>
-                                        <div class="row"><span><span class="dot" style="background:#D4EDE0;"></span>Litigation</span><span>${Explorer.fmtCurrency(latest.litigation_cost)}</span></div>
+                                        <div class="row"><span><span class="dot" style="background:#5EEAD4;"></span>Processing</span><span>${Explorer.fmtCurrency(latest.processing_cost)}</span></div>
+                                        <div class="row"><span><span class="dot" style="background:#FBBF24;"></span>Litigation</span><span>${Explorer.fmtCurrency(latest.litigation_cost)}</span></div>
                                         <div class="row"><span><span class="dot" style="background:#FFFFFF;"></span>Per Request</span><span>${Explorer.fmtCurrency(latest.cost_per_request)}</span></div>
                                     </div>
                                 </div>
@@ -324,7 +319,7 @@
                     `;
                     new Chart(document.getElementById('chart-cost-donut'), {
                         type: 'doughnut',
-                        data: { labels: ['Processing Cost', 'Litigation Cost'], datasets: [{ data: [latest.processing_cost, latest.litigation_cost], backgroundColor: ['#1B4332', '#74C69D'] }] },
+                        data: { labels: ['Processing Cost', 'Litigation Cost'], datasets: [{ data: [latest.processing_cost, latest.litigation_cost], backgroundColor: ['#0D9488', '#F4A100'] }] },
                         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 12, font: { size: 11.5, weight: '600' }, color: '#555' } }, tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${Explorer.fmtCurrency(ctx.parsed)}` } } } }
                     });
                     new Chart(document.getElementById('chart-cost-line'), {
