@@ -95,7 +95,7 @@
 
         const years = a.years.slice(-8);
         sparkline('spark-received', years.map(y=>y.received), '#2980B9');
-        sparkline('spark-backlog', years.map(y=>y.backlog), '#C0392B');
+        sparkline('spark-backlog', years.map(y=>y.backlog), Explorer.METRIC_COLORS.backlog);
     }
 
     function renderOverview(latest) {

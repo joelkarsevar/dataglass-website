@@ -33,6 +33,16 @@ const Explorer = (() => {
         return '$' + Math.round(n).toLocaleString('en-US');
     }
 
+    // Compact form for tight spaces (flip-card backs, axis ticks): 704K, 1.71M, $661M
+    function fmtCompact(n, currency) {
+        if (n === null || n === undefined || isNaN(n)) return '-';
+        const a = Math.abs(n), p = currency ? '$' : '';
+        if (a >= 1e9) return p + (n / 1e9).toFixed(2) + 'B';
+        if (a >= 1e6) return p + (n / 1e6).toFixed(2) + 'M';
+        if (a >= 1e3) return p + (n / 1e3).toFixed(0) + 'K';
+        return p + Math.round(n).toLocaleString('en-US');
+    }
+
     function fmtPct(n, digits) {
         if (n === null || n === undefined || isNaN(n)) return '-';
         return n.toFixed(digits === undefined ? 1 : digits) + '%';
@@ -43,6 +53,21 @@ const Explorer = (() => {
         if (score >= 75) return 'score-high';
         if (score >= 50) return 'score-mid';
         return 'score-low';
+    }
+
+    // Agency profile pages are keyed by the short slug in agency_detail.json
+    // (va, doj, ...), not by slugify(fullName). Use this map to build links.
+    // Returns {fullName: slug, abbrev: slug}. Names with no profile are absent.
+    let slugMapPromise = null;
+    function loadSlugMap() {
+        if (!slugMapPromise) {
+            slugMapPromise = loadAgencyDetail().then(agencies => {
+                const m = {};
+                Object.values(agencies).forEach(a => { m[a.agency] = a.slug; if (a.abbrev) m[a.abbrev] = a.slug; });
+                return m;
+            }).catch(() => ({}));
+        }
+        return slugMapPromise;
     }
 
     function slugify(name) {
@@ -61,12 +86,12 @@ const Explorer = (() => {
     const METRIC_COLORS = {
         received: '#1B365D',
         processed: '#5B8AC4',
-        backlog: '#C0392B',
+        backlog: '#9B2226',          // same red as Full denial, per Overview review
         appeals_backlog: '#6A4C93',
         total_cost: '#1B4332',
         processing_cost: '#1B4332',
         litigation_cost: '#74C69D',
-        cost_per_request: '#1B4332',
+        cost_per_request: '#52B788', // lighter green; pairs with total_cost dark green
         staff: '#8E44AD',
         simple: '#2A9D8F',
         complex: '#F4A100',
@@ -145,7 +170,7 @@ const Explorer = (() => {
 
     return {
         loadTrends, loadAgencyScores, loadExemptions, loadAgencyDetail, loadAwards,
-        fmtNum, fmtCurrency, fmtPct, scoreClass, slugify,
+        fmtNum, fmtCurrency, fmtCompact, fmtPct, scoreClass, slugify, loadSlugMap,
         NAVY, STEEL, CHART_COLORS, METRIC_COLORS, baseChartOptions, initChrome
     };
 })();
