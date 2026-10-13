@@ -263,7 +263,7 @@
                             <div class="kpi-value">${Explorer.fmtNum(latest.requests_processed)}</div>
                             ${delta(latest.requests_processed, prev.requests_processed, 'neutral')}
                             <div class="kpi-flip-hint">Hover for 5-year trend</div>`,
-                        trendTitle, trendChart(rows, 'requests_processed', '#9CC0EA', fmtK));
+                        trendTitle, trendChart(rows, 'requests_processed', '#FFFFFF', fmtK));
 
                     const cardBacklog = flipCard(`
                             <div class="kpi-label">Backlog (FY End)</div>
@@ -276,26 +276,24 @@
                     const procShare = latest.processing_cost / latest.total_cost * 100;
                     const litShare = latest.litigation_cost / latest.total_cost * 100;
                     const feeShare = latest.fees_collected / latest.total_cost * 100;
-                    const costPerStaff = latest.staff ? latest.total_cost / latest.staff : null;
                     const cardCost = flipCard(`
                             <div class="kpi-label">Total Program Cost</div>
                             <div class="kpi-value">${Explorer.fmtCurrency(latest.total_cost)}</div>
                             ${delta(latest.total_cost, prev.total_cost, 'badIfUp')}
                             <div class="kpi-flip-hint">${Explorer.fmtCurrency(latest.cost_per_request)} per request &middot; hover for breakdown</div>`,
                         `Where the Money Goes, FY${latest.year}`, `
-                            <div class="kb-stats">
-                                ${stat('$' + latest.cost_per_request.toFixed(2), 'per processed request')}
-                                ${stat(costPerStaff === null ? '-' : Explorer.fmtCurrency(costPerStaff), 'per FOIA staff member')}
+                            <div class="kb-stats" style="grid-template-columns:1fr;">
+                                ${stat('$' + latest.cost_per_request.toFixed(2), 'cost per processed request')}
                             </div>
                             <div class="kb-range">
                                 <div class="kb-range-cap"><span>Cost split</span></div>
                                 <div class="kb-split">
-                                    <div style="width:${procShare.toFixed(1)}%;background:#5EEAD4;" title="Processing ${Explorer.fmtCurrency(latest.processing_cost)}"></div>
-                                    <div style="width:${litShare.toFixed(1)}%;background:#FBBF24;" title="Litigation ${Explorer.fmtCurrency(latest.litigation_cost)}"></div>
+                                    <div style="width:${procShare.toFixed(1)}%;background:#0D9488;" title="Processing ${Explorer.fmtCurrency(latest.processing_cost)}"></div>
+                                    <div style="width:${litShare.toFixed(1)}%;background:#F4A100;" title="Litigation ${Explorer.fmtCurrency(latest.litigation_cost)}"></div>
                                 </div>
                                 <div class="kb-split-legend">
-                                    <span><span class="dot" style="background:#5EEAD4;"></span>Processing ${procShare.toFixed(1)}%</span>
-                                    <span><span class="dot" style="background:#FBBF24;"></span>Litigation ${litShare.toFixed(1)}%</span>
+                                    <span><span class="dot" style="background:#0D9488;"></span>Processing ${procShare.toFixed(1)}%</span>
+                                    <span><span class="dot" style="background:#F4A100;"></span>Litigation ${litShare.toFixed(1)}%</span>
                                 </div>
                             </div>
                             <div class="kb-rows">
