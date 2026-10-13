@@ -6,9 +6,9 @@
     <title>FOIA Data Overview - Data Glass LLC</title>
     <link rel="icon" type="image/svg+xml" href="dataglass-icon-white.svg">
     <link rel="stylesheet" href="site.css">
-    <link rel="stylesheet" href="assets/explore.css">
+    <link rel="stylesheet" href="assets/explore.css?v=2026-10-12b">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
-    <script src="assets/explore.js"></script>
+    <script src="assets/explore.js?v=2026-10-12b"></script>
     
 </head>
 <body>
@@ -147,7 +147,7 @@
                     <div class="chart-sub">Top exemption categories cited</div>
                     <div id="ex-snapshot-list" style="margin-top:14px;"></div>
                     <p class="chart-blurb" id="blurb-exemptions"></p>
-                    <a href="exemptions.html" style="display:inline-block;margin-top:8px;color:#1B365D;font-weight:600;font-size:0.9em;text-decoration:none;">See full Exemption Explorer →</a>
+                    <a href="exemptions.html" class="ov-link-btn">See Full Exemption Explorer →</a>
                 </div>
             </div>
 
@@ -185,33 +185,41 @@
                 }
                 const tipNum = { label: (ctx) => ` ${ctx.dataset.label}: ${Explorer.fmtNum(ctx.parsed.y)}` };
 
+                // Axis tick labels: compact, no trailing zeros ($750M, 1.5M, 200K)
+                function fmtAxis(v, currency) {
+                    const a = Math.abs(v), p = currency ? '$' : '';
+                    const t = x => String(parseFloat(x.toFixed(2)));
+                    if (a >= 1e9) return p + t(v / 1e9) + 'B';
+                    if (a >= 1e6) return p + t(v / 1e6) + 'M';
+                    if (a >= 1e3) return p + t(v / 1e3) + 'K';
+                    return p + t(v);
+                }
+
                 // ---------- Flip-card back helpers ----------
-                // Percent change, signed, one decimal
-                function pctChg(cur, base) { return base ? (cur - base) / base * 100 : null; }
-                function signed(p, digits) { return p === null ? '-' : (p >= 0 ? '+' : '') + p.toFixed(digits === undefined ? 0 : digits) + '%'; }
-                // Compound annual growth rate between first and latest year
-                function cagr(cur, base, years) { return (base > 0 && years > 0) ? (Math.pow(cur / base, 1 / years) - 1) * 100 : null; }
-                // tone: '' (neutral), 'good' or 'bad'. Only backlog and cost tiles use tone.
-                function tone(isBad) { return isBad ? 'bad' : 'good'; }
-                // 13-year range bar: low ... [avg tick] ... high, with a dot for the latest year
-                function rangeBar(rows, key, fmt, dotTone) {
-                    const vals = rows.map(r => r[key]);
+                // Five-year line trend, drawn as HTML + SVG (no canvas) so it sizes
+                // correctly inside the 3D-flipped card at every width.
+                // Points sit at fixed % positions; the SVG stretches to fit the plot box.
+                function trendChart(rows, key, color, fmt) {
+                    const r5 = rows.slice(-5);
+                    const vals = r5.map(r => r[key]);
                     const lo = Math.min(...vals), hi = Math.max(...vals);
-                    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
-                    const loYr = rows[vals.indexOf(lo)].year, hiYr = rows[vals.indexOf(hi)].year;
-                    const cur = vals[vals.length - 1];
-                    const pos = v => hi === lo ? 50 : ((v - lo) / (hi - lo) * 100);
-                    const rank = [...vals].sort((x, y) => y - x).indexOf(cur) + 1;
-                    const where = rank === 1 ? 'Record high' : rank === vals.length ? 'Record low' : `#${rank} of ${vals.length} yrs`;
+                    const xs = r5.map((_, i) => 8 + i * (84 / (r5.length - 1 || 1)));
+                    const ys = vals.map(v => hi === lo ? 50 : 90 - (v - lo) / (hi - lo) * 80);
+                    const line = xs.map((x, i) => `${x.toFixed(2)},${ys[i].toFixed(2)}`).join(' ');
+                    const area = `${xs[0].toFixed(2)},100 ${line} ${xs[xs.length - 1].toFixed(2)},100`;
+                    const last = r5.length - 1;
                     return `
-                        <div class="kb-range">
-                            <div class="kb-range-cap"><span>${vals.length}-year range</span><span class="now">${where}</span></div>
-                            <div class="kb-range-track">
-                                <div class="kb-range-fill" style="width:${pos(cur).toFixed(1)}%;"></div>
-                                <div class="kb-range-avg" style="left:${pos(avg).toFixed(1)}%;" title="${vals.length}-year average: ${fmt(avg)}"></div>
-                                <div class="kb-range-dot ${dotTone || ''}" style="left:${pos(cur).toFixed(1)}%;"></div>
+                        <div class="kb-trend" role="img" aria-label="Five-year trend: ${r5.map((r, i) => 'FY' + r.year + ' ' + fmt(vals[i])).join(', ')}">
+                            <div class="kb-trend-plot">
+                                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                                    <polygon points="${area}" fill="${color}" fill-opacity="0.12"></polygon>
+                                    <polyline points="${line}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
+                                </svg>
+                                ${xs.map((x, i) => `
+                                    <div class="kb-trend-dot${i === last ? ' latest' : ''}" style="left:${x.toFixed(2)}%;top:${ys[i].toFixed(2)}%;background:${color};"></div>
+                                    <div class="kb-trend-val${i === last ? ' latest' : ''}" style="left:${x.toFixed(2)}%;top:${ys[i].toFixed(2)}%;">${fmt(vals[i])}</div>`).join('')}
                             </div>
-                            <div class="kb-range-ends"><span>Low ${fmt(lo)} (FY${String(loYr).slice(2)})</span><span>Avg ${fmt(avg)}</span><span>High ${fmt(hi)} (FY${String(hiYr).slice(2)})</span></div>
+                            <div class="kb-trend-years">${xs.map((x, i) => `<span style="left:${x.toFixed(2)}%;">FY${String(r5[i].year).slice(2)}</span>`).join('')}</div>
                         </div>`;
                 }
                 function stat(val, lbl, cls) { return `<div><div class="kb-val ${cls || ''}">${val}</div><div class="kb-lbl">${lbl}</div></div>`; }
@@ -230,8 +238,6 @@
                     const prev = rows[rows.length - 2];
                     const first = rows[0];
                     const prior_year = prev.year;
-                    const span = latest.year - first.year;
-                    const sinceLbl = `since FY${first.year}`;
                     // mode: 'neutral' (volume tiles, no green/red) or 'badIfUp' (backlog, cost)
                     function delta(cur, prior, mode) {
                         if (!prior) return '';
@@ -240,90 +246,52 @@
                         const cls = mode === 'neutral' ? 'neutral' : (increased ? 'up' : 'down');
                         return `<div class="kpi-delta ${cls}">${increased ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}% vs FY${prior_year}</div>`;
                     }
-                    const fmtK = v => Explorer.fmtCompact(v);
-                    const fmtK$ = v => Explorer.fmtCompact(v, true);
+                    // Point labels: thousands rounded (838K), millions to 2 places trimmed (1.71M)
+                    const fmtK = v => Math.abs(v) >= 1e6 ? fmtAxis(v) : Math.round(v / 1e3) + 'K';
+                    const r5 = rows.slice(-5);
+                    const trendTitle = `5-Year Trend, FY${r5[0].year}-FY${latest.year}`;
 
-                    // Requests Received
-                    const recvChg = pctChg(latest.requests_received, first.requests_received);
-                    const recvCagr = cagr(latest.requests_received, first.requests_received, span);
-                    const gap = latest.requests_received - latest.requests_processed;
                     const cardReceived = flipCard(`
                             <div class="kpi-label">FY${latest.year} Requests Received</div>
                             <div class="kpi-value">${Explorer.fmtNum(latest.requests_received)}</div>
                             ${delta(latest.requests_received, prev.requests_received, 'neutral')}
-                            <div class="kpi-flip-hint">Hover for context</div>`,
-                        'Incoming demand', `
-                            <div class="kb-stats">
-                                ${stat(signed(recvChg), sinceLbl)}
-                                ${stat(signed(recvCagr, 1), 'avg growth per year')}
-                            </div>
-                            ${rangeBar(rows, 'requests_received', fmtK)}
-                            <div class="kb-rows">
-                                <div class="row"><span>${gap >= 0 ? 'Received beyond processed' : 'Processed beyond received'}</span><span>${Explorer.fmtNum(Math.abs(gap))}</span></div>
-                            </div>`);
+                            <div class="kpi-flip-hint">Hover for 5-year trend</div>`,
+                        trendTitle, trendChart(rows, 'requests_received', '#FFFFFF', fmtK));
 
-                    // Requests Processed
-                    const clearance = latest.requests_processed / latest.requests_received * 100;
-                    const avgClearance = rows.reduce((s, r) => s + r.requests_processed / r.requests_received, 0) / rows.length * 100;
-                    const procChg = pctChg(latest.requests_processed, first.requests_processed);
                     const cardProcessed = flipCard(`
                             <div class="kpi-label">Requests Processed</div>
                             <div class="kpi-value">${Explorer.fmtNum(latest.requests_processed)}</div>
                             ${delta(latest.requests_processed, prev.requests_processed, 'neutral')}
-                            <div class="kpi-flip-hint">Hover for context</div>`,
-                        'Throughput', `
-                            <div class="kb-stats">
-                                ${stat(clearance.toFixed(1) + '%', 'clearance rate')}
-                                ${stat(signed(procChg), sinceLbl)}
-                            </div>
-                            ${rangeBar(rows, 'requests_processed', fmtK)}
-                            <div class="kb-rows">
-                                <div class="row"><span>Processed ÷ received, ${rows.length}-yr avg</span><span>${avgClearance.toFixed(1)}%</span></div>
-                            </div>`);
+                            <div class="kpi-flip-hint">Hover for 5-year trend</div>`,
+                        trendTitle, trendChart(rows, 'requests_processed', '#9CC0EA', fmtK));
 
-                    // Backlog (red/green allowed)
-                    const monthsOfWork = latest.backlog / (latest.requests_processed / 12);
-                    const backlogChg = pctChg(latest.backlog, first.backlog);
-                    const overdueShare = latest.pending_end ? latest.backlog / latest.pending_end * 100 : null;
-                    const bMax = Math.max(...rows.map(r => r.backlog));
-                    const bAvg = rows.reduce((s, r) => s + r.backlog, 0) / rows.length;
                     const cardBacklog = flipCard(`
                             <div class="kpi-label">Backlog (FY End)</div>
                             <div class="kpi-value">${Explorer.fmtNum(latest.backlog)}</div>
                             ${delta(latest.backlog, prev.backlog, 'badIfUp')}
-                            <div class="kpi-flip-hint">Hover for context</div>`,
-                        'How deep is the backlog', `
-                            <div class="kb-stats">
-                                ${stat(monthsOfWork.toFixed(1) + ' mo', 'of work at FY' + latest.year + ' pace')}
-                                ${stat(signed(backlogChg), sinceLbl, tone(backlogChg > 0))}
-                            </div>
-                            ${rangeBar(rows, 'backlog', fmtK, tone(latest.backlog > bAvg))}
-                            <div class="kb-rows">
-                                <div class="row"><span>Share of pending that is overdue</span><span>${overdueShare === null ? '-' : overdueShare.toFixed(1) + '%'}</span></div>
-                                <div class="row"><span>Pending, FY start to end</span><span>${fmtK(latest.pending_start)} → ${fmtK(latest.pending_end)}</span></div>
-                            </div>`);
+                            <div class="kpi-flip-hint">Hover for 5-year trend</div>`,
+                        trendTitle, trendChart(rows, 'backlog', '#FF9C94', fmtK));
 
-                    // Total Program Cost (red/green allowed)
-                    const cprChg = pctChg(latest.cost_per_request, first.cost_per_request);
-                    const costChg = pctChg(latest.total_cost, first.total_cost);
+                    // Total Program Cost (no FY2013 comparisons; FY-only figures)
                     const procShare = latest.processing_cost / latest.total_cost * 100;
                     const litShare = latest.litigation_cost / latest.total_cost * 100;
                     const feeShare = latest.fees_collected / latest.total_cost * 100;
+                    const costPerStaff = latest.staff ? latest.total_cost / latest.staff : null;
                     const cardCost = flipCard(`
                             <div class="kpi-label">Total Program Cost</div>
                             <div class="kpi-value">${Explorer.fmtCurrency(latest.total_cost)}</div>
                             ${delta(latest.total_cost, prev.total_cost, 'badIfUp')}
-                            <div class="kpi-flip-hint">${Explorer.fmtCurrency(latest.cost_per_request)} per request &middot; hover for context</div>`,
-                        'Where the money goes', `
+                            <div class="kpi-flip-hint">${Explorer.fmtCurrency(latest.cost_per_request)} per request &middot; hover for breakdown</div>`,
+                        `Where the Money Goes, FY${latest.year}`, `
                             <div class="kb-stats">
-                                ${stat(signed(cprChg), 'per request, ' + sinceLbl, tone(cprChg > 0))}
-                                ${stat(signed(costChg), 'total cost, ' + sinceLbl, tone(costChg > 0))}
+                                ${stat('$' + latest.cost_per_request.toFixed(2), 'per processed request')}
+                                ${stat(costPerStaff === null ? '-' : Explorer.fmtCurrency(costPerStaff), 'per FOIA staff member')}
                             </div>
                             <div class="kb-range">
-                                <div class="kb-range-cap"><span>FY${latest.year} cost split</span></div>
+                                <div class="kb-range-cap"><span>Cost split</span></div>
                                 <div class="kb-split">
-                                    <div style="width:${procShare.toFixed(1)}%;background:#5EEAD4;" title="Processing ${procShare.toFixed(1)}%"></div>
-                                    <div style="width:${litShare.toFixed(1)}%;background:#FBBF24;" title="Litigation ${litShare.toFixed(1)}%"></div>
+                                    <div style="width:${procShare.toFixed(1)}%;background:#5EEAD4;" title="Processing ${Explorer.fmtCurrency(latest.processing_cost)}"></div>
+                                    <div style="width:${litShare.toFixed(1)}%;background:#FBBF24;" title="Litigation ${Explorer.fmtCurrency(latest.litigation_cost)}"></div>
                                 </div>
                                 <div class="kb-split-legend">
                                     <span><span class="dot" style="background:#5EEAD4;"></span>Processing ${procShare.toFixed(1)}%</span>
@@ -349,7 +317,7 @@
                         options: chartOpts({
                             scales: {
                                 x: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } },
-                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' } }
+                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => fmtAxis(v) }, grid: { color: '#F5F5F5' } }
                             }
                         }, tipNum)
                     });
@@ -364,7 +332,7 @@
                         options: chartOpts({
                             scales: {
                                 x: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } },
-                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' } }
+                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => fmtAxis(v) }, grid: { color: '#F5F5F5' } }
                             }
                         }, { label: (ctx) => ` Backlog: ${Explorer.fmtNum(ctx.parsed.y)}` })
                     });
@@ -408,7 +376,7 @@
                             scales: {
                                 x: { ticks: { color: '#666', font: { size: 10 } }, grid: { color: '#F5F5F5' } },
                                 y: { position: 'left', ticks: { color: '#2D8A5F', font: { size: 10, weight: '600' }, callback: v => Explorer.fmtCurrency(v) }, grid: { color: '#F5F5F5' }, title: { display: true, text: 'Cost per request', color: '#2D8A5F', font: { size: 10, weight: '600' } } },
-                                y1: { position: 'right', ticks: { color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' }, callback: v => Explorer.fmtCompact(v, true) }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Total cost', color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' } } }
+                                y1: { position: 'right', ticks: { color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' }, callback: v => fmtAxis(v, true) }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Total cost', color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' } } }
                             }
                         }, { label: (ctx) => ` ${ctx.dataset.label.replace(/ \((left|right) axis\)/, '')}: ${ctx.dataset.yAxisID === 'y' ? '$' + ctx.parsed.y.toFixed(2) : Explorer.fmtCurrency(ctx.parsed.y)}` })
                     });
@@ -480,7 +448,7 @@
                         options: chartOpts({
                             scales: {
                                 x: { ticks: { color: '#666', font: { size: 10 }, callback: function(v) { return this.getLabelForValue(v).replace('FY20', 'FY'); } }, grid: { color: '#F5F5F5' } },
-                                y: { ticks: { color: '#666', font: { size: 10 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' }, beginAtZero: true }
+                                y: { ticks: { color: '#666', font: { size: 10 }, callback: v => fmtAxis(v) }, grid: { color: '#F5F5F5' }, beginAtZero: true }
                             }
                         }, { label: (ctx) => ` Appeals backlog: ${Explorer.fmtNum(ctx.parsed.y)}` })
                     });
