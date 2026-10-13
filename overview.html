@@ -70,7 +70,7 @@
 
         <div class="explorer-body">
 
-            <div id="kpi-row" class="kpi-grid">
+            <div id="kpi-row" class="kpi-grid kpi-grid-flip">
                 <div class="kpi-card"><div class="kpi-label">Loading…</div></div>
             </div>
 
@@ -134,10 +134,13 @@
                 <div class="chart-panel">
                     <h3 id="appeals-title">Appeals Workflow</h3>
                     <div class="chart-sub">What happens after a requester appeals a denial</div>
-                    <div class="kpi-grid" id="appeals-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px;margin-bottom:14px;"></div>
+                    <div class="kpi-grid kpi-grid-3" id="appeals-kpis" style="margin-top:14px;margin-bottom:18px;"></div>
+                    <div class="chart-subhead">Appeal Decisions</div>
                     <div class="chart-canvas-wrap mini"><canvas id="chart-appeals-donut"></canvas></div>
+                    <div class="chart-subhead" style="margin-top:20px;">Appeals Backlog at FY End</div>
+                    <div class="chart-canvas-wrap mini"><canvas id="chart-appeals-backlog"></canvas></div>
                     <p class="chart-blurb" id="blurb-appeals"></p>
-                    <a href="rankings.html" class="def-cta" style="background:#1B365D;color:#fff;padding:10px 18px;font-size:0.9em;margin-top:14px;">Browse Agency Profiles →</a>
+                    <a href="components.html" class="def-cta" style="background:#1B365D;color:#fff;padding:10px 18px;font-size:0.9em;margin-top:14px;">Browse Agencies &amp; Components →</a>
                 </div>
                 <div class="chart-panel">
                     <h3 id="ex-snap-title">Exemptions Snapshot</h3>
@@ -164,111 +167,174 @@
                 };
                 const CLOSURE_KEYS = ['no_records','improper','duplicate','other','withdrawn','not_agency_record','not_described','referred'];
 
-                function sparkline(canvasId, values, color) {
-                    const ctx = document.getElementById(canvasId);
-                    if (!ctx) return;
-                    const cleanValues = values.map(v => (v === undefined || isNaN(v)) ? null : v);
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: { labels: cleanValues.map((_,i)=>i), datasets: [{ data: cleanValues, borderColor: color, borderWidth: 2.75, pointRadius: 0, fill: false, tension: 0.25, spanGaps: true }] },
-                        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display:false }, tooltip: { enabled:false } }, scales: { x: { display:false }, y: { display:false } } }
-                    });
+                // One legend style for every chart on this page: bottom, centered,
+                // solid circles. Tooltips keep the shared navy style.
+                const LEGEND = {
+                    position: 'bottom', align: 'center',
+                    labels: { color: '#555', font: { size: 11.5, weight: '600' }, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 14 }
+                };
+                function chartOpts(overrides, tooltipCallbacks) {
+                    const o = Explorer.baseChartOptions(overrides);
+                    o.plugins = Object.assign({}, o.plugins, { legend: LEGEND });
+                    if (tooltipCallbacks) o.plugins.tooltip = Object.assign({}, o.plugins.tooltip, { callbacks: tooltipCallbacks });
+                    return o;
+                }
+                // Line series with solid, filled points (legend dots render solid too)
+                function solidLine(label, data, color, extra) {
+                    return Object.assign({ label, data, borderColor: color, backgroundColor: color, pointBackgroundColor: color, pointBorderColor: color, pointRadius: 3.5, pointHoverRadius: 5, borderWidth: 2.5, fill: false, tension: 0.3 }, extra || {});
+                }
+                const tipNum = { label: (ctx) => ` ${ctx.dataset.label}: ${Explorer.fmtNum(ctx.parsed.y)}` };
+
+                // ---------- Flip-card back helpers ----------
+                // Percent change, signed, one decimal
+                function pctChg(cur, base) { return base ? (cur - base) / base * 100 : null; }
+                function signed(p, digits) { return p === null ? '-' : (p >= 0 ? '+' : '') + p.toFixed(digits === undefined ? 0 : digits) + '%'; }
+                // Compound annual growth rate between first and latest year
+                function cagr(cur, base, years) { return (base > 0 && years > 0) ? (Math.pow(cur / base, 1 / years) - 1) * 100 : null; }
+                // tone: '' (neutral), 'good' or 'bad'. Only backlog and cost tiles use tone.
+                function tone(isBad) { return isBad ? 'bad' : 'good'; }
+                // 13-year range bar: low ... [avg tick] ... high, with a dot for the latest year
+                function rangeBar(rows, key, fmt, dotTone) {
+                    const vals = rows.map(r => r[key]);
+                    const lo = Math.min(...vals), hi = Math.max(...vals);
+                    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+                    const loYr = rows[vals.indexOf(lo)].year, hiYr = rows[vals.indexOf(hi)].year;
+                    const cur = vals[vals.length - 1];
+                    const pos = v => hi === lo ? 50 : ((v - lo) / (hi - lo) * 100);
+                    const rank = [...vals].sort((x, y) => y - x).indexOf(cur) + 1;
+                    const where = rank === 1 ? 'Record high' : rank === vals.length ? 'Record low' : `#${rank} of ${vals.length} yrs`;
+                    return `
+                        <div class="kb-range">
+                            <div class="kb-range-cap"><span>${vals.length}-year range</span><span class="now">${where}</span></div>
+                            <div class="kb-range-track">
+                                <div class="kb-range-fill" style="width:${pos(cur).toFixed(1)}%;"></div>
+                                <div class="kb-range-avg" style="left:${pos(avg).toFixed(1)}%;" title="${vals.length}-year average: ${fmt(avg)}"></div>
+                                <div class="kb-range-dot ${dotTone || ''}" style="left:${pos(cur).toFixed(1)}%;"></div>
+                            </div>
+                            <div class="kb-range-ends"><span>Low ${fmt(lo)} (FY${String(loYr).slice(2)})</span><span>Avg ${fmt(avg)}</span><span>High ${fmt(hi)} (FY${String(hiYr).slice(2)})</span></div>
+                        </div>`;
+                }
+                function stat(val, lbl, cls) { return `<div><div class="kb-val ${cls || ''}">${val}</div><div class="kb-lbl">${lbl}</div></div>`; }
+                function flipCard(frontHtml, backTitle, backHtml) {
+                    return `
+                        <div class="kpi-flip" tabindex="0">
+                            <div class="kpi-flip-inner">
+                                <div class="kpi-flip-front">${frontHtml}</div>
+                                <div class="kpi-flip-back"><div class="kpi-tooltip-title">${backTitle}</div>${backHtml}</div>
+                            </div>
+                        </div>`;
                 }
 
                 Explorer.loadTrends().then(rows => {
                     const latest = rows[rows.length - 1];
                     const prev = rows[rows.length - 2];
                     const first = rows[0];
-                    function delta(cur, prior, badIfUp) {
+                    const prior_year = prev.year;
+                    const span = latest.year - first.year;
+                    const sinceLbl = `since FY${first.year}`;
+                    // mode: 'neutral' (volume tiles, no green/red) or 'badIfUp' (backlog, cost)
+                    function delta(cur, prior, mode) {
                         if (!prior) return '';
                         const pct = ((cur - prior) / prior * 100);
                         const increased = pct >= 0;
-                        const bad = badIfUp ? increased : !increased;
-                        const cls = bad ? 'up' : 'down';
+                        const cls = mode === 'neutral' ? 'neutral' : (increased ? 'up' : 'down');
                         return `<div class="kpi-delta ${cls}">${increased ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}% vs FY${prior_year}</div>`;
                     }
-                    const prior_year = prev.year;
-                    const last8 = rows.slice(-8);
-                    const kpiRow = document.getElementById('kpi-row');
-                    kpiRow.innerHTML = `
-                        <div class="kpi-flip">
-                            <div class="kpi-flip-inner">
-                                <div class="kpi-flip-front">
-                                    <div class="kpi-label">FY${latest.year} Requests Received</div>
-                                    <div class="kpi-value">${Explorer.fmtNum(latest.requests_received)}</div>
-                                    ${delta(latest.requests_received, prev.requests_received, false)}
-                                    <div class="kpi-flip-hint">Hover for trend</div>
+                    const fmtK = v => Explorer.fmtCompact(v);
+                    const fmtK$ = v => Explorer.fmtCompact(v, true);
+
+                    // Requests Received
+                    const recvChg = pctChg(latest.requests_received, first.requests_received);
+                    const recvCagr = cagr(latest.requests_received, first.requests_received, span);
+                    const gap = latest.requests_received - latest.requests_processed;
+                    const cardReceived = flipCard(`
+                            <div class="kpi-label">FY${latest.year} Requests Received</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.requests_received)}</div>
+                            ${delta(latest.requests_received, prev.requests_received, 'neutral')}
+                            <div class="kpi-flip-hint">Hover for context</div>`,
+                        'Incoming demand', `
+                            <div class="kb-stats">
+                                ${stat(signed(recvChg), sinceLbl)}
+                                ${stat(signed(recvCagr, 1), 'avg growth per year')}
+                            </div>
+                            ${rangeBar(rows, 'requests_received', fmtK)}
+                            <div class="kb-rows">
+                                <div class="row"><span>${gap >= 0 ? 'Received beyond processed' : 'Processed beyond received'}</span><span>${Explorer.fmtNum(Math.abs(gap))}</span></div>
+                            </div>`);
+
+                    // Requests Processed
+                    const clearance = latest.requests_processed / latest.requests_received * 100;
+                    const avgClearance = rows.reduce((s, r) => s + r.requests_processed / r.requests_received, 0) / rows.length * 100;
+                    const procChg = pctChg(latest.requests_processed, first.requests_processed);
+                    const cardProcessed = flipCard(`
+                            <div class="kpi-label">Requests Processed</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.requests_processed)}</div>
+                            ${delta(latest.requests_processed, prev.requests_processed, 'neutral')}
+                            <div class="kpi-flip-hint">Hover for context</div>`,
+                        'Throughput', `
+                            <div class="kb-stats">
+                                ${stat(clearance.toFixed(1) + '%', 'clearance rate')}
+                                ${stat(signed(procChg), sinceLbl)}
+                            </div>
+                            ${rangeBar(rows, 'requests_processed', fmtK)}
+                            <div class="kb-rows">
+                                <div class="row"><span>Processed ÷ received, ${rows.length}-yr avg</span><span>${avgClearance.toFixed(1)}%</span></div>
+                            </div>`);
+
+                    // Backlog (red/green allowed)
+                    const monthsOfWork = latest.backlog / (latest.requests_processed / 12);
+                    const backlogChg = pctChg(latest.backlog, first.backlog);
+                    const overdueShare = latest.pending_end ? latest.backlog / latest.pending_end * 100 : null;
+                    const bMax = Math.max(...rows.map(r => r.backlog));
+                    const bAvg = rows.reduce((s, r) => s + r.backlog, 0) / rows.length;
+                    const cardBacklog = flipCard(`
+                            <div class="kpi-label">Backlog (FY End)</div>
+                            <div class="kpi-value">${Explorer.fmtNum(latest.backlog)}</div>
+                            ${delta(latest.backlog, prev.backlog, 'badIfUp')}
+                            <div class="kpi-flip-hint">Hover for context</div>`,
+                        'How deep is the backlog', `
+                            <div class="kb-stats">
+                                ${stat(monthsOfWork.toFixed(1) + ' mo', 'of work at FY' + latest.year + ' pace')}
+                                ${stat(signed(backlogChg), sinceLbl, tone(backlogChg > 0))}
+                            </div>
+                            ${rangeBar(rows, 'backlog', fmtK, tone(latest.backlog > bAvg))}
+                            <div class="kb-rows">
+                                <div class="row"><span>Share of pending that is overdue</span><span>${overdueShare === null ? '-' : overdueShare.toFixed(1) + '%'}</span></div>
+                                <div class="row"><span>Pending, FY start to end</span><span>${fmtK(latest.pending_start)} → ${fmtK(latest.pending_end)}</span></div>
+                            </div>`);
+
+                    // Total Program Cost (red/green allowed)
+                    const cprChg = pctChg(latest.cost_per_request, first.cost_per_request);
+                    const costChg = pctChg(latest.total_cost, first.total_cost);
+                    const procShare = latest.processing_cost / latest.total_cost * 100;
+                    const litShare = latest.litigation_cost / latest.total_cost * 100;
+                    const feeShare = latest.fees_collected / latest.total_cost * 100;
+                    const cardCost = flipCard(`
+                            <div class="kpi-label">Total Program Cost</div>
+                            <div class="kpi-value">${Explorer.fmtCurrency(latest.total_cost)}</div>
+                            ${delta(latest.total_cost, prev.total_cost, 'badIfUp')}
+                            <div class="kpi-flip-hint">${Explorer.fmtCurrency(latest.cost_per_request)} per request &middot; hover for context</div>`,
+                        'Where the money goes', `
+                            <div class="kb-stats">
+                                ${stat(signed(cprChg), 'per request, ' + sinceLbl, tone(cprChg > 0))}
+                                ${stat(signed(costChg), 'total cost, ' + sinceLbl, tone(costChg > 0))}
+                            </div>
+                            <div class="kb-range">
+                                <div class="kb-range-cap"><span>FY${latest.year} cost split</span></div>
+                                <div class="kb-split">
+                                    <div style="width:${procShare.toFixed(1)}%;background:#5EEAD4;" title="Processing ${procShare.toFixed(1)}%"></div>
+                                    <div style="width:${litShare.toFixed(1)}%;background:#FBBF24;" title="Litigation ${litShare.toFixed(1)}%"></div>
                                 </div>
-                                <div class="kpi-flip-back">
-                                    <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <div class="kpi-spark-wrap"><canvas id="spark-received"></canvas></div>
-                                    <div class="kpi-tooltip-breakdown">
-                                        <div class="row"><span>vs. Processed</span><span>${Explorer.fmtNum(latest.requests_received - latest.requests_processed)} more received</span></div>
-                                        <div class="row"><span>FY${first.year} baseline</span><span>${Explorer.fmtNum(first.requests_received)}</span></div>
-                                    </div>
+                                <div class="kb-split-legend">
+                                    <span><span class="dot" style="background:#5EEAD4;"></span>Processing ${procShare.toFixed(1)}%</span>
+                                    <span><span class="dot" style="background:#FBBF24;"></span>Litigation ${litShare.toFixed(1)}%</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="kpi-flip">
-                            <div class="kpi-flip-inner">
-                                <div class="kpi-flip-front">
-                                    <div class="kpi-label">Requests Processed</div>
-                                    <div class="kpi-value">${Explorer.fmtNum(latest.requests_processed)}</div>
-                                    ${delta(latest.requests_processed, prev.requests_processed, false)}
-                                    <div class="kpi-flip-hint">Hover for trend</div>
-                                </div>
-                                <div class="kpi-flip-back">
-                                    <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <div class="kpi-spark-wrap"><canvas id="spark-processed"></canvas></div>
-                                    <div class="kpi-tooltip-breakdown">
-                                        <div class="row"><span>% of Received</span><span>${(latest.requests_processed/latest.requests_received*100).toFixed(1)}%</span></div>
-                                        <div class="row"><span>FY${first.year} baseline</span><span>${Explorer.fmtNum(first.requests_processed)}</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kpi-flip">
-                            <div class="kpi-flip-inner">
-                                <div class="kpi-flip-front">
-                                    <div class="kpi-label">Backlog (FY End)</div>
-                                    <div class="kpi-value">${Explorer.fmtNum(latest.backlog)}</div>
-                                    ${delta(latest.backlog, prev.backlog, true)}
-                                    <div class="kpi-flip-hint">Hover for trend</div>
-                                </div>
-                                <div class="kpi-flip-back">
-                                    <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <div class="kpi-spark-wrap"><canvas id="spark-backlog"></canvas></div>
-                                    <div class="kpi-tooltip-breakdown">
-                                        <div class="row"><span>Pending, FY Start</span><span>${Explorer.fmtNum(latest.pending_start)}</span></div>
-                                        <div class="row"><span>Pending, FY End</span><span>${Explorer.fmtNum(latest.pending_end)}</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kpi-flip">
-                            <div class="kpi-flip-inner">
-                                <div class="kpi-flip-front">
-                                    <div class="kpi-label">Total Program Cost</div>
-                                    <div class="kpi-value">${Explorer.fmtCurrency(latest.total_cost)}</div>
-                                    ${delta(latest.total_cost, prev.total_cost, true)}
-                                    <div class="kpi-flip-hint">${Explorer.fmtCurrency(latest.cost_per_request)} per request &middot; hover for trend</div>
-                                </div>
-                                <div class="kpi-flip-back">
-                                    <div class="kpi-tooltip-title">8-Year Trend</div>
-                                    <div class="kpi-spark-wrap"><canvas id="spark-cost"></canvas></div>
-                                    <div class="kpi-tooltip-breakdown">
-                                        <div class="row"><span><span class="dot" style="background:#5EEAD4;"></span>Processing</span><span>${Explorer.fmtCurrency(latest.processing_cost)}</span></div>
-                                        <div class="row"><span><span class="dot" style="background:#FBBF24;"></span>Litigation</span><span>${Explorer.fmtCurrency(latest.litigation_cost)}</span></div>
-                                        <div class="row"><span><span class="dot" style="background:#FFFFFF;"></span>Per Request</span><span>${Explorer.fmtCurrency(latest.cost_per_request)}</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    sparkline('spark-received', last8.map(r=>r.requests_received), '#FFFFFF');
-                    sparkline('spark-processed', last8.map(r=>r.requests_processed), '#FFFFFF');
-                    sparkline('spark-backlog', last8.map(r=>r.backlog), '#FFFFFF');
-                    sparkline('spark-cost', last8.map(r=>r.total_cost), '#FFFFFF');
+                            <div class="kb-rows">
+                                <div class="row"><span>Fees recovered</span><span>${Explorer.fmtCurrency(latest.fees_collected)} (${feeShare.toFixed(1)}% of cost)</span></div>
+                            </div>`);
+
+                    document.getElementById('kpi-row').innerHTML = cardReceived + cardProcessed + cardBacklog + cardCost;
 
                     const years = rows.map(r => 'FY' + r.year);
                     new Chart(document.getElementById('chart-volume'), {
@@ -280,7 +346,12 @@
                                 { label: 'Processed', data: rows.map(r => r.requests_processed), backgroundColor: Explorer.METRIC_COLORS.processed }
                             ]
                         },
-                        options: Explorer.baseChartOptions()
+                        options: chartOpts({
+                            scales: {
+                                x: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } },
+                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' } }
+                            }
+                        }, tipNum)
                     });
                     document.getElementById('blurb-volume').textContent = `Agencies received ${Explorer.fmtNum(latest.requests_received)} requests and processed ${Explorer.fmtNum(latest.requests_processed)} in FY${latest.year}, ${latest.requests_processed >= latest.requests_received ? 'keeping pace with' : 'trailing'} incoming demand.`;
 
@@ -288,9 +359,14 @@
                         type: 'line',
                         data: {
                             labels: years,
-                            datasets: [{ label: 'Backlog', data: rows.map(r => r.backlog), borderColor: Explorer.METRIC_COLORS.backlog, fill: false, tension: 0.3 }]
+                            datasets: [solidLine('Backlog (requests pending past the statutory deadline)', rows.map(r => r.backlog), Explorer.METRIC_COLORS.backlog)]
                         },
-                        options: Explorer.baseChartOptions()
+                        options: chartOpts({
+                            scales: {
+                                x: { ticks: { color: '#666', font: { size: 11 } }, grid: { color: '#F5F5F5' } },
+                                y: { ticks: { color: '#666', font: { size: 11 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' } }
+                            }
+                        }, { label: (ctx) => ` Backlog: ${Explorer.fmtNum(ctx.parsed.y)}` })
                     });
                     const backlogDir = latest.backlog >= prev.backlog ? 'grew' : 'shrank';
                     document.getElementById('blurb-backlog').textContent = `The government-wide backlog ${backlogDir} to ${Explorer.fmtNum(latest.backlog)} requests in FY${latest.year}, ${Math.abs((latest.backlog-prev.backlog)/prev.backlog*100).toFixed(1)}% ${latest.backlog >= prev.backlog ? 'higher' : 'lower'} than FY${prev.year}.`;
@@ -319,22 +395,22 @@
                     `;
                     new Chart(document.getElementById('chart-cost-donut'), {
                         type: 'doughnut',
-                        data: { labels: ['Processing Cost', 'Litigation Cost'], datasets: [{ data: [latest.processing_cost, latest.litigation_cost], backgroundColor: ['#0D9488', '#F4A100'] }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 12, font: { size: 11.5, weight: '600' }, color: '#555' } }, tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${Explorer.fmtCurrency(ctx.parsed)}` } } } }
+                        data: { labels: ['Processing cost', 'Litigation cost'], datasets: [{ data: [latest.processing_cost, latest.litigation_cost], backgroundColor: ['#0D9488', '#F4A100'] }] },
+                        options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: LEGEND, tooltip: Object.assign({}, Explorer.baseChartOptions().plugins.tooltip, { callbacks: { label: (ctx) => ` ${ctx.label}: ${Explorer.fmtCurrency(ctx.parsed)} (${(ctx.parsed / latest.total_cost * 100).toFixed(1)}%)` } }) } }
                     });
                     new Chart(document.getElementById('chart-cost-line'), {
                         type: 'line',
                         data: { labels: years, datasets: [
-                            { label: 'Cost Per Request', data: rows.map(r=>r.cost_per_request), borderColor: '#8E44AD', tension: 0.3, yAxisID: 'y', pointRadius: 2 },
-                            { label: 'Total Cost', data: rows.map(r=>r.total_cost), borderColor: '#1B4332', tension: 0.3, yAxisID: 'y1', pointRadius: 2 },
+                            solidLine('Cost per request (left axis)', rows.map(r=>r.cost_per_request), Explorer.METRIC_COLORS.cost_per_request, { yAxisID: 'y', pointRadius: 3 }),
+                            solidLine('Total cost (right axis)', rows.map(r=>r.total_cost), Explorer.METRIC_COLORS.total_cost, { yAxisID: 'y1', pointRadius: 3 }),
                         ]},
-                        options: Explorer.baseChartOptions({
+                        options: chartOpts({
                             scales: {
                                 x: { ticks: { color: '#666', font: { size: 10 } }, grid: { color: '#F5F5F5' } },
-                                y: { position: 'left', ticks: { color: '#666', font: { size: 10 }, callback: v => Explorer.fmtCurrency(v) }, grid: { color: '#F5F5F5' }, title: { display: true, text: 'Cost / Request', color: '#666', font: { size: 10 } } },
-                                y1: { position: 'right', ticks: { color: '#666', font: { size: 10 }, callback: v => Explorer.fmtCurrency(v) }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Total Cost', color: '#666', font: { size: 10 } } }
+                                y: { position: 'left', ticks: { color: '#2D8A5F', font: { size: 10, weight: '600' }, callback: v => Explorer.fmtCurrency(v) }, grid: { color: '#F5F5F5' }, title: { display: true, text: 'Cost per request', color: '#2D8A5F', font: { size: 10, weight: '600' } } },
+                                y1: { position: 'right', ticks: { color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' }, callback: v => Explorer.fmtCompact(v, true) }, grid: { drawOnChartArea: false }, title: { display: true, text: 'Total cost', color: Explorer.METRIC_COLORS.total_cost, font: { size: 10, weight: '600' } } }
                             }
-                        })
+                        }, { label: (ctx) => ` ${ctx.dataset.label.replace(/ \((left|right) axis\)/, '')}: ${ctx.dataset.yAxisID === 'y' ? '$' + ctx.parsed.y.toFixed(2) : Explorer.fmtCurrency(ctx.parsed.y)}` })
                     });
                     document.getElementById('blurb-cost').textContent = `Running FOIA programs cost ${Explorer.fmtCurrency(latest.total_cost)} in FY${latest.year}, averaging ${Explorer.fmtCurrency(latest.cost_per_request)} per processed request. Litigation made up ${(latest.litigation_cost/latest.total_cost*100).toFixed(1)}% of that total.`;
 
@@ -370,27 +446,51 @@
                     `).join('');
 
                     // ---------- Appeals Workflow ----------
+                    const apB = latest.appeals_backlog, apBPrev = prev.appeals_backlog;
                     document.getElementById('appeals-kpis').innerHTML = `
                         <div class="kpi-card" style="box-shadow:none;">
-                            <div class="kpi-label">Appeals Received</div>
+                            <div class="kpi-label">Received</div>
                             <div class="kpi-value">${Explorer.fmtNum(latest.appeals_received)}</div>
-                            <div class="chart-sub" style="margin:4px 0 0;">this fiscal year</div>
+                            <div class="chart-sub" style="margin:4px 0 0;">FY${latest.year} appeals</div>
                         </div>
                         <div class="kpi-card" style="box-shadow:none;">
-                            <div class="kpi-label">Appeals Processed</div>
+                            <div class="kpi-label">Processed</div>
                             <div class="kpi-value">${Explorer.fmtNum(latest.appeals_processed)}</div>
                             <div class="chart-sub" style="margin:4px 0 0;">${latest.appeals_received ? (latest.appeals_processed/latest.appeals_received*100).toFixed(1) : '0'}% of received</div>
                         </div>
+                        <div class="kpi-card" style="box-shadow:none;">
+                            <div class="kpi-label">Backlog</div>
+                            <div class="kpi-value">${Explorer.fmtNum(apB)}</div>
+                            ${delta(apB, apBPrev, 'badIfUp')}
+                        </div>
                     `;
                     const appealsTotal = (latest.appeals_affirmed||0) + (latest.appeals_partially_reversed||0) + (latest.appeals_reversed||0);
+                    let appealsBlurb = '';
                     if (appealsTotal) {
                         new Chart(document.getElementById('chart-appeals-donut'), {
                             type: 'doughnut',
-                            data: { labels: ['Affirmed', 'Partially Reversed', 'Reversed'], datasets: [{ data: [latest.appeals_affirmed, latest.appeals_partially_reversed, latest.appeals_reversed], backgroundColor: ['#9B2226','#F4A100','#2A9D8F'] }] },
-                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 7, boxHeight: 7, padding: 10, font: { size: 11, weight: '600' }, color: '#555' } } } }
+                            data: { labels: ['Affirmed', 'Partially reversed', 'Reversed'], datasets: [{ data: [latest.appeals_affirmed, latest.appeals_partially_reversed, latest.appeals_reversed], backgroundColor: [Explorer.METRIC_COLORS.denial, Explorer.METRIC_COLORS.partial, Explorer.METRIC_COLORS.grant] }] },
+                            options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: LEGEND, tooltip: Object.assign({}, Explorer.baseChartOptions().plugins.tooltip, { callbacks: { label: (ctx) => ` ${ctx.label}: ${Explorer.fmtNum(ctx.parsed)} (${(ctx.parsed / appealsTotal * 100).toFixed(1)}%)` } }) } }
                         });
-                        document.getElementById('blurb-appeals').textContent = `${(latest.appeals_affirmed/appealsTotal*100).toFixed(0)}% of appeal decisions were affirmed in FY${latest.year}; ${((latest.appeals_reversed+latest.appeals_partially_reversed)/appealsTotal*100).toFixed(0)}% were reversed in whole or part.`;
+                        appealsBlurb = `${(latest.appeals_affirmed/appealsTotal*100).toFixed(0)}% of appeal decisions were affirmed in FY${latest.year}; ${((latest.appeals_reversed+latest.appeals_partially_reversed)/appealsTotal*100).toFixed(0)}% were reversed in whole or part. `;
                     }
+                    new Chart(document.getElementById('chart-appeals-backlog'), {
+                        type: 'line',
+                        data: { labels: years, datasets: [solidLine('Appeals backlog', rows.map(r => r.appeals_backlog), Explorer.METRIC_COLORS.appeals_backlog, { pointRadius: 3 })] },
+                        options: chartOpts({
+                            scales: {
+                                x: { ticks: { color: '#666', font: { size: 10 }, callback: function(v) { return this.getLabelForValue(v).replace('FY20', 'FY'); } }, grid: { color: '#F5F5F5' } },
+                                y: { ticks: { color: '#666', font: { size: 10 }, callback: v => Explorer.fmtCompact(v) }, grid: { color: '#F5F5F5' }, beginAtZero: true }
+                            }
+                        }, { label: (ctx) => ` Appeals backlog: ${Explorer.fmtNum(ctx.parsed.y)}` })
+                    });
+                    if (apB !== undefined && apBPrev) {
+                        const apChg = (apB - apBPrev) / apBPrev * 100;
+                        const multiple = apB / apBPrev;
+                        const sizeTxt = multiple >= 2 ? `more than doubled` : `${apChg >= 0 ? 'grew' : 'fell'} ${Math.abs(apChg).toFixed(0)}%`;
+                        appealsBlurb += `The appeals backlog ${sizeTxt} to ${Explorer.fmtNum(apB)} (from ${Explorer.fmtNum(apBPrev)} in FY${prev.year}), as agencies processed ${Explorer.fmtNum(latest.appeals_processed)} appeals against ${Explorer.fmtNum(latest.appeals_received)} received.`;
+                    }
+                    document.getElementById('blurb-appeals').textContent = appealsBlurb;
                 });
 
                 // ---------- Exemptions Snapshot ----------
@@ -410,11 +510,11 @@
                     document.getElementById('blurb-exemptions').textContent = `${entries[0][0]} was the most-cited exemption in FY${data.by_agency_latest_fy}, invoked ${Explorer.fmtNum(entries[0][1])} times.`;
                 });
 
-                Explorer.loadAgencyScores().then(scores => {
+                Promise.all([Explorer.loadAgencyScores(), Explorer.loadSlugMap()]).then(([scores, slugs]) => {
                     const latestYear = Math.max(...scores.map(r => r.year));
                     const latestScores = scores.filter(r => r.year === latestYear);
                     const topVol = latestScores.filter(r => r.requests_received).sort((a,b) => b.requests_received - a.requests_received).slice(0, 10);
-                    document.getElementById('ov-top-volume').innerHTML = '<ol class="lb-list">' + topVol.map(r => `<li><a href="agency.html?a=${Explorer.slugify(r.agency)}" title="${r.agency}">${r.abbrev || r.agency}</a><span>${Explorer.fmtNum(r.requests_received)}</span></li>`).join('') + '</ol>';
+                    document.getElementById('ov-top-volume').innerHTML = '<ol class="lb-list">' + topVol.map(r => { const slug = slugs[r.agency] || slugs[r.abbrev]; const name = r.abbrev || r.agency; return `<li>${slug ? `<a href="agency.html?a=${encodeURIComponent(slug)}" title="${r.agency}">${name}</a>` : `<a title="${r.agency}" style="cursor:default;">${name}</a>`}<span>${Explorer.fmtNum(r.requests_received)}</span></li>`; }).join('') + '</ol>';
                     if (topVol.length) {
                         const share = topVol[0].requests_received / latestScores.reduce((s,r)=>s+(r.requests_received||0),0) * 100;
                         document.getElementById('blurb-volume-top').textContent = `${topVol[0].abbrev || topVol[0].agency} alone accounted for ${share.toFixed(0)}% of all requests received government-wide in FY${latestYear}.`;
